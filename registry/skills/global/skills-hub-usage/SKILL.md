@@ -44,11 +44,19 @@ python3 $SISO_HUB/scripts/skills health [--skill <id>]
 ### Installation Commands
 
 ```bash
-# Install a skill (copy to ~/.claude/skills/)
+# Install a skill to ~/.claude/skills/ (default)
 python3 $SISO_HUB/scripts/skills install gitsearch
 
-# Symlink instead (updates sync from hub automatically)
-python3 $SISO_HUB/scripts/skills install gitsearch --link
+# Install into a specific agent's skill directory (auto-detects structure)
+python3 $SISO_HUB/scripts/skills install gitsearch --agent PM_Agent
+# → installs to agents/PM_Agent/.claude/skills/gitsearch/ (full skill, has SKILL.md)
+# → installs to agents/PM_Agent/skills/<skill>/  (bare skill, scripts only)
+
+# Symlink instead (live updates sync from hub automatically)
+python3 $SISO_HUB/scripts/skills install gitsearch --link --agent PM_Agent
+
+# Install to a custom target directory
+python3 $SISO_HUB/scripts/skills install websearch --target /path/to/skills/
 
 # Validate a skill's structure
 python3 $SISO_HUB/scripts/skills validate gitsearch
