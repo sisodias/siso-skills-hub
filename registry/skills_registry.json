@@ -923,6 +923,151 @@
         "user_invocable": true,
         "status": "stable"
       }
+    },
+    {
+      "skill_id": "skills-hub-usage",
+      "name": "Skills Hub Usage",
+      "description": "Navigate, discover, install, and use skills from the SISO Skills Hub",
+      "category": "global",
+      "tags": ["skills-hub", "discovery", "navigation", "self-help"],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'SISO_HUB env var must point to skills_hub directory'"
+      },
+      "files": {
+        "required": ["SKILL.md"],
+        "optional": ["README.md"]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "check_status",
+      "name": "Check Status",
+      "description": "Check the current status of a pipeline run by reading progress files",
+      "category": "pipeline",
+      "tags": ["pipeline", "status", "progress", "workflow"],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": ["SKILL.md"],
+        "optional": []
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "create_progress",
+      "name": "Create Progress",
+      "description": "Initialize or update progress.md for a pipeline run",
+      "category": "pipeline",
+      "tags": ["pipeline", "progress", "logging", "workflow"],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": ["SKILL.md"],
+        "optional": []
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "read_job_ticket",
+      "name": "Read JobTicket",
+      "description": "Read and validate a JobTicket JSON file from inbox",
+      "category": "pipeline",
+      "tags": ["pipeline", "jobticket", "inbox", "workflow"],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": ["SKILL.md"],
+        "optional": []
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "pass_to_next",
+      "name": "Pass to Next",
+      "description": "Pass context to the next agent in the pipeline by writing output files",
+      "category": "pipeline",
+      "tags": ["pipeline", "handoff", "workflow", "agent-communication"],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": ["SKILL.md"],
+        "optional": []
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
     }
   ]
 }
