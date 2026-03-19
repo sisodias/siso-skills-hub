@@ -6,53 +6,34 @@ import os
 import sys
 from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
-
-
-def unblock_task(task_id: str):
+def unblock_task(task_id: str, blocked_by_id: str):
     config = load_config()
     db_path = config.get("db_path")
 
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    cursor.execute("SELECT id, blocked_by_task_id FROM tasks WHERE id = ?", (task_id,))
-    task = cursor.fetchone()
+    cursor.execute("""
+        DELETE FROM task_relationships
+        WHERE from_task_id = ? AND to_task_id = ? AND relationship_type = 'blocks'
+    """, (blocked_by_id, task_id))
 
-    if not task:
-        print(json.dumps({"status": "error", "message": f"Task {task_id} not found"}))
-        conn.close()
-        return
-
-    if not task[1]:
-        print(json.dumps({"status": "success", "message": f"Task {task_id} was not blocked"}))
-        conn.close()
-        return
-
-    cursor.execute(
-        "UPDATE tasks SET blocked_by_task_id = NULL, updated_at = ? WHERE id = ?",
-        (datetime.now(timezone.utc).isoformat(), task_id)
-    )
-
+    deleted = cursor.rowcount
     conn.commit()
     conn.close()
 
-    print(json.dumps({
-        "status": "success",
-        "task_id": task_id,
-        "message": f"Task {task_id} is now unblocked"
-    }))
+    print(json.dumps({"status": "success", "deleted": deleted, "task_id": task_id, "unblocked_by": blocked_by_id}))
 
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--task-id", required=True, help="Task to unblock")
+    parser.add_argument("--task-id", required=True)
+    parser.add_argument("--blocked-by", required=True)
     args = parser.parse_args()
-    unblock_task(args.task_id)
+    unblock_task(args.task_id, args.blocked_by)

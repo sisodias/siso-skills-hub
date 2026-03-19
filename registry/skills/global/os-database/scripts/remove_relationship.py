@@ -4,14 +4,11 @@ import sqlite3
 import json
 import os
 import sys
+from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
 def remove_relationship(relationship_id: int):
@@ -22,20 +19,16 @@ def remove_relationship(relationship_id: int):
     cursor = conn.cursor()
 
     cursor.execute("DELETE FROM task_relationships WHERE id = ?", (relationship_id,))
-    if cursor.rowcount == 0:
-        conn.close()
-        print(json.dumps({"status": "error", "message": "Relationship not found"}))
-        sys.exit(1)
-
+    deleted = cursor.rowcount
     conn.commit()
     conn.close()
-    print(json.dumps({"status": "success", "relationship_id": relationship_id}))
+
+    print(json.dumps({"status": "success", "deleted": deleted, "relationship_id": relationship_id}))
 
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--relationship-id", type=int, required=True, help="Relationship ID to remove")
+    parser.add_argument("--relationship-id", type=int, required=True)
     args = parser.parse_args()
-
     remove_relationship(args.relationship_id)

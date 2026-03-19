@@ -4,14 +4,11 @@ import sqlite3
 import json
 import os
 import sys
+from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
 def get_fields(task_id: str):
@@ -22,14 +19,6 @@ def get_fields(task_id: str):
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    # Check if task exists
-    cursor.execute("SELECT id FROM tasks WHERE id = ?", (task_id,))
-    if not cursor.fetchone():
-        print(json.dumps({"status": "error", "message": f"Task '{task_id}' not found"}))
-        conn.close()
-        return
-
-    # Get field definitions and values
     cursor.execute("""
         SELECT
             d.id, d.name, d.field_key, d.field_type, d.description, d.options,
@@ -51,14 +40,12 @@ def get_fields(task_id: str):
                 value = json.loads(row['value'])
             except json.JSONDecodeError:
                 value = row['value']
-
         options = None
         if row['options']:
             try:
                 options = json.loads(row['options'])
             except json.JSONDecodeError:
                 pass
-
         fields.append({
             "id": row['id'],
             "name": row['name'],
@@ -71,16 +58,12 @@ def get_fields(task_id: str):
             "updated_at": row['updated_at']
         })
 
-    print(json.dumps({
-        "status": "success",
-        "task_id": task_id,
-        "fields": fields
-    }))
+    print(json.dumps({"status": "success", "task_id": task_id, "fields": fields}))
 
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--task-id", required=True, dest="task_id", help="Task ID")
+    parser.add_argument("--task-id", required=True)
     args = parser.parse_args()
     get_fields(args.task_id)

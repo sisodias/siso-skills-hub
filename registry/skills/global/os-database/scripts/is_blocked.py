@@ -4,14 +4,12 @@ import sqlite3
 import json
 import os
 import sys
+from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+# Import shared config from scripts directory
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
 def is_blocked(task_id: str):
@@ -20,7 +18,6 @@ def is_blocked(task_id: str):
 
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-
     cursor.execute("""
         SELECT id, title, status, blocked_by_task_id
         FROM tasks

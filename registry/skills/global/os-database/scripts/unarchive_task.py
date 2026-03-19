@@ -3,15 +3,12 @@
 import sqlite3
 import json
 import os
+import sys
 from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
 def unarchive_task(task_id: str):
@@ -22,34 +19,20 @@ def unarchive_task(task_id: str):
     cursor = conn.cursor()
     now = datetime.now(timezone.utc).isoformat()
 
-    # Check if task exists
-    cursor.execute("SELECT id, archived_at FROM tasks WHERE id = ?", (task_id,))
-    row = cursor.fetchone()
-    if not row:
-        print(json.dumps({"status": "error", "message": f"Task {task_id} not found"}))
-        conn.close()
-        return
+    cursor.execute("""
+        UPDATE tasks SET status = 'pending', archived_at = NULL, updated_at = ? WHERE id = ?
+    """, (now, task_id))
 
-    if row[1] is None:
-        print(json.dumps({"status": "error", "message": f"Task {task_id} is not archived"}))
-        conn.close()
-        return
-
-    # Unarchive the task
-    cursor.execute(
-        "UPDATE tasks SET archived_at = NULL, status = 'pending', updated_at = ? WHERE id = ?",
-        (now, task_id)
-    )
+    updated = cursor.rowcount
     conn.commit()
     conn.close()
 
-    print(json.dumps({"status": "success", "task_id": task_id, "unarchived": True}))
+    print(json.dumps({"status": "success", "updated": updated, "task_id": task_id}))
 
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--task-id", required=True, help="Task ID to unarchive")
+    parser.add_argument("--task-id", required=True)
     args = parser.parse_args()
-
     unarchive_task(args.task_id)

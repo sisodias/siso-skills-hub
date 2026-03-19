@@ -6,48 +6,23 @@ import os
 import sys
 from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
-
-
-def add_blocked_by(task_id: str, blocked_by_task_id: str):
+def add_blocked_by(task_id: str, blocked_by_id: str):
     config = load_config()
     db_path = config.get("db_path")
 
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
+    now = datetime.now(timezone.utc).isoformat()
 
-    # Verify both tasks exist
-    cursor.execute("SELECT id FROM tasks WHERE id = ?", (task_id,))
-    if not cursor.fetchone():
-        print(json.dumps({"status": "error", "message": f"Task {task_id} not found"}))
-        conn.close()
-        return
-
-    cursor.execute("SELECT id, status FROM tasks WHERE id = ?", (blocked_by_task_id,))
-    blocker = cursor.fetchone()
-    if not blocker:
-        print(json.dumps({"status": "error", "message": f"Blocking task {blocked_by_task_id} not found"}))
-        conn.close()
-        return
-
-    # Check if blocker is completed
-    if blocker[1] != 'completed':
-        print(json.dumps({
-            "status": "warning",
-            "message": f"Blocking task {blocked_by_task_id} is not completed (status: {blocker[1]})"
-        }))
-
-    # Add the dependency
-    cursor.execute(
-        "UPDATE tasks SET blocked_by_task_id = ?, updated_at = ? WHERE id = ?",
-        (blocked_by_task_id, datetime.now(timezone.utc).isoformat(), task_id)
-    )
+    cursor.execute("""
+        INSERT INTO task_relationships (from_task_id, to_task_id, relationship_type, created_at)
+        VALUES (?, ?, 'blocks', ?)
+    """, (blocked_by_id, task_id, now))
 
     conn.commit()
     conn.close()
@@ -55,8 +30,7 @@ def add_blocked_by(task_id: str, blocked_by_task_id: str):
     print(json.dumps({
         "status": "success",
         "task_id": task_id,
-        "blocked_by": blocked_by_task_id,
-        "message": f"Task {task_id} is now blocked by {blocked_by_task_id}"
+        "blocked_by": blocked_by_id
     }))
 
 

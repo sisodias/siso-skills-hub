@@ -4,17 +4,15 @@ import sqlite3
 import json
 import os
 import sys
+from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+# Import shared config from scripts directory
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
-def check_cycle(db_path: str, from_task_id: str, to_task_id: str) -> tuple[bool, list]:
+def check_cycle(db_path, from_task_id: str, to_task_id: str):
     """
     Check if adding blocks(from_task_id, to_task_id) creates a cycle.
     Returns (has_cycle, path) where path shows the cycle if one exists.
@@ -40,28 +38,43 @@ def check_cycle(db_path: str, from_task_id: str, to_task_id: str) -> tuple[bool,
         graph[from_t].append(to_t)
 
     # Now check if there's a path from to_task_id to from_task_id
-    # Using DFS
+    # Using DFS with proper cycle detection (fix: track cycle path properly)
     visited = set()
+    on_stack = set()
     path = []
+    cycle_path = []
 
     def dfs(node: str) -> bool:
-        if node == from_task_id:
+        if node in on_stack:
+            # Found a back edge - this is a cycle, record the cycle path
+            cycle_path.extend(path + [node])
             return True
         if node in visited:
             return False
         visited.add(node)
+        on_stack.add(node)
         path.append(node)
         for neighbor in graph.get(node, []):
             if dfs(neighbor):
                 return True
+        on_stack.remove(node)
         path.pop()
         return False
+
+    # Check for self-loop
+    if from_task_id == to_task_id:
+        conn.close()
+        return True, [from_task_id, to_task_id]
 
     cycle_found = dfs(to_task_id)
     conn.close()
 
     if cycle_found:
-        return True, path + [from_task_id]
+        # Avoid duplicates: from_task_id may already be in cycle_path
+        result_path = cycle_path.copy()
+        if not result_path or result_path[-1] != from_task_id:
+            result_path.append(from_task_id)
+        return True, result_path
     return False, []
 
 

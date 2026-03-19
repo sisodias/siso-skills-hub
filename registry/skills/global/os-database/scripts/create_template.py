@@ -6,13 +6,9 @@ import os
 import sys
 from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
 def create_template(name: str, title_template: str, description_template: str = None,
@@ -22,16 +18,15 @@ def create_template(name: str, title_template: str, description_template: str = 
     config = load_config()
     db_path = config.get("db_path")
 
+    subtasks_json = subtasks_template
+    if subtasks_template and not subtasks_template.startswith('['):
+        # Comma-separated list
+        items = [s.strip() for s in subtasks_template.split(',')]
+        subtasks_json = json.dumps(items)
+
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     now = datetime.now(timezone.utc).isoformat()
-
-    # Handle subtasks_template - can be JSON string or plain string
-    subtasks_json = subtasks_template
-    if subtasks_template and not subtasks_template.startswith('['):
-        # It's a comma-separated list, convert to JSON
-        items = [s.strip() for s in subtasks_template.split(',')]
-        subtasks_json = json.dumps(items)
 
     try:
         cursor.execute("""
@@ -53,11 +48,8 @@ def create_template(name: str, title_template: str, description_template: str = 
             "name": name,
             "message": f"Template '{name}' created successfully"
         }))
-    except sqlite3.IntegrityError as e:
-        print(json.dumps({
-            "status": "error",
-            "message": f"Template '{name}' already exists"
-        }))
+    except sqlite3.IntegrityError:
+        print(json.dumps({"status": "error", "message": f"Template '{name}' already exists"}))
     finally:
         conn.close()
 
@@ -65,14 +57,14 @@ def create_template(name: str, title_template: str, description_template: str = 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Create a task template")
-    parser.add_argument("--name", required=True, help="Template name (unique)")
-    parser.add_argument("--title-template", required=True, help="Title template with {placeholders}")
-    parser.add_argument("--description-template", help="Description template")
+    parser.add_argument("--name", required=True)
+    parser.add_argument("--title-template", required=True)
+    parser.add_argument("--description-template")
     parser.add_argument("--default-priority", choices=['low', 'medium', 'high'], default='medium')
-    parser.add_argument("--default-tags", help="Comma-separated tags")
-    parser.add_argument("--default-due-days", type=int, default=7, help="Default due days from creation")
-    parser.add_argument("--subtasks-template", help='Subtasks as JSON array or comma-separated (e.g., "[\"Investigate\",\"Fix\"]" or "Investigate,Fix")')
-    parser.add_argument("--created-by-agent-id", help="Agent ID creating this template")
+    parser.add_argument("--default-tags")
+    parser.add_argument("--default-due-days", type=int, default=7)
+    parser.add_argument("--subtasks-template")
+    parser.add_argument("--created-by-agent-id")
     args = parser.parse_args()
     create_template(args.name, args.title_template, args.description_template,
                     args.default_priority, args.default_tags, args.default_due_days,

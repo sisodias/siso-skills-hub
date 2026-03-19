@@ -3,14 +3,12 @@
 import sqlite3
 import json
 import os
+import sys
+from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
 def list_relationships(task_id: str):
@@ -18,9 +16,9 @@ def list_relationships(task_id: str):
     db_path = config.get("db_path")
 
     conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    # Get relationships where task is either source or target
     cursor.execute("""
         SELECT id, from_task_id, to_task_id, relationship_type, created_at
         FROM task_relationships
@@ -28,16 +26,7 @@ def list_relationships(task_id: str):
         ORDER BY created_at DESC
     """, (task_id, task_id))
 
-    relationships = []
-    for row in cursor.fetchall():
-        relationships.append({
-            "id": row[0],
-            "from_task_id": row[1],
-            "to_task_id": row[2],
-            "relationship_type": row[3],
-            "created_at": row[4]
-        })
-
+    relationships = [dict(row) for row in cursor.fetchall()]
     conn.close()
     print(json.dumps({"task_id": task_id, "relationships": relationships, "count": len(relationships)}))
 
@@ -45,7 +34,6 @@ def list_relationships(task_id: str):
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--task-id", required=True, help="Task ID to list relationships for")
+    parser.add_argument("--task-id", required=True)
     args = parser.parse_args()
-
     list_relationships(args.task_id)

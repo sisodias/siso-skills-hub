@@ -1,70 +1,43 @@
 #!/usr/bin/env python3
-"""Virtual tags helper - computes tags at query time."""
+"""Get tasks with virtual tags computed at query time."""
 import sqlite3
 import json
 import os
-from datetime import datetime, timedelta
+import sys
+from datetime import datetime, timedelta, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
-def compute_virtual_tags(due_date_str, blocked_by_id, status, all_task_ids):
-    """Compute virtual tags for a task."""
+def compute_virtual_tags(due_date_str, blocked_by_id, status, incomplete_tasks):
     tags = []
     now = datetime.now()
 
-    # BLOCKED: task has blocked_by_task_id pointing to incomplete task
-    if blocked_by_id and blocked_by_id in all_task_ids:
-        # Check if blocking task is incomplete
+    if blocked_by_id and blocked_by_id in incomplete_tasks:
         tags.append("BLOCKED")
 
-    # OVERDUE: due_date is in the past
     if due_date_str:
         try:
             due_date = datetime.fromisoformat(due_date_str.replace('Z', '+00:00'))
-            if due_date < now:
+            if due_date.replace(tzinfo=None) < now:
                 tags.append("OVERDUE")
-        except ValueError:
-            pass
-
-    # WEEK: due_date is within current week
-    if due_date_str:
-        try:
-            due_date = datetime.fromisoformat(due_date_str.replace('Z', '+00:00'))
-            now = datetime.now()
             week_end = now + timedelta(days=7)
-            if now <= due_date <= week_end:
+            if now <= due_date.replace(tzinfo=None) <= week_end:
                 tags.append("WEEK")
         except ValueError:
             pass
 
-    # MONTH: due_date is within current month
-    if due_date_str:
-        try:
-            due_date = datetime.fromisoformat(due_date_str.replace('Z', '+00:00'))
-            now = datetime.now()
-            if now <= due_date <= now.replace(day=28) + timedelta(days=7):  # rough month check
-                tags.append("MONTH")
-        except ValueError:
-            pass
-
-    # READY: pending AND not blocked AND (no due_date OR due_date <= now)
     if status == "pending":
-        is_blocked = blocked_by_id and blocked_by_id in all_task_ids
-        has_due = bool(due_date_str)
+        is_blocked = blocked_by_id and blocked_by_id in incomplete_tasks
         if not is_blocked:
-            if not has_due:
+            if not due_date_str:
                 tags.append("READY")
             else:
                 try:
                     due_date = datetime.fromisoformat(due_date_str.replace('Z', '+00:00'))
-                    if due_date <= now:
+                    if due_date.replace(tzinfo=None) <= now:
                         tags.append("READY")
                 except ValueError:
                     pass
@@ -73,7 +46,6 @@ def compute_virtual_tags(due_date_str, blocked_by_id, status, all_task_ids):
 
 
 def get_tasks_with_virtual_tags(agent_id=None, project_id=None, tag=None):
-    """Get tasks with computed virtual tags."""
     config = load_config()
     db_path = config.get("db_path")
 
@@ -81,18 +53,14 @@ def get_tasks_with_virtual_tags(agent_id=None, project_id=None, tag=None):
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    # Get all task IDs that are incomplete (for BLOCKED check)
     cursor.execute("SELECT id FROM tasks WHERE status != 'completed'")
     incomplete_tasks = {row[0] for row in cursor.fetchall()}
 
-    # Base query
     query = "SELECT * FROM tasks WHERE 1=1"
     params = []
-
     if agent_id:
         query += " AND assigned_agent_id = ?"
         params.append(agent_id)
-
     if project_id:
         query += " AND project_id = ?"
         params.append(project_id)
@@ -101,7 +69,6 @@ def get_tasks_with_virtual_tags(agent_id=None, project_id=None, tag=None):
     rows = cursor.fetchall()
     conn.close()
 
-    # Compute virtual tags for each task
     tasks = []
     for row in rows:
         task = dict(row)
@@ -113,7 +80,6 @@ def get_tasks_with_virtual_tags(agent_id=None, project_id=None, tag=None):
         )
         tasks.append(task)
 
-    # Filter by tag if specified
     if tag:
         tasks = [t for t in tasks if tag in t["virtual_tags"]]
 
@@ -121,9 +87,7 @@ def get_tasks_with_virtual_tags(agent_id=None, project_id=None, tag=None):
 
 
 def list_tasks(tag=None, agent_id=None, project_id=None):
-    """CLI entry point for listing tasks with virtual tags."""
     config = load_config()
-
     if not agent_id:
         agent_id = config.get("agent_id")
 
@@ -141,9 +105,8 @@ def list_tasks(tag=None, agent_id=None, project_id=None):
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Get tasks with virtual tags")
-    parser.add_argument("--tag", choices=["BLOCKED", "OVERDUE", "WEEK", "MONTH", "READY"], help="Filter by virtual tag")
-    parser.add_argument("--agent-id", help="Filter by agent ID")
-    parser.add_argument("--project-id", help="Filter by project ID")
+    parser.add_argument("--tag", choices=["BLOCKED", "OVERDUE", "WEEK", "MONTH", "READY"])
+    parser.add_argument("--agent-id")
+    parser.add_argument("--project-id")
     args = parser.parse_args()
-
     list_tasks(args.tag, args.agent_id, args.project_id)

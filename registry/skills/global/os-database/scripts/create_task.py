@@ -6,14 +6,10 @@ import os
 import sys
 from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-STATE_PATH = os.path.join(SCRIPT_DIR, "state.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+# Import shared config
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config, load_state
 
 
 def create_task(project_id: str, title: str, description: str, assigned_agent: str = None, priority: str = 'medium', due_date: str = None, create_workspace: bool = False, estimated_minutes: int = None, fields: str = None):
@@ -24,9 +20,11 @@ def create_task(project_id: str, title: str, description: str, assigned_agent: s
     cursor = conn.cursor()
     now = datetime.now(timezone.utc).isoformat()
 
-    # Generate task ID
-    cursor.execute("SELECT COUNT(*) FROM tasks")
-    count = cursor.fetchone()[0] + 1
+    # Generate task ID using a transaction with IMMEDIATE to prevent race conditions
+    # Previous COUNT(*) approach races with concurrent inserts
+    cursor.execute("BEGIN IMMEDIATE")
+    cursor.execute("SELECT COALESCE(MAX(CAST(SUBSTR(id, 6) AS INTEGER)), 0) + 1 FROM tasks WHERE id LIKE 'TASK-%'")
+    count = cursor.fetchone()[0]
     task_id = f"TASK-{count:03d}"
 
     # Create workspace folder only if requested

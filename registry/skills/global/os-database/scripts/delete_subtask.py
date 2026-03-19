@@ -4,14 +4,11 @@ import sqlite3
 import json
 import os
 import sys
+from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
 def delete_subtask(subtask_id: int):
@@ -20,30 +17,19 @@ def delete_subtask(subtask_id: int):
 
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-
-    # Check exists
-    cursor.execute("SELECT id, title FROM subtasks WHERE id = ?", (subtask_id,))
-    row = cursor.fetchone()
-
-    if not row:
-        print(json.dumps({"status": "error", "message": f"Subtask {subtask_id} not found"}))
-        conn.close()
-        sys.exit(1)
+    now = datetime.now(timezone.utc).isoformat()
 
     cursor.execute("DELETE FROM subtasks WHERE id = ?", (subtask_id,))
+    deleted = cursor.rowcount
     conn.commit()
     conn.close()
 
-    print(json.dumps({
-        "status": "success",
-        "subtask_id": subtask_id,
-        "deleted_title": row[0]
-    }))
+    print(json.dumps({"status": "success", "deleted": deleted, "subtask_id": subtask_id}))
 
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--subtask-id", type=int, required=True, help="Subtask ID to delete")
+    parser.add_argument("--subtask-id", type=int, required=True)
     args = parser.parse_args()
     delete_subtask(args.subtask_id)

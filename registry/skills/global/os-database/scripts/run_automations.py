@@ -3,19 +3,16 @@
 import sqlite3
 import json
 import os
+import sys
+import uuid
 from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
 def evaluate_condition(condition: dict, data: dict) -> bool:
-    """Evaluate a trigger condition against the data."""
     field = condition.get("field")
     op = condition.get("op")
     value = condition.get("value")
@@ -41,24 +38,21 @@ def evaluate_condition(condition: dict, data: dict) -> bool:
 
 
 def execute_action(action_type: str, action_config: dict, automation_id: int, data: dict, db_path: str) -> str:
-    """Execute the action and return result."""
     result = {"executed": True}
 
     if action_type == "log":
-        # Use log_event to log the event
         event_type = action_config.get("event_type", "ACTION")
         msg = action_config.get("msg", "Automation triggered")
 
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
-        # Get a default agent_id (use PM_Agent as default)
         cursor.execute("SELECT id FROM agents LIMIT 1")
         row = cursor.fetchone()
         agent_id = row[0] if row else "SYSTEM"
 
         cursor.execute("""INSERT INTO timeline_events (id, agent_id, event_type, message, timestamp)
                           VALUES (?, ?, ?, ?, ?)""",
-                       (f"EVT-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}", agent_id, event_type, msg, datetime.now(timezone.utc).isoformat()))
+                       (f"EVT-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S%f')}", agent_id, event_type, msg, datetime.now(timezone.utc).isoformat()))
         conn.commit()
         conn.close()
         result["logged"] = True
@@ -84,7 +78,6 @@ def run_automations(event: str, data_json: str):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    # Get all enabled automations matching the event
     cursor.execute("""SELECT id, name, trigger_condition, action_type, action_config
                       FROM automations WHERE trigger_event = ? AND enabled = 1""",
                    (event,))
@@ -100,7 +93,6 @@ def run_automations(event: str, data_json: str):
                 action_cfg = json.loads(action_config)
                 result = execute_action(action_type, action_cfg, automation_id, data, db_path)
 
-                # Log the execution
                 cursor.execute("""INSERT INTO automation_logs (automation_id, trigger_data, action_result)
                                   VALUES (?, ?, ?)""",
                                (automation_id, data_json, result))
@@ -123,7 +115,6 @@ def run_automations(event: str, data_json: str):
 
 if __name__ == "__main__":
     import argparse
-    import sys
     parser = argparse.ArgumentParser()
     parser.add_argument("--event", required=True, help="Event that triggered this")
     parser.add_argument("--data", required=True, help="JSON data for the event")

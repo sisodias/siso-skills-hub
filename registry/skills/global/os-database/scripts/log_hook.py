@@ -1,23 +1,26 @@
 #!/usr/bin/env python3
-"""Hook script to log events to os-database"""
-import sys
+"""Hook script to log events to os-database."""
+import sqlite3
+import json
 import os
+import sys
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
-# Add scripts to path
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.environ.get("SISO_SYSTEM_DB", os.path.expanduser("~/.SystemDB/sisostem.db"))
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
-def log_event(agent_id, event_type, message, metadata=None):
-    """Log an event to the timeline_events table"""
-    import sqlite3
 
-    conn = sqlite3.connect(DB_PATH)
+def log_event(agent_id: str, event_type: str, message: str, metadata: str = None):
+    config = load_config()
+    db_path = config.get("db_path")
+
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
     event_id = str(uuid.uuid4())
-    timestamp = datetime.utcnow().isoformat() + "+00:00"
+    timestamp = datetime.now(timezone.utc).isoformat()
 
     cursor.execute("""
         INSERT INTO timeline_events (id, agent_id, event_type, message, metadata, timestamp)
@@ -28,14 +31,14 @@ def log_event(agent_id, event_type, message, metadata=None):
     conn.close()
     print(f"Logged {event_type}: {message}")
 
+
 if __name__ == "__main__":
-    if len(sys.argv) < 4:
-        print("Usage: log_hook.py <agent_id> <event_type> <message> [metadata]")
-        sys.exit(1)
+    import argparse
+    parser = argparse.ArgumentParser(description="Log an event to the timeline")
+    parser.add_argument("--agent-id", required=True, help="Agent ID")
+    parser.add_argument("--event-type", required=True, help="Event type (e.g., THOUGHT, ACTION)")
+    parser.add_argument("--message", required=True, help="Event message")
+    parser.add_argument("--metadata", help="Optional metadata as JSON")
+    args = parser.parse_args()
 
-    agent_id = sys.argv[1]
-    event_type = sys.argv[2]
-    message = sys.argv[3]
-    metadata = sys.argv[4] if len(sys.argv) > 4 else None
-
-    log_event(agent_id, event_type, message, metadata)
+    log_event(args.agent_id, args.event_type, args.message, args.metadata)

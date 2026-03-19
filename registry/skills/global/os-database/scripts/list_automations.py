@@ -3,51 +3,55 @@
 import sqlite3
 import json
 import os
+import sys
+from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
-def list_automations(enabled_only: bool = False):
+def list_automations():
     config = load_config()
     db_path = config.get("db_path")
 
     conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    query = "SELECT id, name, trigger_event, trigger_condition, action_type, action_config, enabled, created_at FROM automations"
-    if enabled_only:
-        query += " WHERE enabled = 1"
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='automations'")
+    if not cursor.fetchone():
+        print(json.dumps({"status": "error", "message": "Table 'automations' does not exist in this database schema"}))
+        conn.close()
+        return
 
-    cursor.execute(query)
+    cursor.execute("""
+        SELECT id, name, trigger_event, trigger_condition, action_type, action_config, enabled
+        FROM automations
+        ORDER BY name
+    """)
+
     rows = cursor.fetchall()
     conn.close()
 
     automations = []
     for row in rows:
-        automations.append({
-            "id": row[0],
-            "name": row[1],
-            "trigger_event": row[2],
-            "trigger_condition": row[3],
-            "action_type": row[4],
-            "action_config": row[5],
-            "enabled": bool(row[6]),
-            "created_at": row[7]
-        })
+        auto = dict(row)
+        try:
+            auto["trigger_condition"] = json.loads(auto["trigger_condition"])
+        except (json.JSONDecodeError, TypeError):
+            pass
+        try:
+            auto["action_config"] = json.loads(auto["action_config"])
+        except (json.JSONDecodeError, TypeError):
+            pass
+        automations.append(auto)
 
-    print(json.dumps(automations, indent=2))
+    print(json.dumps({"status": "success", "count": len(automations), "automations": automations}))
 
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--enabled-only", action="store_true", help="Show only enabled automations")
+    parser = argparse.ArgumentParser(description="List all automations")
     args = parser.parse_args()
-
-    list_automations(args.enabled_only)
+    list_automations()

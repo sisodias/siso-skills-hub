@@ -4,14 +4,11 @@ import sqlite3
 import json
 import os
 import sys
+from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
 def set_field(task_id: str, field: str, value: str):
@@ -21,37 +18,22 @@ def set_field(task_id: str, field: str, value: str):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    # Find field by field_key
-    cursor.execute("SELECT id, field_type FROM custom_field_definitions WHERE field_key = ?", (field,))
+    # Resolve field key to field_id
+    cursor.execute("SELECT id FROM custom_fields WHERE field_key = ?", (field,))
     row = cursor.fetchone()
     if not row:
         print(json.dumps({"status": "error", "message": f"Field '{field}' not found"}))
         conn.close()
         return
 
-    field_id, field_type = row
+    field_id = row[0]
 
-    # Check if task exists
-    cursor.execute("SELECT id FROM tasks WHERE id = ?", (task_id,))
-    if not cursor.fetchone():
-        print(json.dumps({"status": "error", "message": f"Task '{task_id}' not found"}))
-        conn.close()
-        return
-
-    # Validate value based on field type
+    # Try to interpret value as JSON, else store as string
     try:
-        if field_type == 'number':
-            float(value)  # Validate it's a number
-        elif field_type == 'checkbox':
-            if value.lower() not in ('true', 'false', '1', '0', 'yes', 'no'):
-                raise ValueError("Checkbox must be true/false")
+        value_json = json.dumps(json.loads(value))
+    except (json.JSONDecodeError, TypeError):
         value_json = json.dumps(value)
-    except (json.JSONDecodeError, ValueError) as e:
-        print(json.dumps({"status": "error", "message": f"Invalid value for field type {field_type}: {e}"}))
-        conn.close()
-        return
 
-    # Upsert the value
     cursor.execute("""
         INSERT INTO custom_field_values (task_id, field_id, value, created_at, updated_at)
         VALUES (?, ?, ?, datetime('now'), datetime('now'))

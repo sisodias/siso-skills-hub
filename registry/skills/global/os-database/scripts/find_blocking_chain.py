@@ -4,17 +4,15 @@ import sqlite3
 import json
 import os
 import sys
+from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+# Import shared config from scripts directory
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
-def find_blocking_chain(db_path: str, task_id: str) -> list:
+def find_blockers_recursive(db_path, task_id: str):
     """Find all tasks that block this task, recursively."""
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
@@ -34,43 +32,27 @@ def find_blocking_chain(db_path: str, task_id: str) -> list:
         blocked_by[to_t].append(from_t)
 
     # Find all blockers recursively
-    visited = set()
     blockers = []
+    visited = set()
 
-    def find_blockers(task: str):
+    def dfs(task: str):
+        if task in visited:
+            return
+        visited.add(task)
         for blocker in blocked_by.get(task, []):
-            if blocker not in visited:
-                visited.add(blocker)
-                # Get task details
-                cursor.execute("SELECT id, title, status FROM tasks WHERE id = ?", (blocker,))
-                row = cursor.fetchone()
-                if row:
-                    blockers.append({
-                        "id": row[0],
-                        "title": row[1],
-                        "status": row[2]
-                    })
-                find_blockers(blocker)
+            blockers.append(blocker)
+            dfs(blocker)
 
-    # Get target task details
-    cursor.execute("SELECT id, title, status FROM tasks WHERE id = ?", (task_id,))
-    target = cursor.fetchone()
-    if not target:
-        print(json.dumps({"status": "error", "message": f"Task {task_id} not found"}))
-        conn.close()
-        sys.exit(1)
-
-    find_blockers(task_id)
+    dfs(task_id)
     conn.close()
-
     return blockers
 
 
-def find_blocking_chain_cmd(task_id: str):
+def find_blocking_chain(task_id: str):
     config = load_config()
     db_path = config.get("db_path")
 
-    blockers = find_blocking_chain(db_path, task_id)
+    blockers = find_blockers_recursive(db_path, task_id)
 
     print(json.dumps({
         "status": "success",
@@ -82,8 +64,7 @@ def find_blocking_chain_cmd(task_id: str):
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description="Find all tasks blocking a given task (transitive)")
-    parser.add_argument("--task-id", required=True, help="Task ID to find blockers for")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--task-id", required=True, help="Task ID")
     args = parser.parse_args()
-
-    find_blocking_chain_cmd(args.task_id)
+    find_blocking_chain(args.task_id)

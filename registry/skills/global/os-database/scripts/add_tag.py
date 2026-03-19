@@ -4,14 +4,11 @@ import sqlite3
 import json
 import os
 import sys
+from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
 def add_tag(task_id: str, tag: str):
@@ -20,23 +17,23 @@ def add_tag(task_id: str, tag: str):
 
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
+    now = datetime.now(timezone.utc).isoformat()
 
-    try:
-        cursor.execute("INSERT INTO task_tags (task_id, tag) VALUES (?, ?)", (task_id, tag))
-        conn.commit()
-        result = {"status": "success", "task_id": task_id, "tag": tag, "message": f"Tag '{tag}' added to {task_id}"}
-    except sqlite3.IntegrityError:
-        result = {"status": "exists", "task_id": task_id, "tag": tag, "message": f"Tag '{tag}' already exists on {task_id}"}
-    finally:
-        conn.close()
+    cursor.execute("""
+        INSERT INTO task_tags (task_id, tag, created_at)
+        VALUES (?, ?, ?)
+    """, (task_id, tag, now))
 
-    print(json.dumps(result))
+    conn.commit()
+    conn.close()
+
+    print(json.dumps({"status": "success", "task_id": task_id, "tag": tag}))
 
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--task-id", required=True, help="Task ID")
-    parser.add_argument("--tag", required=True, help="Tag to add")
+    parser.add_argument("--task-id", required=True)
+    parser.add_argument("--tag", required=True)
     args = parser.parse_args()
     add_tag(args.task_id, args.tag)

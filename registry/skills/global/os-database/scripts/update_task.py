@@ -3,15 +3,12 @@
 import sqlite3
 import json
 import os
+import sys
 from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+# Add scripts directory to path for imports
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _shared_config import load_config, SCRIPT_DIR
 
 
 def run_automations_for_task(event: str, task_id: str, old_status: str = None, new_status: str = None):

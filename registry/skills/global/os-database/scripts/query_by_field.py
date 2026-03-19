@@ -4,17 +4,14 @@ import sqlite3
 import json
 import os
 import sys
+from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
-def query_by_field(field: str, value: str):
+def query_by_field(field: str, value: str = None):
     config = load_config()
     db_path = config.get("db_path")
 
@@ -22,19 +19,16 @@ def query_by_field(field: str, value: str):
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    # Find field by field_key
-    cursor.execute("SELECT id, field_type FROM custom_field_definitions WHERE field_key = ?", (field,))
+    # Resolve field key to field_id
+    cursor.execute("SELECT id FROM custom_fields WHERE field_key = ?", (field,))
     row = cursor.fetchone()
     if not row:
         print(json.dumps({"status": "error", "message": f"Field '{field}' not found"}))
         conn.close()
         return
 
-    field_id, field_type = row
+    field_id = row[0]
 
-    # Query tasks with this field value
-    # For select fields, match the value string
-    # For other fields, match the JSON value
     cursor.execute("""
         SELECT t.id, t.title, t.status, t.project_id, t.priority, v.value, v.updated_at
         FROM tasks t
@@ -55,7 +49,6 @@ def query_by_field(field: str, value: str):
             except json.JSONDecodeError:
                 task_value = row['value']
 
-        # Filter by value if provided
         if value and str(task_value).lower() != value.lower():
             continue
 

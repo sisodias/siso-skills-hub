@@ -3,31 +3,34 @@
 import sqlite3
 import json
 import os
+import sys
 from datetime import datetime, timedelta
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
+# Add scripts directory to path for imports
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _shared_config import load_config
 
 
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
-
-
-def compute_virtual_tags(due_date_str, blocked_by_id, status, incomplete_tasks, task_id, db_path):
-    """Compute virtual tags for a task."""
+def compute_virtual_tags(due_date_str, blocked_by_id, status, incomplete_tasks, task_id, db_path, all_blocking_tasks=None):
+    """Compute virtual tags for a task.
+    If all_blocking_tasks dict is provided, use it to avoid N+1 queries.
+    """
     tags = []
     now = datetime.now()
 
-    # Get blocking tasks from task_relationships
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-    cursor.execute("""
-        SELECT from_task_id FROM task_relationships
-        WHERE relationship_type = 'blocks' AND to_task_id = ?
-    """, (task_id,))
-    blocking_tasks = [row[0] for row in cursor.fetchall()]
-    conn.close()
+    # Get blocking tasks - use pre-fetched dict if available (fixes N+1 DB connections)
+    if all_blocking_tasks is not None:
+        blocking_tasks = all_blocking_tasks.get(task_id, [])
+    else:
+        # Fallback: single query per task (less efficient)
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT from_task_id FROM task_relationships
+            WHERE relationship_type = 'blocks' AND to_task_id = ?
+        """, (task_id,))
+        blocking_tasks = [row[0] for row in cursor.fetchall()]
+        conn.close()
 
     # BLOCKED: task has blocked_by_task_id OR has blocks relationship from incomplete task
     is_blocked = False
@@ -104,6 +107,17 @@ def get_tasks(agent_id=None, tag=None):
     cursor.execute("SELECT id FROM tasks WHERE status != 'completed'")
     incomplete_tasks = {row[0] for row in cursor.fetchall()}
 
+    # Pre-fetch all blocking relationships to avoid N+1 queries (fix for Bug 3)
+    cursor.execute("""
+        SELECT to_task_id, from_task_id FROM task_relationships
+        WHERE relationship_type = 'blocks'
+    """)
+    all_blocking_tasks = {}
+    for to_task, from_task in cursor.fetchall():
+        if to_task not in all_blocking_tasks:
+            all_blocking_tasks[to_task] = []
+        all_blocking_tasks[to_task].append(from_task)
+
     # Build query
     query = """
         SELECT id, title, description, status, priority, due_date, blocked_by_task_id, urgency_score, tags, created_at
@@ -118,7 +132,7 @@ def get_tasks(agent_id=None, tag=None):
     rows = cursor.fetchall()
     conn.close()
 
-    # Compute virtual tags
+    # Compute virtual tags (using pre-fetched blocking tasks to avoid N+1)
     tasks = []
     for row in rows:
         task = dict(row)
@@ -128,7 +142,8 @@ def get_tasks(agent_id=None, tag=None):
             task.get("status"),
             incomplete_tasks,
             task.get("id"),
-            db_path
+            db_path,
+            all_blocking_tasks
         )
 
         # Filter by tag if specified

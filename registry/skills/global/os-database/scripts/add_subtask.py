@@ -6,26 +6,18 @@ import os
 import sys
 from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
-
-
-def add_subtask(task_id: str, title: str):
+def add_subtask(task_id: str, title: str, sort_order: int = 0):
     config = load_config()
     db_path = config.get("db_path")
 
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     now = datetime.now(timezone.utc).isoformat()
-
-    # Get next sort_order
-    cursor.execute("SELECT COALESCE(MAX(sort_order), 0) + 1 FROM subtasks WHERE task_id = ?", (task_id,))
-    sort_order = cursor.fetchone()[0]
 
     cursor.execute("""
         INSERT INTO subtasks (task_id, title, status, sort_order, created_at, updated_at)
@@ -50,5 +42,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--task-id", required=True, help="Parent task ID")
     parser.add_argument("--title", required=True, help="Subtask title")
+    parser.add_argument("--sort-order", type=int, default=0)
     args = parser.parse_args()
-    add_subtask(args.task_id, args.title)
+    add_subtask(args.task_id, args.title, args.sort_order)

@@ -3,14 +3,12 @@
 import sqlite3
 import json
 import os
+import sys
+from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
 def list_subtasks(task_id: str):
@@ -42,6 +40,6 @@ def list_subtasks(task_id: str):
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--task-id", required=True, help="Task ID to list subtasks for")
+    parser.add_argument("--task-id", required=True)
     args = parser.parse_args()
     list_subtasks(args.task_id)

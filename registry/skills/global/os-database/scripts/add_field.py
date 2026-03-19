@@ -4,42 +4,22 @@ import sqlite3
 import json
 import os
 import sys
+from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+# Import shared config from scripts directory
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
-def add_field(name: str, field_type: str, field_key: str, description: str = None,
-              is_global: bool = False, project_id: str = None, options: str = None,
-              is_required: bool = False):
+def add_field(name: str, field_type: str, field_key: str, description: str = None, is_global: bool = False, project_id: str = None, options: str = None, is_required: bool = False):
     config = load_config()
     db_path = config.get("db_path")
 
+    options_json = json.dumps(json.loads(options)) if options else None
+
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-
-    # Check if field_key already exists
-    cursor.execute("SELECT id FROM custom_field_definitions WHERE field_key = ?", (field_key,))
-    if cursor.fetchone():
-        print(json.dumps({"status": "error", "message": f"Field key '{field_key}' already exists"}))
-        conn.close()
-        return
-
-    # Parse options if provided
-    options_json = None
-    if options:
-        try:
-            options_json = json.dumps(json.loads(options))
-        except json.JSONDecodeError:
-            print(json.dumps({"status": "error", "message": "Invalid JSON in options"}))
-            conn.close()
-            return
-
     cursor.execute("""
         INSERT INTO custom_field_definitions (name, field_type, field_key, description, is_global, project_id, options, is_required)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)

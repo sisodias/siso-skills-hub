@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
-"""Show recent timeline events"""
+"""Get recent events from timeline_events."""
 import sqlite3
+import json
 import os
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timezone
 
-DB_PATH = os.environ.get("SISO_SYSTEM_DB", os.path.expanduser("~/.SystemDB/sisostem.db"))
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
-def get_recent_events(period='1 hour', agent_id=None, limit=20):
-    """Get recent events from timeline_events"""
-    conn = sqlite3.connect(DB_PATH)
+
+def get_recent_events(period: str = "1h", agent_id: str = None, limit: int = 20):
+    config = load_config()
+    db_path = config.get("db_path")
+
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
@@ -21,7 +27,7 @@ def get_recent_events(period='1 hour', agent_id=None, limit=20):
     elif period.endswith('d'):
         interval = f"-{period[:-1]} days"
     else:
-        interval = "-1 hour"  # default
+        interval = "-1 hour"
 
     query = """
         SELECT agent_id, event_type, message, timestamp
@@ -42,6 +48,7 @@ def get_recent_events(period='1 hour', agent_id=None, limit=20):
     conn.close()
 
     return rows
+
 
 if __name__ == "__main__":
     import argparse

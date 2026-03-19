@@ -6,34 +6,28 @@ import os
 import sys
 from datetime import datetime, timedelta, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
-
-
-def use_template(template_name: str, project_id: str, custom_fields: str = None,
-                created_by_agent_id: str = None):
+def use_template(template_name: str, project_id: str, custom_fields: str = None, created_by_agent_id: str = None):
     config = load_config()
+    if not created_by_agent_id:
+        created_by_agent_id = config.get("agent_id", "SYSTEM")
+
     db_path = config.get("db_path")
-
     conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-    now = datetime.now(timezone.utc).isoformat()
 
-    # Parse custom fields
     fields = {}
     if custom_fields:
         try:
             fields = json.loads(custom_fields)
         except json.JSONDecodeError:
-            print(json.dumps({"status": "error", "message": "Invalid JSON in custom-fields"}))
-            return
+            pass
 
-    # Get template
     cursor.execute("""
         SELECT id, title_template, description_template, default_priority,
                default_tags, default_due_days, subtasks_template
@@ -69,6 +63,8 @@ def use_template(template_name: str, project_id: str, custom_fields: str = None,
     count = cursor.fetchone()[0] + 1
     task_id = f"TASK-{count:03d}"
 
+    now = datetime.now(timezone.utc).isoformat()
+
     # Create task
     cursor.execute("""
         INSERT INTO tasks (
@@ -84,7 +80,6 @@ def use_template(template_name: str, project_id: str, custom_fields: str = None,
         try:
             subtasks = json.loads(subtasks_template)
             for i, subtask_title in enumerate(subtasks):
-                # Fill in placeholders in subtask titles too
                 for key, value in fields.items():
                     subtask_title = subtask_title.replace(f"{{{key}}}", str(value))
 
@@ -98,7 +93,7 @@ def use_template(template_name: str, project_id: str, custom_fields: str = None,
                       project_id, now, now))
                 subtasks_created.append(subtask_id)
         except json.JSONDecodeError:
-            pass  # Skip subtasks if JSON is invalid
+            pass
 
     conn.commit()
     conn.close()

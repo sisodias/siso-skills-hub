@@ -4,14 +4,11 @@ import sqlite3
 import json
 import os
 import sys
+from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
 def remove_tag(task_id: str, tag: str):
@@ -26,18 +23,13 @@ def remove_tag(task_id: str, tag: str):
     conn.commit()
     conn.close()
 
-    if deleted > 0:
-        result = {"status": "success", "task_id": task_id, "tag": tag, "message": f"Tag '{tag}' removed from {task_id}"}
-    else:
-        result = {"status": "not_found", "task_id": task_id, "tag": tag, "message": f"Tag '{tag}' not found on {task_id}"}
-
-    print(json.dumps(result))
+    print(json.dumps({"status": "success", "deleted": deleted, "task_id": task_id, "tag": tag}))
 
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--task-id", required=True, help="Task ID")
-    parser.add_argument("--tag", required=True, help="Tag to remove")
+    parser.add_argument("--task-id", required=True)
+    parser.add_argument("--tag", required=True)
     args = parser.parse_args()
     remove_tag(args.task_id, args.tag)

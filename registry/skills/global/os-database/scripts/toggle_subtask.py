@@ -3,15 +3,12 @@
 import sqlite3
 import json
 import os
+import sys
 from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
 def toggle_subtask(subtask_id: int):
@@ -22,22 +19,18 @@ def toggle_subtask(subtask_id: int):
     cursor = conn.cursor()
     now = datetime.now(timezone.utc).isoformat()
 
-    # Get current status
     cursor.execute("SELECT status FROM subtasks WHERE id = ?", (subtask_id,))
     row = cursor.fetchone()
-
     if not row:
         print(json.dumps({"status": "error", "message": f"Subtask {subtask_id} not found"}))
         conn.close()
-        sys.exit(1)
+        return
 
     current_status = row[0]
-    new_status = "completed" if current_status == "pending" else "pending"
+    new_status = 'completed' if current_status == 'pending' else 'pending'
 
     cursor.execute("""
-        UPDATE subtasks
-        SET status = ?, updated_at = ?
-        WHERE id = ?
+        UPDATE subtasks SET status = ?, updated_at = ? WHERE id = ?
     """, (new_status, now, subtask_id))
 
     conn.commit()
@@ -54,6 +47,6 @@ def toggle_subtask(subtask_id: int):
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--subtask-id", type=int, required=True, help="Subtask ID to toggle")
+    parser.add_argument("--subtask-id", type=int, required=True)
     args = parser.parse_args()
     toggle_subtask(args.subtask_id)

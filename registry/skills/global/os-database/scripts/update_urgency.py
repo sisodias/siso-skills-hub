@@ -3,96 +3,90 @@
 import sqlite3
 import json
 import os
-from datetime import datetime, date
+import sys
+from datetime import datetime, timezone
 
-DB_PATH = os.environ.get("SISO_SYSTEM_DB", os.path.expanduser("~/.SystemDB/sisostem.db"))
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
-PRIORITY_SCORES = {
-    "critical": 8,
-    "high": 6,
-    "medium": 4,
-    "low": 2,
-    "": 0,
-    None: 0,
-}
 
-def calculate_urgency(task):
+def calculate_urgency(due_date_str, priority, status, blocked_by_id):
+    """Calculate urgency score (0-100) for a task."""
     score = 0
-    today = date.today()
+    now = datetime.now(timezone.utc)
 
-    # Priority score
-    priority = task.get("priority", "").lower()
-    score += PRIORITY_SCORES.get(priority, 0)
+    # Base score from priority
+    priority_scores = {"critical": 40, "high": 30, "medium": 20, "low": 10}
+    score += priority_scores.get(priority, 15)
 
-    # Due date score
-    due_date = task.get("due_date")
-    if due_date:
+    # Overdue tasks get max urgency boost
+    if due_date_str:
         try:
-            if isinstance(due_date, str):
-                due = datetime.fromisoformat(due_date.replace("Z", "+00:00")).date()
+            due = datetime.fromisoformat(due_date_str.replace('Z', '+00:00'))
+            if due.tzinfo:
+                due = due.replace(tzinfo=None)
+            if due < now:
+                score += 50
             else:
-                due = due_date
-
-            days_until = (due - today).days
-
-            if days_until < 0:
-                score += 10  # Overdue
-            elif days_until == 0:
-                score += 8   # Due today
-            elif days_until <= 7:
-                score += 6   # Due this week
-            elif days_until <= 30:
-                score += 4   # Due this month
-        except Exception:
+                days_until = (due - now).total_seconds() / 86400
+                if days_until <= 1:
+                    score += 30
+                elif days_until <= 3:
+                    score += 20
+                elif days_until <= 7:
+                    score += 10
+        except ValueError:
             pass
 
-    # Age score: +1 per day since created
-    created_at = task.get("created_at")
-    if created_at:
-        try:
-            if isinstance(created_at, str):
-                created = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
-            else:
-                created = created_at
+    # Blocked tasks get a slight reduction
+    if blocked_by_id:
+        score = max(0, score - 10)
 
-            age_days = (datetime.now(created.tzinfo) - created).days
-            score += max(0, age_days)
-        except Exception:
-            pass
-
-    # Tags score: +2 per tag
-    tags = task.get("tags", "")
-    if tags:
-        tag_list = [t.strip() for t in str(tags).split(",") if t.strip()]
-        score += len(tag_list) * 2
-
-    return score
+    return min(100, score)
 
 
 def update_urgency():
-    conn = sqlite3.connect(DB_PATH)
+    config = load_config()
+    db_path = config.get("db_path")
+
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM tasks")
-    tasks = cursor.fetchall()
+    # Ensure urgency_score column exists
+    try:
+        cursor.execute("SELECT urgency_score FROM tasks LIMIT 1")
+    except sqlite3.OperationalError:
+        cursor.execute("ALTER TABLE tasks ADD COLUMN urgency_score INTEGER DEFAULT 0")
+        conn.commit()
+
+    cursor.execute("SELECT id, due_date, priority, status, blocked_by_task_id FROM tasks")
+    rows = cursor.fetchall()
 
     updated = 0
-    for task in tasks:
-        task_dict = dict(task)
-        urgency = calculate_urgency(task_dict)
-
-        cursor.execute(
-            "UPDATE tasks SET urgency_score = ? WHERE id = ?",
-            (urgency, task["id"])
+    for row in rows:
+        score = calculate_urgency(
+            row['due_date'],
+            row['priority'],
+            row['status'],
+            row['blocked_by_task_id']
         )
+        cursor.execute("UPDATE tasks SET urgency_score = ? WHERE id = ?", (score, row['id']))
         updated += 1
 
     conn.commit()
     conn.close()
 
-    print(f"Updated urgency scores for {updated} tasks")
+    print(json.dumps({
+        "status": "success",
+        "updated": updated,
+        "message": f"Urgency scores updated for {updated} tasks"
+    }))
 
 
 if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Calculate and update urgency scores for all tasks")
+    args = parser.parse_args()
     update_urgency()

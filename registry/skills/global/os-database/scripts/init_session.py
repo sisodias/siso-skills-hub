@@ -6,45 +6,30 @@ import os
 import sys
 from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-STATE_PATH = os.path.join(SCRIPT_DIR, "state.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
-
-
-def save_state(state):
-    with open(STATE_PATH, 'w') as f:
-        json.dump(state, f, indent=2)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config, load_state
 
 
 def init_agent(task_id: str = None):
     config = load_config()
-
-    agent_id = config.get("agent_id")
-    role = config.get("role", "")
-    department = config.get("department", "")
-    root_path = config.get("root_path", "")
+    state = load_state()
     db_path = config.get("db_path")
 
-    if not agent_id:
-        print(json.dumps({"status": "error", "message": "agent_id not set in config.json"}))
-        return
+    agent_id = config.get("agent_id")
+    role = config.get("role", "agent")
+    department = config.get("department", "general")
+    root_path = config.get("root_path", os.getcwd())
 
     conn = sqlite3.connect(db_path)
-    conn.execute("PRAGMA foreign_keys = ON")
-    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     now = datetime.now(timezone.utc).isoformat()
 
-    # Register/update agent
+    # Get or create agent record
     cursor.execute("SELECT run_count FROM agents WHERE id = ?", (agent_id,))
     row = cursor.fetchone()
 
-    if row is None:
+    if not row:
         cursor.execute("""
             INSERT INTO agents (id, role, department, root_path, status, run_count)
             VALUES (?, ?, ?, ?, 'working', 1)
@@ -70,13 +55,13 @@ def init_agent(task_id: str = None):
     conn.commit()
 
     # Save state
-    state = {
+    new_state = {
         "current_session_id": session_id,
         "current_task_id": task_id,
         "run_number": run_number,
         "session_started_at": now
     }
-    save_state(state)
+    state.update(new_state)
 
     conn.close()
 

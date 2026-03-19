@@ -3,15 +3,12 @@
 import sqlite3
 import json
 import os
+import sys
 from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
 def compare_estimates():
@@ -19,6 +16,7 @@ def compare_estimates():
     db_path = config.get("db_path")
 
     conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -68,7 +66,6 @@ def compare_estimates():
         total_estimated += estimated
         total_actual += time_spent
 
-    # Summary
     if total_estimated > 0:
         total_variance = total_actual - total_estimated
         total_variance_pct = round((total_variance / total_estimated) * 100, 1)

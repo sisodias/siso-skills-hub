@@ -4,20 +4,14 @@ import sqlite3
 import json
 import os
 import sys
-import argparse
 from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _SCRIPT_DIR)
+from _shared_config import load_config
 
 
 def ensure_time_spent_column(db_path):
-    """Add time_spent column if it doesn't exist."""
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     try:
@@ -87,6 +81,7 @@ def track_time(task_id: str, action: str):
 
 
 if __name__ == "__main__":
+    import argparse
     parser = argparse.ArgumentParser(description="Track time on a task")
     parser.add_argument("--task-id", required=True, help="Task ID to track time on")
     parser.add_argument("--action", required=True, choices=["start", "stop"], help="Start or stop the timer")

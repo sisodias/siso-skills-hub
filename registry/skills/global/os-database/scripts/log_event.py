@@ -7,21 +7,11 @@ import sys
 import uuid
 from datetime import datetime, timezone
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-STATE_PATH = os.path.join(SCRIPT_DIR, "state.json")
+# Add scripts directory to path for imports
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _shared_config import load_config, load_state
 
 VALID_TYPES = ['BOOT', 'THOUGHT', 'ACTION', 'TOOL_CALL', 'ERROR', 'HANDOFF', 'COMPLETED']
-
-
-def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
-
-
-def load_state():
-    with open(STATE_PATH) as f:
-        return json.load(f)
 
 
 def log_event(event_type: str, message: str, metadata: dict = None):
