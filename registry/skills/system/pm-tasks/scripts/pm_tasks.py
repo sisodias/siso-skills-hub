@@ -6,7 +6,7 @@ import sys
 import os
 
 # Path to the task system
-SISO_TASKS = "/Users/shaansisodia/SISO_Workspace/agent_os/skills_hub/registry/skills/task-manager/siso-tasks.py"
+SISO_TASKS = os.environ.get("SISO_TASKS_SCRIPT", "/Users/shaansisodia/SISO_Workspace/agent_os/skills_hub/registry/skills/system/task-manager/siso-tasks.py")
 DB_PATH = os.environ.get("SISO_SYSTEM_DB", os.path.expanduser("~/.SystemDB/sisostem.db"))
 
 def run(cmd):
