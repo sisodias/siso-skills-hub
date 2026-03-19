@@ -124,10 +124,36 @@ def find_skill_dir(skill_id):
     return None
 
 
+def resolve_agent_skill_path(agent_name, skill_dir):
+    """
+    Resolve the correct per-agent skill installation path.
+
+    Pattern 1: <agent>/.claude/skills/<skill_id>/  — full skills (has SKILL.md + scripts)
+    Pattern 2: <agent>/skills/<skill_id>/           — bare script skills (no SKILL.md)
+
+    Detection: if skill has SKILL.md at root, use Pattern 1.
+    """
+    # Walk up to find workspace root (contains agents/ dir)
+    workspace = skill_dir
+    while workspace != workspace.parent:
+        if (workspace / "agents").exists():
+            break
+        workspace = workspace.parent
+
+    agent_base = workspace / "agents" / agent_name
+    if not agent_base.exists():
+        agent_base = Path(os.path.expanduser("~")) / "agents" / agent_name
+
+    has_skill_md = (skill_dir / "SKILL.md").exists()
+    if has_skill_md:
+        return agent_base / ".claude" / "skills" / skill_dir.name
+    else:
+        return agent_base / "skills" / skill_dir.name
+
+
 def cmd_install(args):
     """Install skill to target"""
     skill_id = args.skill_id
-    target = Path(args.target or os.path.expanduser("~/.claude/skills"))
 
     # Find skill directory (search recursively in category subdirs)
     skill_dir = find_skill_dir(skill_id)
@@ -137,7 +163,15 @@ def cmd_install(args):
             track(skill_id, success=False, error_type="not_found", context="install")
         return 1
 
-    target_dir = target / skill_id
+    # Resolve target
+    if args.agent:
+        target_dir = resolve_agent_skill_path(args.agent, skill_dir)
+        print(f"Installing to agent '{args.agent}' (pattern: {'full' if (skill_dir / 'SKILL.md').exists() else 'bare'})")
+    elif args.target:
+        target_dir = Path(args.target) / skill_id
+    else:
+        target_dir = Path(os.path.expanduser("~/.claude/skills")) / skill_id
+
     target_dir.parent.mkdir(parents=True, exist_ok=True)
 
     if args.link:
@@ -153,8 +187,17 @@ def cmd_install(args):
         # Copy
         if target_dir.exists():
             shutil.rmtree(target_dir)
-        shutil.copytree(skill_dir, target_dir)
-        print(f"Installed {skill_id} -> {target_dir}")
+        try:
+            shutil.copytree(skill_dir, target_dir, symlinks=True)
+            print(f"Installed {skill_id} -> {target_dir}")
+        except shutil.Error as e:
+            # Handle broken symlinks gracefully — skip them
+            import errno
+            real_errors = [err for err in e.args[0]
+                           if err[0].errno not in (errno.ENOENT, errno.ELOOP)]
+            if real_errors:
+                print(f"Warning: some files could not be copied: {real_errors}")
+            print(f"Installed {skill_id} -> {target_dir} (with some warnings)")
 
     if TELEMETRY_ENABLED:
         track(skill_id, success=True, context="install")
@@ -440,7 +483,8 @@ def main():
     # install
     p_install = subparsers.add_parser('install', help='Install skill')
     p_install.add_argument('skill_id', help='Skill ID')
-    p_install.add_argument('--target', help='Target directory')
+    p_install.add_argument('--target', help='Target directory (default: ~/.claude/skills/)')
+    p_install.add_argument('--agent', help='Install into agent\'s skill directory (auto-detects full/bare pattern)')
     p_install.add_argument('--link', action='store_true', help='Symlink instead of copy')
     p_install.set_defaults(func=cmd_install)
 
