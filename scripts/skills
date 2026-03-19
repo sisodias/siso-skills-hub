@@ -152,13 +152,62 @@ def resolve_agent_skill_path(agent_name, skill_dir):
 
 
 def cmd_install(args):
-    """Install skill to target"""
-    skill_id = args.skill_id
+    """Install skill to target (supports cloning from remote)"""
+    import subprocess
+
+    # Parse skill_id[@version] syntax
+    skill_spec = args.skill_id
+    version = None
+    if '@' in skill_spec:
+        skill_id, version = skill_spec.rsplit('@', 1)
+    else:
+        skill_id = skill_spec
 
     # Find skill directory (search recursively in category subdirs)
     skill_dir = find_skill_dir(skill_id)
+
+    # If not found locally, try to clone from remote
     if not skill_dir:
-        print(f"Error: Skill '{skill_id}' not found in registry")
+        # Check registry for remote_url
+        with open(REGISTRY_FILE) as f:
+            registry = json.load(f)
+
+        skill_entry = next((s for s in registry["skills"] if s["skill_id"] == skill_id), None)
+        remote_url = skill_entry.get("remote_url") if skill_entry else None
+
+        if remote_url:
+            print(f"Skill '{skill_id}' not found locally, cloning from {remote_url}...")
+            # Clone to temporary location
+            import tempfile
+            with tempfile.TemporaryDirectory() as tmpdir:
+                clone_dir = Path(tmpdir) / skill_id
+                try:
+                    subprocess.run(["git", "clone", remote_url, str(clone_dir)],
+                                 check=True, capture_output=True, text=True)
+
+                    # If version specified, checkout that tag/branch
+                    if version:
+                        subprocess.run(["git", "checkout", version],
+                                     check=True, capture_output=True, text=True, cwd=clone_dir)
+
+                    # Move to registry
+                    target_skill_dir = HUB_ROOT / "registry" / "skills" / skill_id
+                    if target_skill_dir.exists():
+                        shutil.rmtree(target_skill_dir)
+                    shutil.copytree(clone_dir, target_skill_dir)
+                    skill_dir = target_skill_dir
+                    print(f"Cloned {skill_id} from {remote_url}")
+                except subprocess.CalledProcessError as e:
+                    print(f"Error cloning from {remote_url}: {e.stderr}")
+                    return 1
+        else:
+            print(f"Error: Skill '{skill_id}' not found in registry and no remote_url set")
+            if TELEMETRY_ENABLED:
+                track(skill_id, success=False, error_type="not_found", context="install")
+            return 1
+
+    if not skill_dir:
+        print(f"Error: Skill '{skill_id}' not found")
         if TELEMETRY_ENABLED:
             track(skill_id, success=False, error_type="not_found", context="install")
         return 1
@@ -249,6 +298,17 @@ def cmd_validate(args):
     if TELEMETRY_ENABLED:
         track(skill_id, success=True, context="validate")
     return 0
+
+
+def cmd_strategist(args):
+    """Score skill candidates against agents"""
+    from skills_strategist import main as strategist_main
+    sys.argv = ["skills_strategist"]
+    if args.json:
+        sys.argv.append("--json")
+    if args.candidate:
+        sys.argv.extend(["--candidate", args.candidate])
+    return strategist_main()
 
 
 def cmd_recommend(args):
@@ -511,6 +571,19 @@ def cmd_agents(args):
     return 0
 
 
+def cmd_integrator(args):
+    """Read placements and install skills to agents"""
+    from skills_integrator import main as integrator_main
+    sys.argv = ["skills_integrator"]
+    if args.dry_run:
+        sys.argv.append("--dry-run")
+    if args.list:
+        sys.argv.append("--list")
+    if args.json:
+        sys.argv.append("--json")
+    return integrator_main()
+
+
 def cmd_diagnose(args):
     """Diagnose a skill's health and generate report"""
     from skills_diagnose import generate_report, auto_degrade, get_error_profile
@@ -531,6 +604,21 @@ def cmd_diagnose(args):
         print(json.dumps(profile, indent=2))
 
     return 0
+
+
+def cmd_research(args):
+    """Research skills from various sources"""
+    from skills_researcher import main as researcher_main
+    sys.argv = ["skills_researcher"]
+    if args.sources:
+        sys.argv.extend(["--sources", args.sources])
+    if args.query:
+        sys.argv.extend(["--query", args.query])
+    if args.json:
+        sys.argv.append("--json")
+    if args.limit:
+        sys.argv.extend(["--limit", str(args.limit)])
+    return researcher_main()
 
 
 def main():
@@ -579,6 +667,12 @@ def main():
     p_health.add_argument('--days', type=int, default=30, help='Analysis period (default: 30)')
     p_health.set_defaults(func=cmd_health)
 
+    # strategist
+    p_strategist = subparsers.add_parser('strategist', help='Score skill candidates against agents')
+    p_strategist.add_argument('--json', action='store_true', help='JSON output')
+    p_strategist.add_argument('--candidate', type=str, help='Specific candidate file to analyze')
+    p_strategist.set_defaults(func=cmd_strategist)
+
     # recommend
     p_recommend = subparsers.add_parser('recommend', help='Show skill recommendations')
     p_recommend.add_argument('skill_id', nargs='?', help='Skill ID (optional)')
@@ -598,10 +692,25 @@ def main():
     p_diagnose.add_argument('--json', action='store_true', help='JSON output')
     p_diagnose.set_defaults(func=cmd_diagnose)
 
+    # research
+    p_research = subparsers.add_parser('research', help='Research skills from various sources')
+    p_research.add_argument('--sources', default='internal', help='Comma-separated sources: github,internal,external')
+    p_research.add_argument('--query', '-q', help='Search query')
+    p_research.add_argument('--json', action='store_true', help='JSON output')
+    p_research.add_argument('--limit', type=int, default=20, help='Limit results per source')
+    p_research.set_defaults(func=cmd_research)
+
     # agents
     p_agents = subparsers.add_parser('agents', help='Show all agents and their installed skills')
     p_agents.add_argument('--json', action='store_true', help='JSON output')
     p_agents.set_defaults(func=cmd_agents)
+
+    # integrator
+    p_integrator = subparsers.add_parser('integrator', help='Install skills to agents based on placements')
+    p_integrator.add_argument('--dry-run', action='store_true', help='Show what would be installed without installing')
+    p_integrator.add_argument('--list', action='store_true', help='List pending integrations')
+    p_integrator.add_argument('--json', action='store_true', help='JSON output')
+    p_integrator.set_defaults(func=cmd_integrator)
 
     # pipeline
     p_pipeline = subparsers.add_parser('pipeline', help='Pipeline commands')

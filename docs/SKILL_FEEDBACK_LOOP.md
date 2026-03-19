@@ -103,7 +103,7 @@ Actions:
 
 ### Stage 5: Monitor
 
-**Input:** Live telemetry from `sisostem.db`
+**Input:** Live telemetry from `siso_system.db`
 **Output:** Health reports, usage patterns
 
 Continuous monitoring:
@@ -155,7 +155,7 @@ steps:
     output_var: integrations
 
   - skill: skills_health_monitor
-    input: ""  # Reads from sisostem.db directly
+    input: ""  # Reads from siso_system.db directly
     output_var: health_report
 
   - skill: skills_improver
@@ -235,7 +235,7 @@ Installs and validates skill into target agent.
 ### skills_health_monitor
 Reads telemetry and produces health report.
 
-**Inputs:** (reads sisostem.db directly)
+**Inputs:** (reads siso_system.db directly)
 **Outputs:** orphan skills, ghost skills, degraded skills, usage trends
 
 ### skills_improver

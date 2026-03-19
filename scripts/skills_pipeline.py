@@ -38,6 +38,37 @@ class PipelineRunner:
 
     def _invoke_skill(self, skill_id: str, input_data: str) -> tuple[bool, str]:
         """Invoke a skill. Returns (success, output)."""
+        # First check if it's a CLI-wired skill command
+        cli_commands = {
+            "skills_researcher": "research",
+            "skills_strategist": "strategist",
+            "skills_integrator": "integrator",
+            "skills_health_monitor": "health",
+        }
+        if skill_id in cli_commands:
+            cmd = cli_commands[skill_id]
+            scripts_dir = self.pipeline_path.parent.parent / "scripts"
+            # CLI is "skills" (no .py) — use python3 explicitly with absolute path
+            cli_script = (scripts_dir / "skills").resolve()
+            try:
+                args = ["python3", str(cli_script), cmd]
+                # Parse input as CLI flags (e.g., "--sources github,internal --limit 10")
+                if input_data.strip():
+                    import shlex
+                    args.extend(shlex.split(input_data.strip()))
+                result = subprocess.run(
+                    args, capture_output=True, text=True, timeout=120,
+                    cwd=self.pipeline_path.parent.parent
+                )
+                success = result.returncode == 0
+                output = result.stdout.strip() or result.stderr.strip()
+                return success, output
+            except subprocess.TimeoutExpired:
+                return False, "Skill timed out"
+            except Exception as e:
+                return False, str(e)
+
+        # Fallback: look for skill script in registry
         skill_dir = None
         for root, dirs, files in os.walk(SKILLS_DIR):
             if Path(root).name == skill_id:
@@ -47,7 +78,6 @@ class PipelineRunner:
         if not skill_dir:
             return False, f"Skill '{skill_id}' not found"
 
-        # Check for skill scripts
         scripts_dir = skill_dir / "scripts"
         skill_md = skill_dir / "SKILL.md"
 
@@ -57,14 +87,17 @@ class PipelineRunner:
                 script = scripts[0]
                 try:
                     if script.suffix == ".py":
+                        # Pass input via stdin if no args expected
                         result = subprocess.run(
-                            ["python3", str(script), input_data],
-                            capture_output=True, text=True, timeout=120, cwd=SKILLS_DIR
+                            ["python3", str(script.resolve())],
+                            input=input_data.encode() if input_data else None,
+                            capture_output=True, text=True, timeout=120
                         )
                     else:
                         result = subprocess.run(
-                            ["bash", str(script), input_data],
-                            capture_output=True, text=True, timeout=120, cwd=SKILLS_DIR
+                            ["bash", str(script.resolve())],
+                            input=input_data.encode() if input_data else None,
+                            capture_output=True, text=True, timeout=120
                         )
                     success = result.returncode == 0
                     output = result.stdout.strip() or result.stderr.strip()
@@ -74,7 +107,6 @@ class PipelineRunner:
                 except Exception as e:
                     return False, str(e)
 
-        # Fallback: read SKILL.md and return description
         if skill_md.exists():
             return True, skill_md.read_text()[:500]
 

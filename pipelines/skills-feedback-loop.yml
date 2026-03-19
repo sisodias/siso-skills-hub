@@ -1,0 +1,12 @@
+pipeline: skills-feedback-loop
+description: "Skills feedback loop: discover -> analyze -> place -> integrate -> monitor"
+error_mode: continue
+steps:
+  - skill: skills_researcher
+    input: "--sources github,internal"
+  - skill: skills_strategist
+    input: ""
+  - skill: skills_integrator
+    input: "--dry-run"
+  - skill: skills_health_monitor
+    input: ""
