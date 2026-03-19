@@ -286,6 +286,15 @@ def cmd_recommend(args):
 
 def cmd_health(args):
     """Show health scores for skills"""
+    # If --monitor flag, run the full health monitor report
+    if args.monitor:
+        from skills_health_monitor import main as monitor_main
+        sys.argv = ["skills_health_monitor"]
+        if args.json:
+            sys.argv.append("--json")
+        sys.argv.extend(["--days", str(args.days)])
+        return monitor_main()
+
     from skills_telemetry import get_db, get_stats
 
     registry = load_registry()
@@ -566,6 +575,8 @@ def main():
     p_health = subparsers.add_parser('health', help='Show skill health scores')
     p_health.add_argument('--skill', help='Specific skill')
     p_health.add_argument('--json', action='store_true', help='JSON output')
+    p_health.add_argument('--monitor', action='store_true', help='Full health monitor report (orphans, ghosts, degraded, hot skills)')
+    p_health.add_argument('--days', type=int, default=30, help='Analysis period (default: 30)')
     p_health.set_defaults(func=cmd_health)
 
     # recommend
