@@ -1,0 +1,8 @@
+pipeline: research-and-deploy
+description: Research via web+github+x, then deploy with vercel
+error_mode: continue
+steps:
+  - skill: multisearch
+    input: "{input}"
+  - skill: vercel
+    input: "{steps[0].output}"

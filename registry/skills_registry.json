@@ -1,0 +1,928 @@
+{
+  "skills": [
+    {
+      "skill_id": "agent-builder",
+      "name": "Agent Builder",
+      "description": "Create new agents from the SISO v3 agent template",
+      "category": "code",
+      "tags": [
+        "agent",
+        "template",
+        "scaffold",
+        "creation"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md",
+          "TESTING_AGENT.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "agent-commander",
+      "name": "Agent Commander",
+      "description": "Create workspaces, start agents, and communicate with them via CMUX",
+      "category": "communication",
+      "tags": [
+        "workspace",
+        "cmux",
+        "agent",
+        "messaging"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [
+          "cmux"
+        ],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'CMUX must be installed at /Applications/cmux.app'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "analyze_task",
+      "name": "Analyze Task",
+      "description": "Analyze a task and decompose into user stories",
+      "category": "code",
+      "tags": [
+        "task",
+        "analysis",
+        "stories",
+        "decomposition"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "cli-runner",
+      "name": "CLI Runner",
+      "description": "Run SISO CLI commands and interact with agents",
+      "category": "communication",
+      "tags": [
+        "cli",
+        "command",
+        "agent",
+        "execution"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'SISO CLI must be installed in ~/.claude/bin/'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "cmux",
+      "name": "CMUX",
+      "description": "Terminal multiplexer for Claude Code with socket API for workspace control and browser automation",
+      "category": "devops",
+      "tags": [
+        "terminal",
+        "multiplexer",
+        "workspace",
+        "automation",
+        "cmux"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'Install CMUX from https://github.com/shaansisodia/cmux'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "cmux-browser",
+      "name": "CMUX Browser",
+      "description": "Control CMUX browser for automated testing and browser interactions",
+      "category": "devops",
+      "tags": [
+        "browser",
+        "automation",
+        "testing",
+        "cmux",
+        "ui"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [
+          "cmux"
+        ],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'CMUX must be installed'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "github",
+      "name": "GitHub",
+      "description": "Complete GitHub workflow for SISO codebase - branch, commit, push, merge",
+      "category": "devops",
+      "tags": [
+        "git",
+        "github",
+        "workflow",
+        "version-control",
+        "ci-cd"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": [
+          "git"
+        ]
+      },
+      "install_commands": {
+        "system": "echo 'Git is pre-installed on macOS'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "gitsearch",
+      "name": "GitHub Search",
+      "description": "Search GitHub for code, repos, issues, and PRs",
+      "category": "devops",
+      "tags": [
+        "search",
+        "github",
+        "code-discovery",
+        "research"
+      ],
+      "version": "1.0.1",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": "2026-03-19T23:35:09.131643",
+      "dependencies": {
+        "skills": [
+          "cli-runner"
+        ],
+        "packages": [
+          "gh"
+        ]
+      },
+      "install_commands": {
+        "system": "brew install gh",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md",
+          "examples/"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "implement_story",
+      "name": "Implement Story",
+      "description": "Implement a single user story with tests",
+      "category": "code",
+      "tags": [
+        "implementation",
+        "story",
+        "coding",
+        "tests"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "meta-commander",
+      "name": "Meta Commander",
+      "description": "Communicate with META agents in the SISO ecosystem",
+      "category": "communication",
+      "tags": [
+        "messaging",
+        "meta",
+        "agent",
+        "communication"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [
+          "cmux"
+        ],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'CMUX must be installed'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "multisearch",
+      "name": "Multi-Search",
+      "description": "Run web, GitHub, and X searches in parallel for comprehensive research",
+      "category": "data",
+      "tags": [
+        "search",
+        "research",
+        "discovery",
+        "parallel"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [
+          "websearch",
+          "gitsearch",
+          "xsearch"
+        ],
+        "packages": [
+          "gh"
+        ]
+      },
+      "install_commands": {
+        "system": "brew install gh",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "playwright",
+      "name": "Playwright",
+      "description": "Automated browser testing for SISO Internal Lab",
+      "category": "testing",
+      "tags": [
+        "testing",
+        "browser",
+        "automation",
+        "qa",
+        "playwright"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": [
+          "@playwright/cli"
+        ]
+      },
+      "install_commands": {
+        "system": "npm install -g @playwright/cli@latest",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "pm-tasks",
+      "name": "PM Tasks",
+      "description": "Simple PM task manager - create, list, update tasks",
+      "category": "system",
+      "tags": [
+        "task",
+        "management",
+        "pm",
+        "database"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": [
+          "sqlite3"
+        ]
+      },
+      "install_commands": {
+        "system": "echo 'Python with sqlite3 is pre-installed'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "scripts/"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "task-commander",
+      "name": "Task Commander",
+      "description": "Log tasks and communicate with agents using the SISO task database",
+      "category": "system",
+      "tags": [
+        "task",
+        "messaging",
+        "agent",
+        "database"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [
+          "cmux",
+          "pm-tasks"
+        ],
+        "packages": [
+          "sqlite3"
+        ]
+      },
+      "install_commands": {
+        "system": "echo 'Python with sqlite3 is pre-installed'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "task-manager",
+      "name": "Task Manager",
+      "description": "Full task pipeline system with steps, artifacts, and execution logging",
+      "category": "system",
+      "tags": [
+        "task",
+        "pipeline",
+        "workflow",
+        "database",
+        "execution"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": [
+          "sqlite3"
+        ]
+      },
+      "install_commands": {
+        "system": "echo 'Python with sqlite3 is pre-installed'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [],
+        "optional": [
+          "scripts/",
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "vercel",
+      "name": "Vercel",
+      "description": "Deploy SISO Internal Lab to Vercel",
+      "category": "devops",
+      "tags": [
+        "deployment",
+        "vercel",
+        "ci-cd",
+        "infrastructure"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": [
+          "vercel"
+        ]
+      },
+      "install_commands": {
+        "system": "npm install -g vercel",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md",
+          "deploy.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "verify_story",
+      "name": "Verify Story",
+      "description": "Verify a story implementation meets acceptance criteria",
+      "category": "testing",
+      "tags": [
+        "verification",
+        "testing",
+        "qa",
+        "acceptance-criteria"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "websearch",
+      "name": "Web Search",
+      "description": "Search the web using Perplexity Sonar via OpenRouter",
+      "category": "data",
+      "tags": [
+        "search",
+        "web",
+        "research",
+        "perplexity"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'Requires OpenRouter API key'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md",
+          "scripts/",
+          "examples/"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "workspace",
+      "name": "Workspace",
+      "description": "Understand and navigate the SISO workspace",
+      "category": "system",
+      "tags": [
+        "workspace",
+        "navigation",
+        "structure",
+        "organization"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "xsearch",
+      "name": "X Search",
+      "description": "Search X (Twitter) for discussions, opinions, and latest updates",
+      "category": "data",
+      "tags": [
+        "search",
+        "twitter",
+        "x",
+        "social",
+        "trends"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [
+          "websearch"
+        ],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'Requires Perplexity API'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "agent-setup",
+      "name": "Agent Setup",
+      "description": "Create new agent from V4 template with memory system pre-configured",
+      "category": "code",
+      "tags": [
+        "agent",
+        "setup",
+        "template",
+        "memory",
+        "configuration"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "scripts/"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "os-database",
+      "name": "OS Database",
+      "description": "Core Agent OS Database for telemetry, tasks, and timeline tracking",
+      "category": "global",
+      "tags": [
+        "database",
+        "os",
+        "telemetry",
+        "tasks",
+        "timeline"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": [
+          "sqlite3"
+        ]
+      },
+      "install_commands": {
+        "system": "echo 'Python with sqlite3 is pre-installed'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [],
+        "optional": [
+          "scripts/",
+          "rules/",
+          "workflows/",
+          "config/",
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    },
+    {
+      "skill_id": "subagents",
+      "name": "Subagents",
+      "description": "Spawn and manage parallel subagents for concurrent task execution",
+      "category": "global",
+      "tags": [
+        "subagent",
+        "parallel",
+        "spawn",
+        "execution"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md",
+          "templates/"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+pipeline: analyze-and-implement
+description: Analyze a task, implement it, then verify it
+error_mode: stop
+steps:
+  - skill: analyze_task
+    input: "{input}"
+  - skill: implement_story
+    input: "{steps[0].output}"
+  - skill: verify_story
+    input: "{steps[1].output}"
