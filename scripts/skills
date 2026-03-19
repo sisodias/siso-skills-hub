@@ -438,6 +438,70 @@ def cmd_versions(args):
     return 0
 
 
+def cmd_agents(args):
+    """Show all agents and their installed skills"""
+    agents_dir = HUB_ROOT.parent / "agents"
+    if not agents_dir.exists():
+        print("No agents/ directory found")
+        return 1
+
+    registry = load_registry()
+    skill_ids_in_hub = {s['skill_id'] for s in registry.get('skills', [])}
+
+    agents_data = []
+    for agent_dir in sorted(agents_dir.iterdir()):
+        if agent_dir.name.startswith('.') or agent_dir.name in ('README.md', 'PLAN.md', 'registry.md'):
+            continue
+        if not agent_dir.is_dir():
+            continue
+
+        full_skills = []
+        bare_skills = []
+
+        claude_skills = agent_dir / ".claude" / "skills"
+        if claude_skills.exists():
+            for s in sorted(claude_skills.iterdir()):
+                if s.name in ('README.md', 'registry.md'):
+                    continue
+                status = "linked" if s.is_symlink() else "installed"
+                in_hub = "✓" if s.name in skill_ids_in_hub else "?"
+                full_skills.append(f"{s.name} [{status}] {in_hub}")
+
+        bare_skills_dir = agent_dir / "skills"
+        if bare_skills_dir.exists():
+            for s in sorted(bare_skills_dir.iterdir()):
+                if s.name in ('README.md', 'registry.md'):
+                    continue
+                status = "linked" if s.is_symlink() else "installed"
+                in_hub = "✓" if s.name in skill_ids_in_hub else "?"
+                bare_skills.append(f"{s.name} [{status}] {in_hub}")
+
+        agents_data.append({
+            'name': agent_dir.name,
+            'full_skills': full_skills,
+            'bare_skills': bare_skills
+        })
+
+    if args.json:
+        print(json.dumps(agents_data, indent=2))
+        return 0
+
+    for a in agents_data:
+        print(f"\n{a['name']}")
+        if a['full_skills']:
+            print(f"  .claude/skills/: {', '.join(a['full_skills'])}")
+        else:
+            print(f"  .claude/skills/: (empty)")
+        if a['bare_skills']:
+            print(f"  skills/:          {', '.join(a['bare_skills'])}")
+        else:
+            print(f"  skills/:          (empty)")
+
+    print(f"\n({len(agents_data)} agents scanned)")
+    print("  ✓ = in hub registry   ? = not in hub registry")
+    return 0
+
+
 def cmd_diagnose(args):
     """Diagnose a skill's health and generate report"""
     from skills_diagnose import generate_report, auto_degrade, get_error_profile
@@ -522,6 +586,11 @@ def main():
     p_diagnose.add_argument('--days', type=int, default=30, help='Analysis period')
     p_diagnose.add_argument('--json', action='store_true', help='JSON output')
     p_diagnose.set_defaults(func=cmd_diagnose)
+
+    # agents
+    p_agents = subparsers.add_parser('agents', help='Show all agents and their installed skills')
+    p_agents.add_argument('--json', action='store_true', help='JSON output')
+    p_agents.set_defaults(func=cmd_agents)
 
     # pipeline
     p_pipeline = subparsers.add_parser('pipeline', help='Pipeline commands')
