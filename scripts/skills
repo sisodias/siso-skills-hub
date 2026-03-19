@@ -1,0 +1,518 @@
+#!/usr/bin/env python3
+"""
+skills_hub CLI - Manage SISO skills
+"""
+import argparse
+import json
+import os
+import shutil
+import sys
+import time
+from pathlib import Path
+
+HUB_ROOT = Path(__file__).parent.parent
+
+# Import telemetry SDK
+try:
+    from skills_telemetry import track
+    TELEMETRY_ENABLED = True
+except ImportError:
+    TELEMETRY_ENABLED = False
+REGISTRY_FILE = HUB_ROOT / "registry/skills_registry.json"
+SKILLS_DIR = HUB_ROOT / "registry/skills"
+
+
+def load_registry():
+    """Load the skills registry. Returns empty dict if file doesn't exist."""
+    if not REGISTRY_FILE.exists():
+        return {"skills": []}
+    with open(REGISTRY_FILE) as f:
+        return json.load(f)
+
+
+def save_registry(data):
+    with open(REGISTRY_FILE, 'w') as f:
+        json.dump(data, f, indent=2)
+
+
+def cmd_list(args):
+    """List all skills"""
+    registry = load_registry()
+    skills = registry.get('skills', [])
+
+    if not skills:
+        print("No skills found in registry.")
+        return 0
+
+    if args.category:
+        skills = [s for s in skills if s.get('category') == args.category]
+
+    if args.json:
+        print(json.dumps(skills, indent=2))
+        return 0
+
+    print(f"{'SKILL ID':<20} {'NAME':<25} {'CATEGORY':<15} {'STATUS'}")
+    print("-" * 70)
+    for s in skills:
+        print(f"{s['skill_id']:<20} {s['name']:<25} {s.get('category', 'N/A'):<15} {s.get('metadata', {}).get('status', 'N/A')}")
+
+    if TELEMETRY_ENABLED:
+        track("list", success=True, context=f"category:{args.category or 'all'}")
+    return 0
+
+
+def cmd_search(args):
+    """Search skills"""
+    registry = load_registry()
+    query = args.query.lower()
+
+    results = [
+        s for s in registry.get('skills', [])
+        if query in s['skill_id'].lower()
+        or query in s['name'].lower()
+        or query in s.get('description', '').lower()
+        or any(query in tag.lower() for tag in s.get('tags', []))
+    ]
+
+    if not results:
+        print(f"No skills found matching '{args.query}'")
+        if TELEMETRY_ENABLED:
+            track("search", success=False, context=f"query:{args.query}")
+        return 0
+
+    for s in results:
+        print(f"{s['skill_id']}: {s.get('description', '')}")
+        print(f"  Tags: {', '.join(s.get('tags', []))}")
+        print()
+
+    if TELEMETRY_ENABLED:
+        track("search", success=True, context=f"query:{args.query}")
+    return 0
+
+
+def cmd_info(args):
+    """Show skill details"""
+    registry = load_registry()
+    skill = next((s for s in registry.get('skills', []) if s['skill_id'] == args.skill_id), None)
+
+    if not skill:
+        print(f"Error: Skill '{args.skill_id}' not found")
+        if TELEMETRY_ENABLED:
+            track(args.skill_id, success=False, error_type="not_found", context="info")
+        return 1
+
+    print(f"Skill ID: {skill['skill_id']}")
+    print(f"Name: {skill['name']}")
+    print(f"Description: {skill['description']}")
+    print(f"Category: {skill.get('category', 'N/A')}")
+    print(f"Tags: {', '.join(skill.get('tags', []))}")
+    print(f"Version: {skill.get('version', 'N/A')}")
+    print(f"Author: {skill.get('author', 'N/A')}")
+    print(f"Status: {skill.get('metadata', {}).get('status', 'N/A')}")
+    print(f"Dependencies: {skill.get('dependencies', {})}")
+
+    if TELEMETRY_ENABLED:
+        track(args.skill_id, success=True, context="info")
+    return 0
+
+
+def find_skill_dir(skill_id):
+    """Find a skill directory by searching category subdirs recursively."""
+    for root, dirs, files in os.walk(SKILLS_DIR):
+        if Path(root).name == skill_id or (Path(root).parent == SKILLS_DIR and Path(root).name == skill_id):
+            return Path(root)
+    return None
+
+
+def cmd_install(args):
+    """Install skill to target"""
+    skill_id = args.skill_id
+    target = Path(args.target or os.path.expanduser("~/.claude/skills"))
+
+    # Find skill directory (search recursively in category subdirs)
+    skill_dir = find_skill_dir(skill_id)
+    if not skill_dir:
+        print(f"Error: Skill '{skill_id}' not found in registry")
+        if TELEMETRY_ENABLED:
+            track(skill_id, success=False, error_type="not_found", context="install")
+        return 1
+
+    target_dir = target / skill_id
+    target_dir.parent.mkdir(parents=True, exist_ok=True)
+
+    if args.link:
+        # Create symlink
+        if target_dir.exists():
+            if target_dir.is_symlink():
+                target_dir.unlink()
+            else:
+                shutil.rmtree(target_dir)
+        os.symlink(skill_dir.resolve(), target_dir)
+        print(f"Linked {skill_id} -> {target_dir}")
+    else:
+        # Copy
+        if target_dir.exists():
+            shutil.rmtree(target_dir)
+        shutil.copytree(skill_dir, target_dir)
+        print(f"Installed {skill_id} -> {target_dir}")
+
+    if TELEMETRY_ENABLED:
+        track(skill_id, success=True, context="install")
+    return 0
+
+
+def cmd_update(args):
+    """Update skill from registry"""
+    print("Update not implemented yet")
+    return 0
+
+
+def cmd_validate(args):
+    """Validate skill structure"""
+    skill_id = args.skill_id
+
+    # Check registry
+    registry = load_registry()
+    skill_entry = next((s for s in registry.get('skills', []) if s['skill_id'] == skill_id), None)
+
+    if not skill_entry:
+        print(f"Error: Skill '{skill_id}' not found in registry")
+        if TELEMETRY_ENABLED:
+            track(skill_id, success=False, error_type="not_in_registry", context="validate")
+        return 1
+
+    # Check skill directory
+    skill_dir = find_skill_dir(skill_id)
+    if not skill_dir:
+        print(f"Error: Skill directory for '{skill_id}' not found")
+        if TELEMETRY_ENABLED:
+            track(skill_id, success=False, error_type="missing_dir", context="validate")
+        return 1
+
+    # Check required files
+    required_files = skill_entry.get('files', {}).get('required', ['SKILL.md'])
+    missing = []
+    for f in required_files:
+        if not (skill_dir / f).exists():
+            missing.append(f)
+
+    if missing:
+        print(f"Validation FAILED: Missing required files: {', '.join(missing)}")
+        if TELEMETRY_ENABLED:
+            track(skill_id, success=False, error_type="missing_files", context="validate")
+        return 1
+
+    print(f"Validation PASSED: {skill_id} has all required files")
+    if TELEMETRY_ENABLED:
+        track(skill_id, success=True, context="validate")
+    return 0
+
+
+def cmd_recommend(args):
+    """Show skill recommendations based on co-invocation"""
+    from skills_recommend import recommend, get_coinvocations
+    import json
+
+    if args.skill_id:
+        recs = recommend(args.skill_id, top_n=args.top_n)
+        if not recs:
+            print(f"No co-invocation data for '{args.skill_id}' yet.")
+            print("(This improves as skills are used more)")
+            return 0
+
+        print(f"Skills often used with '{args.skill_id}':")
+        for co_skill, count, prob in recs:
+            bar = "█" * int(prob * 20)
+            print(f"  {co_skill:<20} {bar} {prob*100:.0f}%  (seen {count}x)")
+    else:
+        # Show all top pairs
+        recs = get_coinvocations()
+        print(f"{'SKILL':<20} {'OFTEN WITH':<20} {'PROB':<8} {'COUNT'}")
+        print("-" * 60)
+        shown = 0
+        for skill_id, rec_list in sorted(recs.items()):
+            for co_skill, count, prob in rec_list[:2]:
+                print(f"{skill_id:<20} {co_skill:<20} {prob*100:>5.1f}%  {count}x")
+                shown += 1
+                if shown >= 20:
+                    break
+            if shown >= 20:
+                break
+    return 0
+
+
+def cmd_health(args):
+    """Show health scores for skills"""
+    from skills_telemetry import get_db, get_stats
+
+    registry = load_registry()
+    skills = registry.get('skills', [])
+
+    # Filter by skill_id if specified
+    if args.skill:
+        skills = [s for s in skills if s['skill_id'] == args.skill]
+        if not skills:
+            print(f"Error: Skill '{args.skill}' not found in registry")
+            return 1
+
+    results = []
+
+    for skill in skills:
+        sid = skill['skill_id']
+        stats = get_stats(sid, days=30)
+        count = stats['count']
+        success_rate = stats['success_rate'] or 1.0
+        avg_dur = stats['avg_duration_ms'] or 0
+        unique_agents = stats['unique_agents'] or 1
+
+        # Health formula
+        usage_score = min(count / 100, 1.0)  # normalize to 100 invocations = max
+        latency_score = max(0, 1 - (avg_dur / 10000))  # 10s = 0, 0ms = 1
+        diversity_score = min(unique_agents / 5, 1.0)  # 5 agents = max
+
+        health = usage_score * success_rate * latency_score * diversity_score
+        health_pct = int(health * 100)
+
+        results.append({
+            'skill_id': sid,
+            'health': health_pct,
+            'invocations_30d': count,
+            'success_rate': f"{success_rate*100:.1f}%",
+            'avg_ms': int(avg_dur) if avg_dur else 0,
+            'agents': unique_agents
+        })
+
+    results.sort(key=lambda x: x['health'])
+
+    if args.json:
+        print(json.dumps(results, indent=2))
+        return 0
+
+    print(f"{'SKILL ID':<20} {'HEALTH':<8} {'USAGE':<8} {'SUCCESS':<10} {'AVG_MS':<8} {'AGENTS'}")
+    print("-" * 70)
+    for r in results:
+        bar = "█" * (r['health'] // 10) + "░" * (10 - r['health'] // 10)
+        print(f"{r['skill_id']:<20} {bar} {r['health']:>3}%  "
+              f"{r['invocations_30d']:>6}   {r['success_rate']:<10} "
+              f"{r['avg_ms']:>6}ms  {r['agents']}")
+
+    if TELEMETRY_ENABLED:
+        track("health", success=True, context=f"skill:{args.skill or 'all'}")
+    return 0
+
+
+def cmd_depsolve(args):
+    """Show dependency resolution for a skill"""
+    from skills_deps import SkillDeps
+    deps = SkillDeps(REGISTRY_FILE)
+    result = deps.resolve_all(args.skill_id)
+
+    if result['cycles']:
+        print(f"CYCLE DETECTED: {result['cycles']}")
+    if result['diamonds']:
+        print(f"DIAMOND DEPS: {result['diamonds']}")
+
+    print(f"\nInstall order for '{args.skill_id}':")
+    for i, s in enumerate(result['install_order']):
+        print(f"  {i+1}. {s}")
+
+    if args.json:
+        print(json.dumps(result, indent=2))
+
+    return 0
+
+
+def cmd_pipeline(args):
+    """Run or list pipelines"""
+    from skills_pipeline import run_pipeline, list_pipelines
+    if args.subcommand == "list":
+        list_pipelines()
+        return 0
+    elif args.subcommand == "run":
+        return run_pipeline(args.pipeline, args.input, args.error_mode, args.json)
+
+
+def cmd_publish(args):
+    """Publish a skill (tag version, record commit)"""
+    import subprocess
+
+    skill_id = args.skill_id
+
+    # Find skill dir
+    skill_dir = find_skill_dir(skill_id)
+    if not skill_dir:
+        print(f"Error: Skill '{skill_id}' not found")
+        return 1
+
+    # Check if it's a git repo
+    is_git = (skill_dir / ".git").exists()
+
+    commit_hash = None
+    if is_git:
+        result = subprocess.run(["git", "rev-parse", "HEAD"],
+                                capture_output=True, text=True, cwd=skill_dir)
+        commit_hash = result.stdout.strip()[:8]
+
+    # Read registry
+    with open(REGISTRY_FILE) as f:
+        registry = json.load(f)
+
+    # Update skill entry
+    for skill in registry["skills"]:
+        if skill["skill_id"] == skill_id:
+            skill["version"] = args.version or skill["version"]
+            skill["commit_hash"] = commit_hash
+            skill["remote_url"] = args.remote or skill.get("remote_url")
+            skill["published_at"] = __import__("datetime").datetime.now().isoformat()
+            break
+
+    # Save registry
+    with open(REGISTRY_FILE, "w") as f:
+        json.dump(registry, f, indent=2)
+
+    print(f"Published {skill_id}@{skill['version']}" +
+          (f" ({commit_hash})" if commit_hash else ""))
+    return 0
+
+
+def cmd_versions(args):
+    """List published versions of a skill"""
+    skill_id = args.skill_id
+
+    with open(REGISTRY_FILE) as f:
+        registry = json.load(f)
+
+    skill = next((s for s in registry["skills"] if s["skill_id"] == skill_id), None)
+    if not skill:
+        print(f"Error: Skill '{skill_id}' not found")
+        return 1
+
+    print(f"{skill_id} versions:")
+    print(f"  current: {skill.get('version', 'N/A')}")
+    print(f"  commit:  {skill.get('commit_hash', 'N/A')}")
+    print(f"  remote:  {skill.get('remote_url', 'not set')}")
+    print(f"  published: {skill.get('published_at', 'never')}")
+    return 0
+
+
+def cmd_diagnose(args):
+    """Diagnose a skill's health and generate report"""
+    from skills_diagnose import generate_report, auto_degrade, get_error_profile
+
+    skill_id = args.skill_id
+    report, profile = generate_report(skill_id, days=args.days)
+
+    # Auto-degrade if needed
+    degraded = auto_degrade(skill_id)
+
+    print(report)
+
+    if degraded:
+        print(f"\n[Auto-degraded: status set to 'degraded' in registry]")
+
+    if args.json:
+        import json
+        print(json.dumps(profile, indent=2))
+
+    return 0
+
+
+def main():
+    parser = argparse.ArgumentParser(prog="skills")
+    subparsers = parser.add_subparsers()
+
+    # list
+    p_list = subparsers.add_parser('list', help='List skills')
+    p_list.add_argument('--category', help='Filter by category')
+    p_list.add_argument('--json', action='store_true', help='JSON output')
+    p_list.set_defaults(func=cmd_list)
+
+    # search
+    p_search = subparsers.add_parser('search', help='Search skills')
+    p_search.add_argument('query', help='Search query')
+    p_search.set_defaults(func=cmd_search)
+
+    # info
+    p_info = subparsers.add_parser('info', help='Show skill info')
+    p_info.add_argument('skill_id', help='Skill ID')
+    p_info.set_defaults(func=cmd_info)
+
+    # install
+    p_install = subparsers.add_parser('install', help='Install skill')
+    p_install.add_argument('skill_id', help='Skill ID')
+    p_install.add_argument('--target', help='Target directory')
+    p_install.add_argument('--link', action='store_true', help='Symlink instead of copy')
+    p_install.set_defaults(func=cmd_install)
+
+    # update
+    p_update = subparsers.add_parser('update', help='Update skill')
+    p_update.add_argument('skill_id', help='Skill ID')
+    p_update.set_defaults(func=cmd_update)
+
+    # validate
+    p_validate = subparsers.add_parser('validate', help='Validate skill structure')
+    p_validate.add_argument('skill_id', help='Skill ID')
+    p_validate.set_defaults(func=cmd_validate)
+
+    # health
+    p_health = subparsers.add_parser('health', help='Show skill health scores')
+    p_health.add_argument('--skill', help='Specific skill')
+    p_health.add_argument('--json', action='store_true', help='JSON output')
+    p_health.set_defaults(func=cmd_health)
+
+    # recommend
+    p_recommend = subparsers.add_parser('recommend', help='Show skill recommendations')
+    p_recommend.add_argument('skill_id', nargs='?', help='Skill ID (optional)')
+    p_recommend.add_argument('--top-n', type=int, default=5, help='Top N recommendations')
+    p_recommend.set_defaults(func=cmd_recommend)
+
+    # depsolve
+    p_depsolve = subparsers.add_parser('depsolve', help='Show dependency resolution')
+    p_depsolve.add_argument('skill_id', help='Skill ID')
+    p_depsolve.add_argument('--json', action='store_true', help='JSON output')
+    p_depsolve.set_defaults(func=cmd_depsolve)
+
+    # diagnose
+    p_diagnose = subparsers.add_parser('diagnose', help='Diagnose skill health')
+    p_diagnose.add_argument('skill_id', help='Skill ID')
+    p_diagnose.add_argument('--days', type=int, default=30, help='Analysis period')
+    p_diagnose.add_argument('--json', action='store_true', help='JSON output')
+    p_diagnose.set_defaults(func=cmd_diagnose)
+
+    # pipeline
+    p_pipeline = subparsers.add_parser('pipeline', help='Pipeline commands')
+    pipeline_subs = p_pipeline.add_subparsers()
+
+    p_run = pipeline_subs.add_parser('run', help='Run a pipeline')
+    p_run.add_argument('pipeline', help='Pipeline file or pipeline name')
+    p_run.add_argument('--input', '-i', default='')
+    p_run.add_argument('--error-mode', default='stop', choices=['stop', 'continue'])
+    p_run.add_argument('--json', action='store_true')
+    p_run.set_defaults(subcommand='run')
+
+    p_list = pipeline_subs.add_parser('list', help='List pipelines')
+    p_list.set_defaults(subcommand='list')
+
+    p_pipeline.set_defaults(func=cmd_pipeline)
+
+    # publish
+    p_publish = subparsers.add_parser('publish', help='Publish a skill version')
+    p_publish.add_argument('skill_id', help='Skill ID')
+    p_publish.add_argument('--version', '-v', help='Version tag')
+    p_publish.add_argument('--remote', '-r', help='Remote URL')
+    p_publish.set_defaults(func=cmd_publish)
+
+    # versions
+    p_versions = subparsers.add_parser('versions', help='List skill versions')
+    p_versions.add_argument('skill_id', help='Skill ID')
+    p_versions.set_defaults(func=cmd_versions)
+
+    args = parser.parse_args()
+    if hasattr(args, 'func'):
+        return args.func(args)
+    parser.print_help()
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
