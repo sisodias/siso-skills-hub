@@ -50,6 +50,9 @@ with tempfile.TemporaryDirectory(prefix="siso-skills-hub-check-") as directory:
     env["SISO_SYSTEM_DB"] = str(Path(directory) / "system.sqlite")
     for skill_id in ids:
         run(["python3", "scripts/skills", "validate", skill_id], env=env, stdout=subprocess.DEVNULL)
+    target = Path(directory) / "installed"
+    run(["python3", "scripts/skills", "install", "gitsearch", "--target", str(target)], env=env, stdout=subprocess.DEVNULL)
+    assert (target / "gitsearch" / "SKILL.md").is_file(), "disposable skill installation did not materialize source"
 
 run(["python3", "scripts/build_index.py", "--check"])
 
