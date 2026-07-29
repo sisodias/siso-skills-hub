@@ -14,7 +14,7 @@ Task management skill for PM_Agent using the centralized SQLite task database.
 
 ## Database
 
-**Location:** `/Users/shaansisodia/SISO_Workspace/.SystemDB/sisosystem.db`
+**Location:** `${SISO_WORKSPACE}/.SystemDB/sisosystem.db`
 
 ## Quick Usage
 

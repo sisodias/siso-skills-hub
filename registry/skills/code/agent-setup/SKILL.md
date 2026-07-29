@@ -23,11 +23,11 @@ Create a new agent from the V4 template with memory system pre-configured.
 ## Usage
 
 ```bash
-/Users/shaansisodia/SISO_Workspace/agent_os/skills_hub/registry/skills/agent-setup/scripts/setup.sh <agent_dir> <agent_name>
+${SISO_WORKSPACE}/agent_os/skills_hub/registry/skills/agent-setup/scripts/setup.sh <agent_dir> <agent_name>
 
 # Example: Create Developer_Agent
-/Users/shaansisodia/SISO_Workspace/agent_os/skills_hub/registry/skills/agent-setup/scripts/setup.sh \
-    "/Users/shaansisodia/SISO_Workspace/agent_os/agents/Developer_Agent" \
+${SISO_WORKSPACE}/agent_os/skills_hub/registry/skills/agent-setup/scripts/setup.sh \
+    "${SISO_WORKSPACE}/agent_os/agents/Developer_Agent" \
     Developer_Agent
 ```
 

@@ -1,10 +1,11 @@
 # Agent TMUX helpers — add to ~/.zshrc
+SISO_WORKSPACE="${SISO_WORKSPACE:-$HOME/SISO_Workspace}"
 
 # Spawn agent in persistent tmux (runs outside cmux)
 spawn-agent() {
     local agent_name="${1}"
     local session_name="agent-os-${agent_name}"
-    local agent_dir="/Users/shaansisodia/SISO_Workspace/agent_os/agents/${agent_name}"
+    local agent_dir="${SISO_WORKSPACE}/agent_os/agents/${agent_name}"
 
     if [ ! -d "$agent_dir" ]; then
         echo "Agent not found: $agent_dir"

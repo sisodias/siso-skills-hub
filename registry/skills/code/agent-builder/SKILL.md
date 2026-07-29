@@ -15,7 +15,7 @@ Create new agents from the SISO v3 agent template.
 ## Template Location
 
 ```
-/Users/shaansisodia/SISO_Workspace/agent_os/module_templates/agents/live/v3/
+${SISO_WORKSPACE}/agent_os/module_templates/agents/live/v3/
 ```
 
 ## Agent Structure
@@ -45,8 +45,8 @@ Create new agents from the SISO v3 agent template.
 
 ### 1. Copy Template
 ```bash
-cp -r /Users/shaansisodia/SISO_Workspace/agent_os/module_templates/agents/live/v3/ \
-      /Users/shaansisodia/SISO_Workspace/agent_os/agents/<AgentName>
+cp -r ${SISO_WORKSPACE}/agent_os/module_templates/agents/live/v3/ \
+      ${SISO_WORKSPACE}/agent_os/agents/<AgentName>
 ```
 
 ### 2. Update Files
@@ -63,7 +63,7 @@ Create `skills/registry.md` with agent-specific skills.
 
 All meta agents go in:
 ```
-/Users/shaansisodia/SISO_Workspace/agent_os/agents/
+${SISO_WORKSPACE}/agent_os/agents/
 ```
 
 ## Available Models

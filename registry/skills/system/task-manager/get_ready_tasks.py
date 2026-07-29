@@ -13,7 +13,8 @@ import os
 import sys
 from pathlib import Path
 
-TASKS_DIR = Path("/Users/shaansisodia/SISO_Workspace/Agent_OS/.tasks")
+WORKSPACE = Path(os.environ.get("SISO_WORKSPACE", Path.home() / "SISO_Workspace")).expanduser()
+TASKS_DIR = Path(os.environ.get("SISO_TASKS_DIR", WORKSPACE / ".agents" / "tasks")).expanduser()
 
 
 def load_tasks():

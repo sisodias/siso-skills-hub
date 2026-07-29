@@ -6,7 +6,7 @@ Deploy the SISO Internal Lab codebase to Vercel.
 ## Usage
 Run from the codebase directory:
 ```bash
-cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/codebase
+cd ${SISO_WORKSPACE}/SISO_Internal_Lab/codebase
 vercel --prod --yes
 ```
 

@@ -46,14 +46,14 @@ siso-kimi2
 ### Via run.sh
 Each agent has a run.sh script:
 ```bash
-cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/agents/<AgentName>
+cd ${SISO_WORKSPACE}/SISO_Internal_Lab/agents/<AgentName>
 ./run.sh
 ```
 
 ### Interactive Session
 ```bash
 # Open PM Agent
-cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/agents/PM_Agent
+cd ${SISO_WORKSPACE}/SISO_Internal_Lab/agents/PM_Agent
 ./run.sh
 ```
 
@@ -64,7 +64,7 @@ Use agent-builder skill to create new agent.
 
 ### 2. Run Agent
 ```bash
-cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/agents/<AgentName>
+cd ${SISO_WORKSPACE}/SISO_Internal_Lab/agents/<AgentName>
 ./run.sh
 ```
 
@@ -78,7 +78,7 @@ Once agent is running, you can send messages via the terminal.
 agent-builder create Developer_Agent
 
 # 2. Run it
-cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/agents/Developer_Agent
+cd ${SISO_WORKSPACE}/SISO_Internal_Lab/agents/Developer_Agent
 ./run.sh
 
 # 3. The agent is now running and ready to receive tasks
@@ -86,6 +86,6 @@ cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/agents/Developer_Agent
 
 ## Key Paths
 
-- **CLI Bin:** `/Users/shaansisodia/.claude/bin/`
-- **Agents:** `/Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/agents/`
-- **Template:** `/Users/shaansisodia/SISO_Workspace/Agent_OS/workspace/__template_agent__/`
+- **CLI Bin:** `${HOME}/.claude/bin/`
+- **Agents:** `${SISO_WORKSPACE}/SISO_Internal_Lab/agents/`
+- **Template:** `${SISO_WORKSPACE}/Agent_OS/workspace/__template_agent__/`

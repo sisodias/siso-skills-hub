@@ -16,8 +16,8 @@ tags:
 The **central** database lives at `SISO_Workspace/.SystemDB/sisosystem.db`. Set the environment variable before running commands:
 
 ```bash
-export SYSTEM_DB="/Users/shaansisodia/SISO_Workspace/.SystemDB/sisosystem.db"
-python3 /Users/shaansisodia/SISO_Workspace/Agent_OS/skills/siso-tasks/siso-tasks.py <command>
+export SYSTEM_DB="${SISO_WORKSPACE}/.SystemDB/sisosystem.db"
+python3 ${SISO_WORKSPACE}/Agent_OS/skills/siso-tasks/siso-tasks.py <command>
 ```
 
 All agents and projects share this central queue.

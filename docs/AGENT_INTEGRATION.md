@@ -93,7 +93,7 @@ These are the highest-value targets — task management skills (os-database, pm-
 ```python
 import sys
 import os
-sys.path.insert(0, "/Users/shaansisodia/SISO_Workspace/agent_os/skills_hub/scripts")
+sys.path.insert(0, "${SISO_WORKSPACE}/agent_os/skills_hub/scripts")
 from skills_telemetry import track
 
 if __name__ == '__main__':
@@ -119,7 +119,7 @@ Example for `perplexity_search.py`:
 ```python
 import sys
 import os
-sys.path.insert(0, "/Users/shaansisodia/SISO_Workspace/agent_os/skills_hub/scripts")
+sys.path.insert(0, "${SISO_WORKSPACE}/agent_os/skills_hub/scripts")
 from skills_telemetry import track
 
 if __name__ == '__main__':

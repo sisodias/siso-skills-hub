@@ -1,39 +1,43 @@
 # Skills Hub
 
-Central registry for all SISO agent skills. 23 skills across 7 categories, all documented, versioned, and installable.
+Central registry, CLI, dependency graph, templates, pipelines, and bundled source snapshots for SISO agent skills. The current catalog contains 28 skills across 8 categories.
+
+This Hub is not one giant skill and it is not the whole Agents operating stack. A **skill** is one atomic repeatable capability. A **playbook** composes skills with prompts, tools, gates, and evidence; playbooks live in the separate Agent Playbook repository. The Hub makes skills discoverable and installable whether their source is bundled here or promoted to an independent repository.
+
+See [`PROMOTION.md`](PROMOTION.md) for how users can fork the whole Hub or one independently released skill without relying on Git submodules.
 
 ## Quick Start
 
 ```bash
 # List all skills
-python3 skills_hub/scripts/skills list
+python3 scripts/skills list
 
 # Search for a skill
-python3 skills_hub/scripts/skills search github
+python3 scripts/skills search github
 
 # See skill details
-python3 skills_hub/scripts/skills info gitsearch
+python3 scripts/skills info gitsearch
 
 # Check skill health (needs usage data)
-python3 skills_hub/scripts/skills health
+python3 scripts/skills health
 
 # Install a skill
-python3 skills_hub/scripts/skills install gitsearch
+python3 scripts/skills install gitsearch
 
 # Link a skill (live updates from hub)
-python3 skills_hub/scripts/skills install gitsearch --link
+python3 scripts/skills install gitsearch --link
 
 # Resolve dependencies
-python3 skills_hub/scripts/skills depsolve multisearch
+python3 scripts/skills depsolve multisearch
 
 # Get recommendations
-python3 skills_hub/scripts/skills recommend gitsearch
+python3 scripts/skills recommend gitsearch
 
 # Run a pipeline
-python3 skills_hub/scripts/skills pipeline run pipelines/analyze-and-implement.yml --input "build auth"
+python3 scripts/skills pipeline run pipelines/analyze-and-implement.yml --input "build auth"
 
 # List pipelines
-python3 skills_hub/scripts/skills pipeline list
+python3 scripts/skills pipeline list
 ```
 
 ---
@@ -41,9 +45,9 @@ python3 skills_hub/scripts/skills pipeline list
 ## Structure
 
 ```
-skills_hub/
+./
 ├── registry/
-│   ├── skills_registry.json   # Machine-readable registry (23 skills)
+│   ├── skills_registry.json   # Machine-readable registry (28 skills)
 │   ├── INDEX.md              # Human-readable index
 │   └── skills/              # Skill directories by category
 │       ├── devops/          # Infrastructure & deployment
@@ -65,7 +69,7 @@ skills_hub/
 │   └── research-and-deploy.yml
 ├── templates/skill/         # New skill scaffold
 ├── docs/                   # Integration docs
-├── data/                   # (local skill_events.db — deprecated, now in sisosystem.db)
+├── data/                   # Runtime-data policy; databases are not committed
 └── templates/skill/        # New skill scaffold
 ```
 
@@ -76,12 +80,13 @@ skills_hub/
 | Category | Skills |
 |----------|--------|
 | **devops** | cmux, cmux-browser, github, gitsearch, vercel |
-| **code** | agent-builder, agent-setup, analyze_task, implement_story, verify_story |
+| **code** | agent-builder, agent-setup, analyze_task, implement_story |
 | **data** | multisearch, websearch, xsearch |
 | **communication** | agent-commander, cli-runner, meta-commander |
 | **testing** | playwright, verify_story |
 | **system** | pm-tasks, task-commander, task-manager, workspace |
-| **global** | os-database, subagents |
+| **global** | os-database, skills-hub-usage, subagents |
+| **pipeline** | check_status, create_progress, read_job_ticket, pass_to_next |
 
 ---
 
@@ -163,7 +168,7 @@ health = usage_freq × success_rate × latency_score × context_diversity
 
 1. Copy the template:
    ```bash
-   cp -r skills_hub/templates/skill/ skills_hub/registry/skills/<new-skill>/
+   cp -r templates/skill/ registry/skills/<category>/<new-skill>/
    ```
 
 2. Fill in `SKILL.md` with frontmatter and description
@@ -171,14 +176,16 @@ health = usage_freq × success_rate × latency_score × context_diversity
 3. Add to registry:
    ```bash
    # Edit skills_registry.json manually, or:
-   python3 skills_hub/scripts/skills validate <new-skill>
+   python3 scripts/skills validate <new-skill>
    ```
 
 4. Test:
    ```bash
-   python3 skills_hub/scripts/skills validate <new-skill>
-   python3 skills_hub/scripts/skills info <new-skill>
+   python3 scripts/skills validate <new-skill>
+   python3 scripts/skills info <new-skill>
    ```
+
+5. When the skill earns an independent release lifecycle, promote it using [`PROMOTION.md`](PROMOTION.md) and pin the source commit in `skills_registry.json`.
 
 ---
 
@@ -200,9 +207,18 @@ steps:
 
 Run with:
 ```bash
-python3 skills_hub/scripts/skills pipeline run pipelines/analyze-and-implement.yml \
+python3 scripts/skills pipeline run pipelines/analyze-and-implement.yml \
   --input "build a login form"
 ```
+
+## Great Library identity
+
+- Work: `gls:work:8acb11e9-026f-47e3-b620-bb1b969bcbcd`
+- Section: Agents
+- Role: atomic capability catalog in the Agents operating stack
+- Catalog: <https://great-library-of-siso.vercel.app/works/siso-skills/>
+
+The Great Library stores the stable Work identity and immutable release receipts. This repository owns the changing catalog projection and install experience. Independently promoted skill repositories own their own releases.
 
 ---
 
@@ -210,6 +226,6 @@ python3 skills_hub/scripts/skills pipeline run pipelines/analyze-and-implement.y
 
 - **Registry**: `skills_registry.json` — single source of truth
 - **Canonical DB**: `~/.SystemDB/sisostem.db` — task + skill telemetry in one DB
-- **CLI**: `skills_hub/scripts/skills` — all commands
+- **CLI**: `scripts/skills` — all commands
 - **Telemetry**: `skills_telemetry.py` SDK → `sisostem.db.skill_events`
 - **Docs**: This directory + `HUB_DESIGN.md` + `STRATEGIC_ROADMAP.md`

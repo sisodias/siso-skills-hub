@@ -11,6 +11,9 @@ import sys
 import os
 from pathlib import Path
 
+WORKSPACE = Path(os.environ.get("SISO_WORKSPACE", Path.home() / "SISO_Workspace")).expanduser()
+TASKS_DIR = Path(os.environ.get("SISO_TASKS_DIR", WORKSPACE / ".agents" / "tasks")).expanduser()
+
 def main():
     if len(sys.argv) < 3:
         print("Usage: python link_task_beads.py <task_id> <bead_id> [<bead_id> ...]")
@@ -20,9 +23,9 @@ def main():
     bead_ids = sys.argv[2:]
 
     # Find task in backlog or completed
-    task_path = Path(f"/Users/shaansisodia/SISO_Workspace/Agent_OS/.tasks/backlog/{task_id}/task.json")
+    task_path = TASKS_DIR / "backlog" / task_id / "task.json"
     if not task_path.exists():
-        task_path = Path(f"/Users/shaansisodia/SISO_Workspace/Agent_OS/.tasks/completed/{task_id}/task.json")
+        task_path = TASKS_DIR / "completed" / task_id / "task.json"
 
     if not task_path.exists():
         print(f"Error: Task {task_id} not found")

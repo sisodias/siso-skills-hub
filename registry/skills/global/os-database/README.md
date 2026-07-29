@@ -48,7 +48,7 @@ tools
 |-------|------|-------------|
 | `agents` | 21 | All registered agents — `id`, `role`, `department`, `status`, `root_path`, `health_score`, `token_budget_limit`, `tokens_used_lifetime` |
 | `projects` | 5 | Work projects — `id`, `name`, `status`, `workspace_id`, `parent_project_id` (self-referential hierarchy) |
-| `workspaces` | 1 | Top-level containers — `WS-MAIN` at `/Users/shaansisodia/SISO_Workspace` |
+| `workspaces` | 1 | Top-level containers — `WS-MAIN` at `${SISO_WORKSPACE}` |
 
 ### Task System
 

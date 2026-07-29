@@ -102,7 +102,7 @@ cmux list-workspaces
 cmux rename-workspace --workspace workspace:24 "INTERNAL: Testing Agent"
 
 # 4. Navigate to agent (SEPARATE command!)
-cmux send --workspace workspace:24 "cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/agents/Testing_Agent\n"
+cmux send --workspace workspace:24 "cd ${SISO_WORKSPACE}/SISO_Internal_Lab/agents/Testing_Agent\n"
 
 # 5. Start agent (SEPARATE command!)
 cmux send --workspace workspace:24 "siso-mini\n"
@@ -119,7 +119,7 @@ cmux send --workspace workspace:24 "Hello! Can you hear me?\n"
 cmux new-workspace
 # (get ID from list-workspaces, say workspace:25)
 cmux rename-workspace --workspace workspace:25 "INTERNAL: Dev"
-cmux send --workspace workspace:25 "cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/agents/Developer_Agent\n"
+cmux send --workspace workspace:25 "cd ${SISO_WORKSPACE}/SISO_Internal_Lab/agents/Developer_Agent\n"
 cmux send --workspace workspace:25 "siso-mini\n"
 ```
 
@@ -139,8 +139,8 @@ META: <name>        - Meta/management tasks
 
 | Agent | Path |
 |-------|------|
-| PM_Agent | `/Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/agents/PM_Agent` |
-| Testing_Agent | `/Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/agents/Testing_Agent` |
+| PM_Agent | `${SISO_WORKSPACE}/SISO_Internal_Lab/agents/PM_Agent` |
+| Testing_Agent | `${SISO_WORKSPACE}/SISO_Internal_Lab/agents/Testing_Agent` |
 
 To add more agents: use agent-builder skill
 

@@ -1,0 +1,11 @@
+{
+  "name": "siso-skills-hub",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Registry, CLI, dependencies, templates, pipelines, and source receipts for SISO agent skills.",
+  "scripts": {
+    "build:index": "python3 scripts/build_index.py",
+    "check:index": "python3 scripts/build_index.py --check",
+    "test": "python3 scripts/check.py"
+  }
+}

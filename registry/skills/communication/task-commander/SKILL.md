@@ -14,13 +14,13 @@ Log tasks and communicate with agents using the SISO task database.
 
 ## Task Database
 
-Location: `/Users/shaansisodia/SISO_Workspace/.SystemDB/sisosystem.db`
+Location: `${SISO_WORKSPACE}/.SystemDB/sisosystem.db`
 
 Query tasks:
 ```bash
 python3 -c "
 import sqlite3
-conn = sqlite3.connect('/Users/shaansisodia/SISO_Workspace/.SystemDB/sisosystem.db')
+conn = sqlite3.connect('${SISO_WORKSPACE}/.SystemDB/sisosystem.db')
 cursor = conn.cursor()
 cursor.execute('SELECT id, title, assigned_to, status, priority FROM tasks ORDER BY priority DESC LIMIT 10')
 for row in cursor.fetchall():
@@ -38,7 +38,7 @@ Check tasks assigned to an agent:
 ```bash
 python3 -c "
 import sqlite3
-conn = sqlite3.connect('/Users/shaansisodia/SISO_Workspace/.SystemDB/sisosystem.db')
+conn = sqlite3.connect('${SISO_WORKSPACE}/.SystemDB/sisosystem.db')
 cursor = conn.cursor()
 cursor.execute(\"SELECT id, title, status, priority FROM tasks WHERE assigned_to LIKE '%Testing%' AND status='pending' ORDER BY priority DESC\")
 for row in cursor.fetchall():
@@ -71,7 +71,7 @@ cmux send --workspace workspace:X "Task: TASK-0001\nTitle: Implement Auth\nPrior
 ```bash
 python3 -c "
 import sqlite3
-conn = sqlite3.connect('/Users/shaansisodia/SISO_Workspace/.SystemDB/sisosystem.db')
+conn = sqlite3.connect('${SISO_WORKSPACE}/.SystemDB/sisosystem.db')
 cursor = conn.cursor()
 cursor.execute(\"SELECT id, title, status FROM tasks WHERE assigned_to LIKE '%Testing%' AND status='pending'\")
 for row in cursor.fetchall():
@@ -90,8 +90,8 @@ cmux send --workspace workspace:24 "TASK: TEST-0001\nTask: Test task: Add docume
 ## Create New Task
 
 ```bash
-export SYSTEM_DB="/Users/shaansisodia/SISO_Workspace/.SystemDB/sisosystem.db"
-python3 /Users/shaansisodia/SISO_Workspace/Agent_OS/skills/siso-tasks/siso-tasks.py create-task \
+export SYSTEM_DB="${SISO_WORKSPACE}/.SystemDB/sisosystem.db"
+python3 ${SISO_WORKSPACE}/Agent_OS/skills/siso-tasks/siso-tasks.py create-task \
   --id TASK-XXXX \
   --project-id siso-internal \
   --pipeline-type execution \
@@ -108,8 +108,8 @@ python3 /Users/shaansisodia/SISO_Workspace/Agent_OS/skills/siso-tasks/siso-tasks
 ## Update Task Status
 
 ```bash
-export SYSTEM_DB="/Users/shaansisodia/SISO_Workspace/.SystemDB/sisosystem.db"
-python3 /Users/shaansisodia/SISO_Workspace/Agent_OS/skills/siso-tasks/siso-tasks.py update-step \
+export SYSTEM_DB="${SISO_WORKSPACE}/.SystemDB/sisosystem.db"
+python3 ${SISO_WORKSPACE}/Agent_OS/skills/siso-tasks/siso-tasks.py update-step \
   --step-id <step_id> \
   --status completed
 ```

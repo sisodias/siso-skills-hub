@@ -5,6 +5,7 @@
 
 AGENT_NAME="${1}"
 COMMAND="${2:-cla}"
+SISO_WORKSPACE="${SISO_WORKSPACE:-$HOME/SISO_Workspace}"
 
 if [ -z "$AGENT_NAME" ]; then
     echo "Usage: $0 <agent-name> [command]"
@@ -13,7 +14,7 @@ if [ -z "$AGENT_NAME" ]; then
 fi
 
 SESSION_NAME="agent-os-${AGENT_NAME}"
-AGENT_DIR="/Users/shaansisodia/SISO_Workspace/agent_os/agents/${AGENT_NAME}"
+AGENT_DIR="${SISO_WORKSPACE}/agent_os/agents/${AGENT_NAME}"
 
 # Check if agent exists
 if [ ! -d "$AGENT_DIR" ]; then

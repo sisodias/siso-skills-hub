@@ -12,21 +12,21 @@ tags:
 Deploy SISO Internal Lab to Vercel.
 
 ## Location
-`/Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/codebase`
+`${SISO_WORKSPACE}/SISO_Internal_Lab/codebase`
 
 ## Commands
 
 ### Preview
 Deploy preview build for testing:
 ```bash
-cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/codebase
+cd ${SISO_WORKSPACE}/SISO_Internal_Lab/codebase
 vercel --yes
 ```
 
 ### Production
 Deploy to production:
 ```bash
-cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/codebase
+cd ${SISO_WORKSPACE}/SISO_Internal_Lab/codebase
 vercel --prod --yes
 ```
 

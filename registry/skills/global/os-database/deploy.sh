@@ -6,14 +6,15 @@ AGENT_PATH="$1"
 AGENT_ID="$2"
 ROLE="$3"
 DEPARTMENT="$4"
+SISO_WORKSPACE="${SISO_WORKSPACE:-$HOME/SISO_Workspace}"
 
 if [ -z "$AGENT_PATH" ]; then
     echo "Usage: ./deploy-skill.sh <agent_path> <agent_id> <role> <department>"
-    echo "Example: ./deploy-skill.sh /Users/.../agents/PM_Agent PM_Agent 'Project Manager' Meta"
+    echo "Example: ./deploy-skill.sh \"$HOME/agents/PM_Agent\" PM_Agent 'Project Manager' Meta"
     exit 1
 fi
 
-SKILL_SOURCE="/Users/shaansisodia/SISO_Workspace/agent_os/skills_hub/registry/skills/global/os-database"
+SKILL_SOURCE="${SISO_WORKSPACE}/agent_os/skills_hub/registry/skills/global/os-database"
 SKILL_TARGET="$AGENT_PATH/.claude/skills/os-database"
 
 # Create skills directory if needed

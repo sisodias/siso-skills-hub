@@ -8,7 +8,7 @@ The Skills Hub is the central registry for all SISO agent skills. This document 
 
 ## 1. Registry Schema
 
-**Location:** `skills_hub/registry/skills_registry.json`
+**Location:** `registry/skills_registry.json`
 
 Each skill is registered with the following schema:
 
@@ -23,7 +23,9 @@ Each skill is registered with the following schema:
       "tags": ["search", "github", "code-discovery", "research"],
       "version": "1.0.0",
       "author": "SISO Team",
-      "repo_url": "https://github.com/shaansisodia/siso-agent-os/skills_hub/registry/skills/gitsearch",
+      "repo_url": null,
+      "remote_url": null,
+      "commit_hash": null,
       "dependencies": {
         "skills": ["cli-runner"],
         "packages": ["gh"]
@@ -66,6 +68,8 @@ Each skill is registered with the following schema:
 | `version` | string | yes | Semantic versioning |
 | `author` | string | no | Creator/maintainer |
 | `repo_url` | string | no | Source location |
+| `remote_url` | string | no | Clone URL after independent-repository promotion |
+| `commit_hash` | string | no | Reviewed immutable source revision for a promoted skill |
 | `dependencies.skills` | array | no | Required skills |
 | `dependencies.packages` | array | no | System packages |
 | `install_commands.system` | string | no | OS-level install |
@@ -156,7 +160,7 @@ fi
 
 ## 3. Hub CLI
 
-**Location:** `skills_hub/scripts/skills`
+**Location:** `scripts/skills`
 
 The Hub CLI provides a unified interface for managing skills.
 

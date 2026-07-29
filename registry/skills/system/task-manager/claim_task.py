@@ -18,7 +18,8 @@ import time
 from pathlib import Path
 from datetime import datetime
 
-TASKS_DIR = Path("/Users/shaansisodia/SISO_Workspace/Agent_OS/.tasks")
+WORKSPACE = Path(os.environ.get("SISO_WORKSPACE", Path.home() / "SISO_Workspace")).expanduser()
+TASKS_DIR = Path(os.environ.get("SISO_TASKS_DIR", WORKSPACE / ".agents" / "tasks")).expanduser()
 LOCK_DIR = TASKS_DIR / ".locks"
 
 

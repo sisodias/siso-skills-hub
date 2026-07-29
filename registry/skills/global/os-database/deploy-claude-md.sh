@@ -6,13 +6,14 @@ AGENT_PATH="$1"
 AGENT_ID="$2"
 ROLE="$3"
 DEPARTMENT="$4"
+SISO_WORKSPACE="${SISO_WORKSPACE:-$HOME/SISO_Workspace}"
 
 if [ -z "$AGENT_PATH" ]; then
     echo "Usage: ./deploy-claude-md.sh <agent_path> <agent_id> <role> <department>"
     exit 1
 fi
 
-TEMPLATE_SOURCE="/Users/shaansisodia/SISO_Workspace/agent_os/module_templates/agents/live/v4/CLAUDE.md"
+TEMPLATE_SOURCE="${SISO_WORKSPACE}/agent_os/module_templates/agents/live/v4/CLAUDE.md"
 TARGET_FILE="$AGENT_PATH/CLAUDE.md"
 
 if [ ! -f "$TEMPLATE_SOURCE" ]; then

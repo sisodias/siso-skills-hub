@@ -6,6 +6,7 @@
 # Each agent gets its own memory DB at .claude/memory/
 
 set -e
+SISO_WORKSPACE="${SISO_WORKSPACE:-$HOME/SISO_Workspace}"
 
 AGENT_DIR="$1"
 AGENT_NAME="$2"
@@ -16,8 +17,8 @@ if [ -z "$AGENT_DIR" ] || [ -z "$AGENT_NAME" ]; then
     exit 1
 fi
 
-TEMPLATE_DIR="/Users/shaansisodia/SISO_Workspace/agent_os/module_templates/agents/live/v4"
-MEMORY_SOURCE="/Users/shaansisodia/SISO_Workspace/agent_os/os_plugins/backlog/claude-mem-lite"
+TEMPLATE_DIR="${SISO_WORKSPACE}/agent_os/module_templates/agents/live/v4"
+MEMORY_SOURCE="${SISO_WORKSPACE}/agent_os/os_plugins/backlog/claude-mem-lite"
 
 echo "Setting up agent: $AGENT_NAME"
 echo "Location: $AGENT_DIR"
@@ -42,11 +43,11 @@ cat > "$AGENT_DIR/.claude/hooks/hooks.json" << EOF
     "CLAUDE_MEM_AGENT_ID": "$AGENT_NAME"
   },
   "hooks": {
-    "SessionStart": [{"matcher": "startup|clear|compact", "hooks": [{"type": "command", "command": "node \"/Users/shaansisodia/SISO_Workspace/agent_os/os_plugins/backlog/claude-mem-lite/hook.mjs\" session-start", "timeout": 15}]}],
-    "PreToolUse": [{"matcher": "*", "hooks": [{"type": "command", "command": "node \"/Users/shaansisodia/SISO_Workspace/agent_os/os_plugins/backlog/claude-mem-lite/hook.mjs\" pre-tool-use", "timeout": 2}]}],
-    "PostToolUse": [{"matcher": "*", "hooks": [{"type": "command", "command": "node \"/Users/shaansisodia/SISO_Workspace/agent_os/os_plugins/backlog/claude-mem-lite/hook.mjs\" post-tool-use", "timeout": 5}]}],
-    "Stop": [{"matcher": "*", "hooks": [{"type": "command", "command": "node \"/Users/shaansisodia/SISO_Workspace/agent_os/os_plugins/backlog/claude-mem-lite/hook.mjs\" stop", "timeout": 5}]}],
-    "UserPromptSubmit": [{"matcher": "*", "hooks": [{"type": "command", "command": "node \"/Users/shaansisodia/SISO_Workspace/agent_os/os_plugins/backlog/claude-mem-lite/hook.mjs\" user-prompt", "timeout": 5}]}]
+    "SessionStart": [{"matcher": "startup|clear|compact", "hooks": [{"type": "command", "command": "node \"${SISO_WORKSPACE}/agent_os/os_plugins/backlog/claude-mem-lite/hook.mjs\" session-start", "timeout": 15}]}],
+    "PreToolUse": [{"matcher": "*", "hooks": [{"type": "command", "command": "node \"${SISO_WORKSPACE}/agent_os/os_plugins/backlog/claude-mem-lite/hook.mjs\" pre-tool-use", "timeout": 2}]}],
+    "PostToolUse": [{"matcher": "*", "hooks": [{"type": "command", "command": "node \"${SISO_WORKSPACE}/agent_os/os_plugins/backlog/claude-mem-lite/hook.mjs\" post-tool-use", "timeout": 5}]}],
+    "Stop": [{"matcher": "*", "hooks": [{"type": "command", "command": "node \"${SISO_WORKSPACE}/agent_os/os_plugins/backlog/claude-mem-lite/hook.mjs\" stop", "timeout": 5}]}],
+    "UserPromptSubmit": [{"matcher": "*", "hooks": [{"type": "command", "command": "node \"${SISO_WORKSPACE}/agent_os/os_plugins/backlog/claude-mem-lite/hook.mjs\" user-prompt", "timeout": 5}]}]
   }
 }
 EOF
@@ -57,7 +58,7 @@ cat > "$AGENT_DIR/.mcp.json" << EOF
   "mcpServers": {
     "mem": {
       "command": "node",
-      "args": ["/Users/shaansisodia/SISO_Workspace/agent_os/os_plugins/backlog/claude-mem-lite/server.mjs"],
+      "args": ["${SISO_WORKSPACE}/agent_os/os_plugins/backlog/claude-mem-lite/server.mjs"],
       "env": {
         "CLAUDE_MEM_DIR": "$AGENT_DIR/.claude/memory",
         "CLAUDE_MEM_AGENT_ID": "$AGENT_NAME"
@@ -71,7 +72,7 @@ EOF
 echo "💾 Initializing memory database..."
 CLAUDE_MEM_DIR="$AGENT_DIR/.claude/memory" \
 CLAUDE_MEM_AGENT_ID="$AGENT_NAME" \
-    node "/Users/shaansisodia/SISO_Workspace/agent_os/os_plugins/backlog/claude-mem-lite/hook.mjs" session-start 2>/dev/null || true
+    node "${SISO_WORKSPACE}/agent_os/os_plugins/backlog/claude-mem-lite/hook.mjs" session-start 2>/dev/null || true
 
 echo ""
 echo "✅ Agent '$AGENT_NAME' ready!"
@@ -88,7 +89,7 @@ echo "  ├── outbox/               # Task outbox"
 echo "  └── workspace/             # Working dir"
 echo ""
 echo "Note: Uses central claude-mem-lite at:"
-echo "  /Users/shaansisodia/SISO_Workspace/agent_os/os_plugins/backlog/claude-mem-lite"
+echo "  ${SISO_WORKSPACE}/agent_os/os_plugins/backlog/claude-mem-lite"
 echo ""
 echo "Next steps:"
 echo "1. Edit identity.yaml with agent details"

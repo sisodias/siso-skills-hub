@@ -3,6 +3,6 @@
   "agent_id": "PM_Agent",
   "role": "Project Manager",
   "department": "Meta",
-  "root_path": "/Users/shaansisodia/SISO_Workspace/agent_os/agents/PM_Agent",
+  "root_path": "env:SISO_AGENT_ROOT",
   "db_path_fallback": "~/.SystemDB/sisostem.db"
 }

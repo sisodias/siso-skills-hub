@@ -14,7 +14,7 @@ Understand and navigate the SISO Internal Lab workspace.
 ## Workspace Location
 
 ```
-/Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/
+${SISO_WORKSPACE}/SISO_Internal_Lab/
 ```
 
 ## Directory Structure
@@ -57,30 +57,30 @@ SISO_Internal_Lab/
 
 ### List Agents
 ```bash
-ls /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/agents/
+ls ${SISO_WORKSPACE}/SISO_Internal_Lab/agents/
 ```
 
 ### List Codebase Structure
 ```bash
-ls /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/codebase/
+ls ${SISO_WORKSPACE}/SISO_Internal_Lab/codebase/
 ```
 
 ### Check Tasks
 ```bash
-ls /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/.tasks/
+ls ${SISO_WORKSPACE}/SISO_Internal_Lab/.tasks/
 ```
 
 ## Running the App
 
 ### Development
 ```bash
-cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/codebase
+cd ${SISO_WORKSPACE}/SISO_Internal_Lab/codebase
 npm run dev
 ```
 
 ### Production Build
 ```bash
-cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/codebase
+cd ${SISO_WORKSPACE}/SISO_Internal_Lab/codebase
 npm run build
 ```
 

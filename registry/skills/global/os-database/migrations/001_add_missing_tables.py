@@ -14,7 +14,7 @@ import sqlite3
 import sys
 import os
 
-DB_PATH = os.path.expanduser("~/.SystemDB/siso_system.db")
+DB_PATH = os.environ.get("SISO_SYSTEM_DB", os.path.expanduser("~/.SystemDB/siso_system.db"))
 
 
 def table_exists(cursor, table_name):

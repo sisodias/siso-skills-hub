@@ -190,7 +190,7 @@ cmux list-workspaces
 cmux rename-workspace --workspace workspace:X "INTERNAL: Testing"
 
 # 4. Navigate to agent - ALWAYS send cd FIRST
-cmux send --workspace workspace:X "cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/agents/Testing_Agent\n"
+cmux send --workspace workspace:X "cd ${SISO_WORKSPACE}/SISO_Internal_Lab/agents/Testing_Agent\n"
 
 # 5. Run siso-mini - send as SEPARATE command (not together with &&)
 cmux send --workspace workspace:X "siso-mini\n"
@@ -208,8 +208,8 @@ cmux send --workspace workspace:X "siso-mini\n"
 
 | Agent | Path |
 |-------|------|
-| PM_Agent | `/Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/agents/PM_Agent` |
-| Testing_Agent | `/Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/agents/Testing_Agent` |
+| PM_Agent | `${SISO_WORKSPACE}/SISO_Internal_Lab/agents/PM_Agent` |
+| Testing_Agent | `${SISO_WORKSPACE}/SISO_Internal_Lab/agents/Testing_Agent` |
 
 ---
 
@@ -217,7 +217,7 @@ cmux send --workspace workspace:X "siso-mini\n"
 
 ### Start Testing Agent
 ```bash
-cmux send --workspace workspace:6 "cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/agents/Testing_Agent\n"
+cmux send --workspace workspace:6 "cd ${SISO_WORKSPACE}/SISO_Internal_Lab/agents/Testing_Agent\n"
 cmux send --workspace workspace:6 "siso-mini\n"
 ```
 

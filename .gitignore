@@ -6,3 +6,10 @@ __pycache__/
 .DS_Store
 .telemetry_ready
 skills.db
+*.db
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+.env
+.env.*
+!.env.example

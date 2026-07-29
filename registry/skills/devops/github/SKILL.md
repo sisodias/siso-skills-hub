@@ -13,35 +13,35 @@ tags:
 Complete GitHub workflow for SISO Internal Lab codebase.
 
 ## Location
-`/Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/codebase`
+`${SISO_WORKSPACE}/SISO_Internal_Lab/codebase`
 
 ## Commands
 
 ### branch
 Create new feature branch:
 ```bash
-cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/codebase
+cd ${SISO_WORKSPACE}/SISO_Internal_Lab/codebase
 git checkout -b feature/<name>
 ```
 
 ### commit
 Stage and commit changes:
 ```bash
-cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/codebase
+cd ${SISO_WORKSPACE}/SISO_Internal_Lab/codebase
 git add -A && git commit -m "<message>"
 ```
 
 ### push
 Push branch to GitHub:
 ```bash
-cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/codebase
+cd ${SISO_WORKSPACE}/SISO_Internal_Lab/codebase
 git push -u origin $(git branch --show-current)
 ```
 
 ### merge
 Merge current branch to main:
 ```bash
-cd /Users/shaansisodia/SISO_Workspace/SISO_Internal_Lab/codebase
+cd ${SISO_WORKSPACE}/SISO_Internal_Lab/codebase
 git checkout main
 git merge <branch>
 git push

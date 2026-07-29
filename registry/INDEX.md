@@ -4,60 +4,76 @@
 
 ## Categories
 
-### devops
-| Skill | Description |
-|-------|-------------|
-| cmux | Terminal multiplexer for Claude Code with socket API |
-| cmux-browser | Control CMUX browser for automated testing |
-| github | Complete GitHub workflow — branch, commit, push, merge |
-| gitsearch | Search GitHub for code, repos, issues, and PRs |
-| vercel | Deploy SISO Internal Lab to Vercel |
-
 ### code
-| Skill | Description |
-|-------|-------------|
-| agent-builder | Create new agents from SISO v3 agent template |
-| agent-setup | Create new agent from V4 template with memory pre-configured |
-| analyze_task | Analyze a task and decompose into user stories |
-| implement_story | Implement a single user story with tests |
-| verify_story | Verify story implementation meets acceptance criteria |
 
-### data
-| Skill | Description |
-|-------|-------------|
-| multisearch | Run web, GitHub, and X searches in parallel |
-| websearch | Search the web using Perplexity Sonar via OpenRouter |
-| xsearch | Search X (Twitter) for discussions and trends |
+| Skill | Description | Source |
+|---|---|---|
+| agent-builder | Create new agents from the SISO v3 agent template | bundled |
+| agent-setup | Create new agent from V4 template with memory system pre-configured | bundled |
+| analyze_task | Analyze a task and decompose into user stories | bundled |
+| implement_story | Implement a single user story with tests | bundled |
 
 ### communication
-| Skill | Description |
-|-------|-------------|
-| agent-commander | Create workspaces, start agents, communicate via CMUX |
-| cli-runner | Run SISO CLI commands and interact with agents |
-| meta-commander | Communicate with META agents in the SISO ecosystem |
 
-### testing
-| Skill | Description |
-|-------|-------------|
-| playwright | Automated browser testing for SISO Internal Lab |
-| verify_story | Verify story implementation meets acceptance criteria |
+| Skill | Description | Source |
+|---|---|---|
+| agent-commander | Create workspaces, start agents, and communicate with them via CMUX | bundled |
+| cli-runner | Run SISO CLI commands and interact with agents | bundled |
+| meta-commander | Communicate with META agents in the SISO ecosystem | bundled |
 
-### system
-| Skill | Description |
-|-------|-------------|
-| pm-tasks | Simple PM task manager — create, list, update tasks |
-| task-commander | Log tasks and communicate with agents via SISO task database |
-| task-manager | Full task pipeline system with steps, artifacts, execution logging |
-| workspace | Understand and navigate the SISO workspace |
+### data
+
+| Skill | Description | Source |
+|---|---|---|
+| multisearch | Run web, GitHub, and X searches in parallel for comprehensive research | bundled |
+| websearch | Search the web using Perplexity Sonar via OpenRouter | bundled |
+| xsearch | Search X (Twitter) for discussions, opinions, and latest updates | bundled |
+
+### devops
+
+| Skill | Description | Source |
+|---|---|---|
+| cmux | Terminal multiplexer for Claude Code with socket API for workspace control and browser automation | bundled |
+| cmux-browser | Control CMUX browser for automated testing and browser interactions | bundled |
+| github | Complete GitHub workflow for SISO codebase - branch, commit, push, merge | bundled |
+| gitsearch | Search GitHub for code, repos, issues, and PRs | bundled |
+| vercel | Deploy SISO Internal Lab to Vercel | bundled |
 
 ### global
-| Skill | Description |
-|-------|-------------|
-| os-database | Core Agent OS Database — telemetry, tasks, timeline tracking |
-| subagents | Spawn and manage parallel subagents for concurrent execution |
+
+| Skill | Description | Source |
+|---|---|---|
+| os-database | Core Agent OS Database for telemetry, tasks, and timeline tracking | bundled |
+| skills-hub-usage | Navigate, discover, install, and use skills from the SISO Skills Hub | bundled |
+| subagents | Spawn and manage parallel subagents for concurrent task execution | bundled |
+
+### pipeline
+
+| Skill | Description | Source |
+|---|---|---|
+| check_status | Check the current status of a pipeline run by reading progress files | bundled |
+| create_progress | Initialize or update progress.md for a pipeline run | bundled |
+| pass_to_next | Pass context to the next agent in the pipeline by writing output files | bundled |
+| read_job_ticket | Read and validate a JobTicket JSON file from inbox | bundled |
+
+### system
+
+| Skill | Description | Source |
+|---|---|---|
+| pm-tasks | Simple PM task manager - create, list, update tasks | bundled |
+| task-commander | Log tasks and communicate with agents using the SISO task database | bundled |
+| task-manager | Full task pipeline system with steps, artifacts, and execution logging | bundled |
+| workspace | Understand and navigate the SISO workspace | bundled |
+
+### testing
+
+| Skill | Description | Source |
+|---|---|---|
+| playwright | Automated browser testing for SISO Internal Lab | bundled |
+| verify_story | Verify a story implementation meets acceptance criteria | bundled |
 
 ---
 
-**Total: 23 skills**
+**Total: 28 skills**
 
-Use `skills hub list`, `skills hub search <query>`, `skills hub info <skill>` to explore.
+Use `python3 scripts/skills list`, `search <query>`, or `info <skill>` to explore.

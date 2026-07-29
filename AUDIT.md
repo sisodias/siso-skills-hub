@@ -2,7 +2,7 @@
 
 **Date:** 2026-03-19
 **Auditor:** skills_builder_agent
-**Location:** `/Users/shaansisodia/SISO_Workspace/agent_os/skills_hub/`
+**Location:** `${SISO_WORKSPACE}/agent_os/skills_hub/`
 
 ---
 
@@ -134,7 +134,7 @@ global/skill-name/
 
 2. **`memory-setup` is listed in INDEX.md but has no directory.** Dead entry or missing skill.
 
-3. **`os-database` has broken symlinks.** `global/os-database/rules` and `global/os-database/workflows` are symlinks pointing to non-existent paths (e.g., `→ /Users/.../skills/os-database/rules` instead of `global/os-database/rules`).
+3. **Historical: `os-database` had broken absolute symlinks.** Public-release cleanup replaced the remaining machine-specific documentation symlink with a repository-owned file; `rules` and `workflows` are now regular directories.
 
 4. **`task-manager` contains SQLite WAL/SHM files** (siso_tasks.db-wal, siso_tasks.db-shm). These are runtime artifacts and shouldn't be in the skill directory.
 

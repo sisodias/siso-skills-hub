@@ -4,9 +4,13 @@
 import subprocess
 import sys
 import os
+from pathlib import Path
 
 # Path to the task system
-SISO_TASKS = os.environ.get("SISO_TASKS_SCRIPT", "/Users/shaansisodia/SISO_Workspace/agent_os/skills_hub/registry/skills/system/task-manager/siso-tasks.py")
+SISO_TASKS = os.environ.get(
+    "SISO_TASKS_SCRIPT",
+    str(Path(__file__).resolve().parents[2] / "task-manager" / "siso-tasks.py"),
+)
 DB_PATH = os.environ.get("SISO_SYSTEM_DB", os.path.expanduser("~/.SystemDB/sisostem.db"))
 
 def run(cmd):

@@ -174,6 +174,7 @@ def cmd_install(args):
 
         skill_entry = next((s for s in registry["skills"] if s["skill_id"] == skill_id), None)
         remote_url = skill_entry.get("remote_url") if skill_entry else None
+        pinned_revision = skill_entry.get("commit_hash") if skill_entry else None
 
         if remote_url:
             print(f"Skill '{skill_id}' not found locally, cloning from {remote_url}...")
@@ -185,16 +186,20 @@ def cmd_install(args):
                     subprocess.run(["git", "clone", remote_url, str(clone_dir)],
                                  check=True, capture_output=True, text=True)
 
-                    # If version specified, checkout that tag/branch
-                    if version:
-                        subprocess.run(["git", "checkout", version],
+                    # A caller-selected version overrides the registry pin. Otherwise
+                    # materialize the exact reviewed commit recorded by the Hub.
+                    revision = version or pinned_revision
+                    if revision:
+                        subprocess.run(["git", "checkout", "--detach", revision],
                                      check=True, capture_output=True, text=True, cwd=clone_dir)
 
-                    # Move to registry
-                    target_skill_dir = HUB_ROOT / "registry" / "skills" / skill_id
+                    # Materialize a plain source snapshot under its category. The Hub
+                    # is a registry, not a tree of nested Git repositories.
+                    category = skill_entry.get("category", "uncategorized")
+                    target_skill_dir = SKILLS_DIR / category / skill_id
                     if target_skill_dir.exists():
                         shutil.rmtree(target_skill_dir)
-                    shutil.copytree(clone_dir, target_skill_dir)
+                    shutil.copytree(clone_dir, target_skill_dir, ignore=shutil.ignore_patterns(".git"))
                     skill_dir = target_skill_dir
                     print(f"Cloned {skill_id} from {remote_url}")
                 except subprocess.CalledProcessError as e:
