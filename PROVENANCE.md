@@ -13,3 +13,5 @@ During the public-release audit, an embedded OpenRouter credential was found in 
 The same audit replaced personal absolute paths with environment-based workspace contracts, removed a broken absolute symlink and an empty path-artifact file, and removed an empty tracked telemetry database. Runtime data is now excluded from Git.
 
 The SISO-owned Hub and bundled SISO skills carry the repository-root MIT license. A promoted or externally sourced skill keeps its own ownership and license receipt; the Hub license never overrides upstream rights.
+
+The 2026-07-30 task-state reconciliation replaced Task Manager and PM Tasks database ownership with Agent Brain adapters, removed Task Commander raw-SQL and topology assumptions, and moved skill-health events to the Skills-owned `SISO_SKILLS_TELEMETRY_DB`. The mixed `os-database` folder remains preserved only as reviewed legacy import source; its consumer inventory is `registry/legacy-task-consumers.json`.

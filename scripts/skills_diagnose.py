@@ -7,7 +7,7 @@ from pathlib import Path
 from collections import defaultdict
 from datetime import datetime, timedelta
 
-DB_PATH = Path(os.environ.get("SISO_SYSTEM_DB", str(Path.home() / ".SystemDB" / "sisostem.db")))
+DB_PATH = Path(os.environ.get("SISO_SKILLS_TELEMETRY_DB", str(Path.home() / ".local" / "share" / "siso-skills-hub" / "telemetry.db")))
 REGISTRY_FILE = Path(__file__).parent.parent / "registry" / "skills_registry.json"
 
 

@@ -31,7 +31,7 @@
 - Context NOT inherited on spawn — must pass all context explicitly in prompt
 - Subagent `cwd` set at spawn time via team config
 - `planModeRequired: true` blocks execution awaiting approval
-- Two separate systems: (1) Agent/SendMessage, (2) siso-tasks SQLite
+- Separate contracts: Agent Brain owns task truth; the selected host delivers messages; Skills Hub owns local capability telemetry
 
 ---
 

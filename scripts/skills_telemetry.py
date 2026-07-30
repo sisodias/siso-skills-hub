@@ -8,7 +8,7 @@ import os
 import hashlib
 from pathlib import Path
 
-DB_PATH = Path(os.environ.get("SISO_SYSTEM_DB", str(Path.home() / ".SystemDB" / "sisostem.db")))
+DB_PATH = Path(os.environ.get("SISO_SKILLS_TELEMETRY_DB", str(Path.home() / ".local" / "share" / "siso-skills-hub" / "telemetry.db")))
 
 
 def get_db():

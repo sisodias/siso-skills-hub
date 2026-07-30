@@ -149,7 +149,7 @@ Each skill in `skills_registry.json`:
 
 ## Telemetry
 
-Every skill invocation is logged to `~/.SystemDB/sisostem.db` (skill_events table).
+Skill telemetry is stored separately from task state in `~/.local/share/siso-skills-hub/telemetry.db`. Override it with `SISO_SKILLS_TELEMETRY_DB`.
 
 ```python
 from skills_telemetry import track
@@ -220,12 +220,15 @@ python3 scripts/skills pipeline run pipelines/analyze-and-implement.yml \
 
 The Great Library stores the stable Work identity and immutable release receipts. This repository owns the changing catalog projection and install experience. Independently promoted skill repositories own their own releases.
 
+The machine-readable [legacy task consumer inventory](registry/legacy-task-consumers.json) records which adapters migrated to Agent Brain, which source remains preserved for import, and which external-consumer questions are still open.
+
 ---
 
 ## Architecture
 
 - **Registry**: `skills_registry.json` — single source of truth
-- **Canonical DB**: `~/.SystemDB/sisostem.db` — task + skill telemetry in one DB
+- **Task state**: SISO Agent Brain — accessed through its API/client, never direct SQLite
+- **Local telemetry**: `~/.local/share/siso-skills-hub/telemetry.db` — override with `SISO_SKILLS_TELEMETRY_DB`
 - **CLI**: `scripts/skills` — all commands
-- **Telemetry**: `skills_telemetry.py` SDK → `sisostem.db.skill_events`
+- **Telemetry**: `skills_telemetry.py` SDK → Skills-owned `telemetry.db.skill_events`
 - **Docs**: This directory + `HUB_DESIGN.md` + `STRATEGIC_ROADMAP.md`

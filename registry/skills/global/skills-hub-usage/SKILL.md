@@ -119,7 +119,7 @@ python3 $SISO_HUB/scripts/skills diagnose gitsearch [--days 30]
 
 ## Telemetry
 
-Every skill invocation is tracked in `~/.SystemDB/sisostem.db`. You can see skill health:
+Skill invocation telemetry is tracked in the Skills-owned local store at `~/.local/share/siso-skills-hub/telemetry.db` (override with `SISO_SKILLS_TELEMETRY_DB`). It is deliberately separate from Agent Brain task state. You can see skill health:
 
 ```bash
 python3 $SISO_HUB/scripts/skills health

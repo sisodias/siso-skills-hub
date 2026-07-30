@@ -8,7 +8,7 @@ How to integrate skill telemetry into the agent runtime.
 
 **Telemetry SDK exists:** `skills_hub/scripts/skills_telemetry.py`
 - `track(skill_id, success, agent_id, session_id, duration_ms, error_type, context)`
-- Writes to `~/.SystemDB/sisostem.db` (skill_events table - migrated from separate `skills_hub/data/skill_events.db`)
+- Writes to the Skills-owned `~/.local/share/siso-skills-hub/telemetry.db` (`skill_events` table; override with `SISO_SKILLS_TELEMETRY_DB`)
 
 **CLI has telemetry:** `skills_hub/scripts/skills` — all CLI commands (install, search, info, validate) call `track()` internally.
 
@@ -177,18 +177,13 @@ if __name__ == '__main__':
 
 ---
 
-## os-database vs skills_hub Schema Decision
+## Task state vs skill telemetry decision
 
-**Decision: Telemetry now lives in sisosystem.db, NOT in a separate file.**
+**Current decision (2026-07-30): keep the domains separate.**
 
-**History:**
-- Original decision: Separate `skills_hub/data/skill_events.db` for clean domain separation
-- Consolidation decision (2026-03-19): Merged into `~/.SystemDB/sisostem.db` for cross-domain query capability
+- SISO Agent Brain owns shared task, step, artifact, memory, and coordination truth behind its API.
+- Skills Hub owns local capability-health events in `telemetry.db`.
+- A shared `session_id` or `task_id` is a portable correlation value, not permission to join private database files directly.
+- Cross-domain analysis should consume explicit exports or APIs. It must not make Skills Hub a second writer to the Brain database.
 
-**Rationale for consolidation:**
-- `skill_events.session_id` can now JOIN to `sisosystem.sessions` and `sisosystem.tasks`
-- Enables: "Show me all skill invocations for task X" queries
-- Single operational burden: one backup, one path, one connection
-- If sisosystem goes down, you lose task tracking AND skill telemetry — both equally critical
-
-**Implementation:** `~/.SystemDB/sisostem.db` (skill_events table) is now the canonical home for skill telemetry.
+This replaces the 2026-03-19 consolidation experiment. Existing legacy telemetry can remain preserved until a reviewed exporter/importer exists; new events use `SISO_SKILLS_TELEMETRY_DB`.

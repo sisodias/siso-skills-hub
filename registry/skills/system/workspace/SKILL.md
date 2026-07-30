@@ -88,4 +88,4 @@ npm run build
 
 - **GitHub:** Lordsisodia/siso-agency-internal
 - **Vercel:** siso-internal (auto-deploys on push to main)
-- **Database:** SQLite at .SystemDB/sisosystem.db
+- **Task state:** SISO Agent Brain API/client; no project recipe opens its SQLite database directly

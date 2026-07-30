@@ -15,25 +15,25 @@ python3 .claude/skills/<skill-id>/scripts/<script>.py <args>
 
 **Examples:**
 
-Task management (os-database):
+Canonical task management (Agent Brain):
 ```bash
-python3 .claude/skills/os-database/scripts/get_my_tasks.py
-python3 .claude/skills/os-database/scripts/create_task.py --project-id "PRJ-XXX" --title "Task"
-python3 .claude/skills/os-database/scripts/update_task.py --task-id "TASK-001" --status "completed"
-python3 .claude/skills/os-database/scripts/log_event.py --type "THOUGHT" --msg "Doing X"
+siso-brain tasks --agent my-agent
+siso-brain task-create --id TASK-001 --description "Task" --agent my-agent
+siso-brain task-update --id TASK-001 --status completed
+siso-brain timeline --agent my-agent --type ACTION --task TASK-001 --message "Doing X"
 ```
 
-PM tasks (pm-tasks):
+Temporary PM alias (deprecated):
 ```bash
-python3 .claude/skills/pm-tasks/scripts/pm_tasks.py list
-python3 .claude/skills/pm-tasks/scripts/pm_tasks.py create "Task name" --priority 8
-python3 .claude/skills/pm-tasks/scripts/pm_tasks.py update TASK-001 in_progress
+python3 registry/skills/system/pm-tasks/scripts/pm_tasks.py list
+python3 registry/skills/system/pm-tasks/scripts/pm_tasks.py create "Task name" --priority 8
+python3 registry/skills/system/pm-tasks/scripts/pm_tasks.py update TASK-001 in_progress
 ```
 
-Task manager:
+Task Manager compatibility adapter:
 ```bash
-python3 .claude/skills/task-manager/scripts/task_manager.py claim <task-id>
-python3 .claude/skills/task-manager/scripts/task_manager.py progress <task-id>
+python3 registry/skills/system/task-manager/siso-tasks.py view-inbox --role builder
+python3 registry/skills/system/task-manager/siso-tasks.py pull --role builder --claimed-by my-agent
 ```
 
 **Registration:** Listed in agent's `skills/registry.md` under "Agent-Specific Skills"

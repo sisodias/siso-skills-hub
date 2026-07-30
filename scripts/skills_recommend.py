@@ -3,7 +3,7 @@ from pathlib import Path
 from collections import defaultdict
 import time
 
-DB_PATH = Path(os.environ.get("SISO_SYSTEM_DB", str(Path.home() / ".SystemDB" / "sisostem.db")))
+DB_PATH = Path(os.environ.get("SISO_SKILLS_TELEMETRY_DB", str(Path.home() / ".local" / "share" / "siso-skills-hub" / "telemetry.db")))
 
 def get_coinvocations(window_minutes=30, min_count=2):
     """Build co-invocation matrix from skill_events.

@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "legacy_task_consumer_inventory",
+  "observed_at": "2026-07-30",
+  "scope": "siso-skills-hub public source at this revision",
+  "canonical_task_contract": {
+    "work": "SISO Agent Brain",
+    "repository": "Lordsisodia/siso-agent-brain",
+    "revision": "ed50bec86f5cfb86cc5c84ebfce97fad595598b4",
+    "assessment": "LEGACY-TASK-STATE-ASSESSMENT.json"
+  },
+  "consumers": [
+    {"unit":"task-manager","kind":"compatibility_adapter","state":"migrated","contract":"forwards stable commands to siso-brain; owns no database and rejects raw SQL"},
+    {"unit":"pm-tasks","kind":"deprecated_adapter","state":"migrated_pending_retirement","contract":"temporary aliases forward to siso-brain with service-generated IDs"},
+    {"unit":"task-commander","kind":"playbook_step","state":"migrated_pending_playbook_move","contract":"reads and claims through Agent Brain; host delivery remains explicit and contains no topology snapshot"},
+    {"unit":"skills telemetry scripts","kind":"local_capability_telemetry","state":"reclassified","contract":"uses SISO_SKILLS_TELEMETRY_DB and never writes the Agent Brain database"},
+    {"unit":"workspace","kind":"deprecated_environment_recipe","state":"documented_boundary","contract":"points task state to Agent Brain rather than a project-local SQLite path"},
+    {"unit":"agent invocation and integration docs","kind":"documentation","state":"updated","contract":"canonical examples use siso-brain; deprecated adapters are named as transitional"},
+    {"unit":"os-database","kind":"preserved_legacy_source","state":"preserved_for_import_only","contract":"direct SQLite scripts remain isolated inside the explicitly deprecated source folder until a real dry-run is reviewed"}
+  ],
+  "verified_absences": [
+    "No non-legacy Skills Hub executable uses SISO_SYSTEM_DB.",
+    "Task Commander contains no sqlite3 import, raw SELECT, .SystemDB path, CMUX workspace ID, or direct database write.",
+    "Skills telemetry defaults to a Skills-owned XDG-style local data path.",
+    "The compatibility adapters are covered by deterministic command-routing tests."
+  ],
+  "remaining_risks": [
+    "A real local legacy database has not yet passed the Agent Brain importer dry-run.",
+    "Consumers outside this public repository are not covered by this inventory.",
+    "PM Tasks should be removed after its last external consumer migrates.",
+    "Task Commander still needs promotion into a versioned Agent Playbook with a live Herdr delivery receipt."
+  ]
+}

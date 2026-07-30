@@ -13,6 +13,8 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "registry" / "skills_registry.json"
 ASSESSMENTS = ROOT / "registry" / "promotion-assessments.json"
+CONSUMER_INVENTORY = ROOT / "registry" / "legacy-task-consumers.json"
+CHECKPOINT = ROOT / "reports" / "consumer-cleanup.html"
 SKILLS = ROOT / "registry" / "skills"
 IGNORED = {".git", "__pycache__", "node_modules"}
 
@@ -36,6 +38,14 @@ for entry in assessment_entries:
     assert entry["recommendation"] in known_recommendations, f"unknown recommendation for {entry['skill_id']}"
     assert entry["decision_status"] in {"provisional", "accepted"}, f"unknown decision status for {entry['skill_id']}"
     assert entry.get("reason") and entry.get("target") and entry.get("evidence"), f"assessment evidence incomplete for {entry['skill_id']}"
+
+consumer_inventory = json.loads(CONSUMER_INVENTORY.read_text())
+assert CHECKPOINT.is_file(), "missing task consumer cleanup checkpoint"
+assert consumer_inventory["record_type"] == "legacy_task_consumer_inventory"
+assert consumer_inventory["canonical_task_contract"]["revision"] == "ed50bec86f5cfb86cc5c84ebfce97fad595598b4"
+consumer_states = {item["unit"]: item["state"] for item in consumer_inventory["consumers"]}
+assert consumer_states["task-manager"] == "migrated"
+assert consumer_states["skills telemetry scripts"] == "reclassified"
 
 for entry in entries:
     candidates = list(SKILLS.glob(f"*/{entry['skill_id']}"))
@@ -116,13 +126,40 @@ assert module.load_state() == {'session': 'synthetic'}
                              cwd=ROOT, env=adapter_env, text=True, capture_output=True)
     assert refused.returncode == 2 and "raw SQL is retired" in refused.stderr
 
+    telemetry_db = Path(directory) / "skills-telemetry.db"
+    telemetry_env = dict(env)
+    telemetry_env["SISO_SKILLS_TELEMETRY_DB"] = str(telemetry_db)
+    telemetry_probe = """
+import importlib.util, pathlib, sys
+path = pathlib.Path(sys.argv[1])
+spec = importlib.util.spec_from_file_location('skills_telemetry_probe', path)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+module.track('gitsearch', agent_id='fixture-agent', session_id='fixture-session', duration_ms=12)
+stats = module.get_stats('gitsearch', days=1)
+assert stats['count'] == 1 and stats['success_rate'] == 1.0
+"""
+    run(["python3", "-c", telemetry_probe, str(ROOT / "scripts" / "skills_telemetry.py")], env=telemetry_env, stdout=subprocess.DEVNULL)
+    health = subprocess.run(["python3", "scripts/skills_health_monitor.py", "--days", "1", "--json"],
+                            cwd=ROOT, env=telemetry_env, text=True, capture_output=True, check=True)
+    assert json.loads(health.stdout)["total_events"] == 1
+    assert telemetry_db.is_file()
+
+telemetry_sources = ["skills_telemetry.py", "skills_health_monitor.py", "skills_diagnose.py", "skills_recommend.py"]
+for name in telemetry_sources:
+    source = (ROOT / "scripts" / name).read_text()
+    assert "SISO_SKILLS_TELEMETRY_DB" in source and "SISO_SYSTEM_DB" not in source and ".SystemDB" not in source
+task_commander = (SKILLS / "communication" / "task-commander" / "SKILL.md").read_text()
+for forbidden in ("sqlite3", ".SystemDB", "SELECT ", "cmux send", "workspace:24"):
+    assert forbidden not in task_commander, f"task-commander retained legacy coupling: {forbidden}"
+
 run(["python3", "scripts/build_index.py", "--check"])
 run(["python3", "scripts/build_promotion_map.py", "--check"])
 
 patterns = [
     re.compile("/" + "Users" + "/"),
     re.compile("BEGIN (?:RSA |OPENSSH |EC |DSA )?" + "PRIVATE KEY"),
-    re.compile("(?:ghp|github_pat|sk)" + "-[A-Za-z0-9_-]{16,}"),
+    re.compile("(?<![A-Za-z0-9])(?:ghp|github_pat|sk)" + "-[A-Za-z0-9_-]{16,}"),
 ]
 for path in ROOT.rglob("*"):
     if IGNORED.intersection(path.parts):

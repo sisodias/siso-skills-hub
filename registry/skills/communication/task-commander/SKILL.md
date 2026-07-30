@@ -1,124 +1,53 @@
 ---
 name: task-commander
-description: Log tasks and communicate with agents using the SISO task database
-version: 1.0.0
+description: Transitional task-dispatch playbook adapter using Agent Brain for state and an explicitly selected workspace host for delivery.
+version: 2.0.0
 tags:
   - task-management
-  - database
-  - communication
+  - agent-brain
+  - playbook-step
 ---
 
-# Task Commander Skill
+# Task Commander — transitional playbook adapter
 
-Log tasks and communicate with agents using the SISO task database.
+Task Commander does not own a database or a workspace topology. It is one step of a future Agent Playbook: select shared work from **SISO Agent Brain**, construct a bounded handoff, then deliver it through the orchestration host selected by that playbook (for the current SISO stack, normally Herdr).
 
-## Task Database
+## 1. Read or claim work
 
-Location: `${SISO_WORKSPACE}/.SystemDB/sisosystem.db`
-
-Query tasks:
 ```bash
-python3 -c "
-import sqlite3
-conn = sqlite3.connect('${SISO_WORKSPACE}/.SystemDB/sisosystem.db')
-cursor = conn.cursor()
-cursor.execute('SELECT id, title, assigned_to, status, priority FROM tasks ORDER BY priority DESC LIMIT 10')
-for row in cursor.fetchall():
-    print(row)
-conn.close()
-"
+siso-brain tasks --agent Testing_Agent
+siso-brain steps --role tester
+siso-brain step-claim --role tester --by testing-agent
 ```
 
----
+The claim response is the source of truth. Do not query SQLite or infer state from a workspace pane.
 
-## Workflow: Assign Task to Agent
+## 2. Build the handoff
 
-### 1. Get Pending Tasks
-Check tasks assigned to an agent:
-```bash
-python3 -c "
-import sqlite3
-conn = sqlite3.connect('${SISO_WORKSPACE}/.SystemDB/sisosystem.db')
-cursor = conn.cursor()
-cursor.execute(\"SELECT id, title, status, priority FROM tasks WHERE assigned_to LIKE '%Testing%' AND status='pending' ORDER BY priority DESC\")
-for row in cursor.fetchall():
-    print(f'{row[0]}: {row[1]} (priority: {row[3]})')
-conn.close()
-"
-```
+Include only the stable identifiers and context the receiving agent needs:
 
-### 2. Build Task Message
-Include task details when messaging agent:
-```
+```text
 Task: <task_id>
-Title: <title>
-Priority: <priority>
-Description: <description>
-
-Please complete this task.
+Step: <step_id>
+Title: <task_title>
+Intent: <task_description>
+Input: <step_input_payload>
+Definition of done: <playbook acceptance rule>
 ```
 
-### 3. Send to Agent
-```bash
-cmux send --workspace workspace:X "Task: TASK-0001\nTitle: Implement Auth\nPriority: 5\n\nPlease work on this task.\n"
-```
+## 3. Deliver through the selected host
 
----
+Workspace creation, pane selection, and message delivery belong to the orchestration playbook and host adapter. Do not hardcode pane IDs, machine names, or historical CMUX workspaces in this skill.
 
-## Example: Assign Task to Testing Agent
-
-### Step 1: Find task for Testing Agent
-```bash
-python3 -c "
-import sqlite3
-conn = sqlite3.connect('${SISO_WORKSPACE}/.SystemDB/sisosystem.db')
-cursor = conn.cursor()
-cursor.execute(\"SELECT id, title, status FROM tasks WHERE assigned_to LIKE '%Testing%' AND status='pending'\")
-for row in cursor.fetchall():
-    print(row)
-conn.close()
-"
-```
-
-### Step 2: Send to Testing Agent (workspace:24)
-```bash
-cmux send --workspace workspace:24 "TASK: TEST-0001\nTask: Test task: Add documentation\nPriority: 5\n\nPlease test the app and add documentation.\n"
-```
-
----
-
-## Create New Task
+## 4. Record the result
 
 ```bash
-export SYSTEM_DB="${SISO_WORKSPACE}/.SystemDB/sisosystem.db"
-python3 ${SISO_WORKSPACE}/Agent_OS/skills/siso-tasks/siso-tasks.py create-task \
-  --id TASK-XXXX \
-  --project-id siso-internal \
-  --pipeline-type execution \
-  --title "Your task title" \
-  --category feature \
-  --created-by human \
-  --assigned-to Testing_Agent \
-  --description "Task description" \
-  --priority 5
+siso-brain step-update --id <step_id> --status done --output '{"verified":true}'
+siso-brain timeline --agent testing-agent --type HANDOFF --task <task_id> --message "Verification returned"
 ```
 
----
+On a recoverable failure, use `--status retry`; on a terminal step failure, use `--status error`. The Brain updates the parent task state under its tested workflow contract.
 
-## Update Task Status
+## Boundary
 
-```bash
-export SYSTEM_DB="${SISO_WORKSPACE}/.SystemDB/sisosystem.db"
-python3 ${SISO_WORKSPACE}/Agent_OS/skills/siso-tasks/siso-tasks.py update-step \
-  --step-id <step_id> \
-  --status completed
-```
-
----
-
-## Quick Reference
-
-1. Query tasks: Check task DB
-2. Build message: Include task details
-3. Send to agent: Via CMUX
-4. Update status: Mark task complete
+This entry remains in Skills Hub only as a transitional adapter. The full dispatch sequence belongs in Agent Playbooks because it composes task selection, host operations, agent communication, and verification.
