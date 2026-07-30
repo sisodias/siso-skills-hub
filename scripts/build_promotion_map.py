@@ -19,6 +19,9 @@ LABELS = {
     "reconcile_system_then_keep_adapter": "Reconcile system",
     "retire_or_replace": "Retire / replace",
     "candidate_after_evidence": "Candidate after evidence",
+    "keep_thin_adapter": "Keep thin adapter",
+    "retire_after_adapter": "Retire after adapter",
+    "decompose_then_retire": "Decompose then retire",
 }
 
 
@@ -41,7 +44,7 @@ def render():
         rows.append(
             "<tr>"
             f'<td><a href="{escape(source)}"><b>{escape(item["skill_id"])}</b></a><small>{escape(skill["category"])} · {escape(item["capability_kind"].replace("_", " "))}</small></td>'
-            f'<td><span class="tag {escape(item["recommendation"])}">{escape(LABELS[item["recommendation"]])}</span></td>'
+            f'<td><span class="tag {escape(item["recommendation"])}">{escape(LABELS[item["recommendation"]])}</span><small>{escape(item["decision_status"])}</small></td>'
             f'<td>{escape(item["target"])}</td>'
             f'<td>{escape(item["reason"])}<details><summary>Promotion blockers</summary><ul>{blockers}</ul></details></td>'
             "</tr>"
@@ -54,7 +57,7 @@ def render():
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>SISO Skills — Repository Promotion Map</title>
   <style>
-    :root{{--ink:#182033;--muted:#5d6879;--paper:#f4f1e9;--panel:#fff;--line:#d9d5cb;--accent:#087b72;--navy:#13213d}}*{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:16px/1.58 ui-sans-serif,system-ui,sans-serif}}main{{max-width:92rem;margin:auto;padding:38px 24px}}header,section{{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:clamp(20px,4vw,44px);margin:16px 0}}header{{background:linear-gradient(135deg,#101d37,#19324a);color:#f8fbff}}.eyebrow{{color:#65e0cf;font:700 .74rem ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase}}h1{{font-size:clamp(2.5rem,7vw,5.6rem);line-height:.92;letter-spacing:-.05em;margin:.5rem 0 1.3rem;max-width:12ch}}h2{{line-height:1.1}}.lede{{max-width:73ch;font-size:1.18rem;color:#d7e2ef}}.numbers{{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}}.numbers div{{background:#eef2f3;border-radius:12px;padding:15px}}.numbers b{{display:block;font-size:1.7rem}}.numbers span,small{{display:block;color:var(--muted)}}.flow{{display:flex;align-items:center;gap:8px;flex-wrap:wrap}}.node{{padding:9px 13px;border:1px solid var(--line);border-radius:999px;background:#f7f9fa}}.arrow{{color:var(--accent);font-weight:800}}.callout{{border-left:4px solid var(--accent);padding:12px 18px;background:#edf8f6}}table{{border-collapse:collapse;width:100%}}th,td{{padding:12px 10px;border-bottom:1px solid #e3e0d8;text-align:left;vertical-align:top}}th{{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}}td:nth-child(1){{min-width:170px}}td:nth-child(2){{min-width:175px}}.tag{{display:inline-block;border-radius:999px;padding:4px 8px;font:700 .7rem ui-monospace,monospace;text-transform:uppercase}}.stay_bundled{{background:#e5f2ff;color:#215b88}}.move_to_playbook{{background:#ece8ff;color:#59479a}}.reconcile_system_then_keep_adapter{{background:#fff1d6;color:#8b5500}}.retire_or_replace{{background:#ffe5e8;color:#973544}}.candidate_after_evidence{{background:#ddf8ed;color:#08705f}}details{{margin-top:7px}}summary{{cursor:pointer;color:var(--accent)}}ul{{margin:.4rem 0}}code{{overflow-wrap:anywhere}}footer{{padding:32px 4px;color:var(--muted)}}@media(max-width:72rem){{.numbers{{grid-template-columns:1fr 1fr}}table,tbody,tr,th,td{{display:block}}thead{{display:none}}tr{{padding:14px 0;border-bottom:1px solid var(--line)}}td{{border:0;padding:5px 0}}}}@media(max-width:34rem){{main{{padding:12px}}.numbers{{grid-template-columns:1fr}}}}
+    :root{{--ink:#182033;--muted:#5d6879;--paper:#f4f1e9;--panel:#fff;--line:#d9d5cb;--accent:#087b72;--navy:#13213d}}*{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:16px/1.58 ui-sans-serif,system-ui,sans-serif}}main{{max-width:92rem;margin:auto;padding:38px 24px}}header,section{{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:clamp(20px,4vw,44px);margin:16px 0}}header{{background:linear-gradient(135deg,#101d37,#19324a);color:#f8fbff}}.eyebrow{{color:#65e0cf;font:700 .74rem ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase}}h1{{font-size:clamp(2.5rem,7vw,5.6rem);line-height:.92;letter-spacing:-.05em;margin:.5rem 0 1.3rem;max-width:12ch}}h2{{line-height:1.1}}.lede{{max-width:73ch;font-size:1.18rem;color:#d7e2ef}}.numbers{{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px}}.numbers div{{background:#eef2f3;border-radius:12px;padding:15px}}.numbers b{{display:block;font-size:1.7rem}}.numbers span,small{{display:block;color:var(--muted)}}.flow{{display:flex;align-items:center;gap:8px;flex-wrap:wrap}}.node{{padding:9px 13px;border:1px solid var(--line);border-radius:999px;background:#f7f9fa}}.arrow{{color:var(--accent);font-weight:800}}.callout{{border-left:4px solid var(--accent);padding:12px 18px;background:#edf8f6}}table{{border-collapse:collapse;width:100%}}th,td{{padding:12px 10px;border-bottom:1px solid #e3e0d8;text-align:left;vertical-align:top}}th{{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}}td:nth-child(1){{min-width:170px}}td:nth-child(2){{min-width:175px}}.tag{{display:inline-block;border-radius:999px;padding:4px 8px;font:700 .7rem ui-monospace,monospace;text-transform:uppercase}}.stay_bundled{{background:#e5f2ff;color:#215b88}}.move_to_playbook{{background:#ece8ff;color:#59479a}}.reconcile_system_then_keep_adapter{{background:#fff1d6;color:#8b5500}}.retire_or_replace{{background:#ffe5e8;color:#973544}}.candidate_after_evidence,.keep_thin_adapter{{background:#ddf8ed;color:#08705f}}.retire_after_adapter,.decompose_then_retire{{background:#ffe5e8;color:#973544}}details{{margin-top:7px}}summary{{cursor:pointer;color:var(--accent)}}ul{{margin:.4rem 0}}code{{overflow-wrap:anywhere}}footer{{padding:32px 4px;color:var(--muted)}}@media(max-width:72rem){{table,tbody,tr,th,td{{display:block}}thead{{display:none}}tr{{padding:14px 0;border-bottom:1px solid var(--line)}}td{{border:0;padding:5px 0}}}}@media(max-width:34rem){{main{{padding:12px}}.numbers{{grid-template-columns:1fr}}}}
   </style>
 </head>
 <body><main>
@@ -65,9 +68,9 @@ def render():
   </header>
 
   <section>
-    <h2>The first assessment</h2>
+    <h2>The evolving assessment</h2>
     <div class="numbers">{cards}</div>
-    <p class="callout"><b>Promote now: zero.</b> This is a useful result, not a failure. No current folder proves enough independent adoption and release evidence to justify a repository today. Web Search is the first plausible individual-skill candidate; the task/database family is a system reconciliation problem, not three skill repositories.</p>
+    <p class="callout"><b>Promote as standalone skill repositories now: zero.</b> Direct comparison has resolved the task/database family: Agent Brain owns state, Task Manager becomes its thin adapter, PM Tasks retires after migration, and OS Database decomposes across system boundaries.</p>
   </section>
 
   <section>
@@ -78,14 +81,14 @@ def render():
 
   <section>
     <h2>All 28 current entries</h2>
-    <p>Every verdict below is provisional and evidence-linked, so the map can evolve without rewriting history. Open a row's blockers to see what must become true before its next boundary is accepted.</p>
+    <p>Most verdicts remain provisional. Accepted rows have direct cross-repository implementation and behavioral receipts. Open a row's blockers to see what must become true before its next boundary is accepted.</p>
     <table><thead><tr><th>Entry</th><th>Recommendation</th><th>Target boundary</th><th>Reason and blockers</th></tr></thead><tbody>{''.join(rows)}</tbody></table>
   </section>
 
   <section>
     <h2>What happens next</h2>
     <ol>
-      <li><b>Reconcile the task/state family with Agent Brain.</b> OS Database, Task Manager, and PM Tasks overlap one system outcome and currently lack isolated behavioral proof.</li>
+      <li><b>Prove legacy data import.</b> Build fixture-backed migration receipts before removing the preserved OS Database source.</li>
       <li><b>Move compositions to Agent Playbook.</b> Multi-Search, Subagents, story phases, command flows, and pipeline steps should version with the scenarios they compose.</li>
       <li><b>Run Web Search through the promotion gate.</b> Add synthetic transport tests, provider-neutral configuration, citation/error contracts, and actual independent adoption evidence before creating its repository.</li>
     </ol>

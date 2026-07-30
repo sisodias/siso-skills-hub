@@ -29,12 +29,12 @@ assessment_entries = json.loads(ASSESSMENTS.read_text()).get("assessments", [])
 assessment_ids = [entry["skill_id"] for entry in assessment_entries]
 assert len(assessment_ids) == len(set(assessment_ids)), "promotion assessment IDs must be unique"
 assert set(assessment_ids) == set(ids), "promotion assessments must cover exactly the registered skills"
-known_kinds = {"atomic_skill", "tool_adapter", "playbook_step", "orchestration_playbook", "system_adapter", "environment_recipe", "catalog_meta_skill"}
-known_recommendations = {"stay_bundled", "move_to_playbook", "reconcile_system_then_keep_adapter", "retire_or_replace", "candidate_after_evidence"}
+known_kinds = {"atomic_skill", "tool_adapter", "playbook_step", "orchestration_playbook", "system_adapter", "environment_recipe", "catalog_meta_skill", "deprecated_adapter", "mixed_legacy_system"}
+known_recommendations = {"stay_bundled", "move_to_playbook", "reconcile_system_then_keep_adapter", "retire_or_replace", "candidate_after_evidence", "keep_thin_adapter", "retire_after_adapter", "decompose_then_retire"}
 for entry in assessment_entries:
     assert entry["capability_kind"] in known_kinds, f"unknown capability kind for {entry['skill_id']}"
     assert entry["recommendation"] in known_recommendations, f"unknown recommendation for {entry['skill_id']}"
-    assert entry["decision_status"] == "provisional", f"first-pass decision must remain provisional for {entry['skill_id']}"
+    assert entry["decision_status"] in {"provisional", "accepted"}, f"unknown decision status for {entry['skill_id']}"
     assert entry.get("reason") and entry.get("target") and entry.get("evidence"), f"assessment evidence incomplete for {entry['skill_id']}"
 
 for entry in entries:
@@ -93,6 +93,28 @@ module.save_state({'session': 'synthetic'})
 assert module.load_state() == {'session': 'synthetic'}
 """
     run(["python3", "-c", probe, str(SKILLS / "global" / "os-database" / "scripts" / "_shared_config.py"), env["SISO_SYSTEM_DB"]], env=env, stdout=subprocess.DEVNULL)
+
+    fake_brain = Path(directory) / "fake_brain.py"
+    capture = Path(directory) / "brain-command.json"
+    fake_brain.write_text(
+        "import json, os, sys\n"
+        "open(os.environ['SISO_BRAIN_CAPTURE'], 'w').write(json.dumps(sys.argv[1:]))\n"
+        "print('{\"ok\":true}')\n"
+    )
+    adapter_env = dict(env)
+    adapter_env.update({"SISO_BRAIN_CLI": f"python3 {fake_brain}", "SISO_BRAIN_CAPTURE": str(capture)})
+    task_adapter = SKILLS / "system" / "task-manager" / "siso-tasks.py"
+    pm_adapter = SKILLS / "system" / "pm-tasks" / "scripts" / "pm_tasks.py"
+    run(["python3", str(task_adapter), "create-task", "--id", "TASK-CHECK", "--project-id", "library",
+         "--pipeline-type", "execution", "--description", "adapter receipt", "--assigned-to", "builder",
+         "--priority", "8"], env=adapter_env, stdout=subprocess.DEVNULL)
+    routed = json.loads(capture.read_text())
+    assert routed[:3] == ["task-create", "--id", "TASK-CHECK"] and "--urgency" in routed and "80" in routed
+    run(["python3", str(pm_adapter), "update", "TASK-CHECK", "completed"], env=adapter_env, stdout=subprocess.DEVNULL)
+    assert json.loads(capture.read_text()) == ["task-update", "--id", "TASK-CHECK", "--status", "completed"]
+    refused = subprocess.run(["python3", str(task_adapter), "query", "--sql", "SELECT * FROM tasks"],
+                             cwd=ROOT, env=adapter_env, text=True, capture_output=True)
+    assert refused.returncode == 2 and "raw SQL is retired" in refused.stderr
 
 run(["python3", "scripts/build_index.py", "--check"])
 run(["python3", "scripts/build_promotion_map.py", "--check"])
