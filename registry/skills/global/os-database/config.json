@@ -1,8 +1,8 @@
 {
   "db_path": "env:SISO_SYSTEM_DB",
-  "agent_id": "PM_Agent",
-  "role": "Project Manager",
-  "department": "Meta",
+  "agent_id": "env:SISO_AGENT_ID",
+  "role": "env:SISO_AGENT_ROLE",
+  "department": "env:SISO_AGENT_DEPARTMENT",
   "root_path": "env:SISO_AGENT_ROOT",
-  "db_path_fallback": "~/.SystemDB/sisostem.db"
+  "db_path_fallback": "~/.SystemDB/siso_system.db"
 }

@@ -18,8 +18,8 @@ This skill connects you to the central Agent OS database.
 
 ```
 .claude/skills/os-database/
-├── config.json      # Your identity (edit before use)
-├── state.json      # Auto-managed session state
+├── config.json      # Environment-backed public defaults
+├── .runtime/       # Auto-managed local session state (gitignored)
 ├── schema.sql     # DB reference for errors
 ├── DATABASE.md    # Full schema documentation (READ THIS)
 ├── scripts/        # Atomic tools

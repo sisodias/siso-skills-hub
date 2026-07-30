@@ -12,7 +12,7 @@ You have just started. You MUST execute these steps in exact order.
 ```bash
 python3 .claude/skills/os-database/scripts/init_session.py
 ```
-- **Result:** Creates session, updates state.json with your SESSION_ID and run_number
+- **Result:** Creates a session and writes your SESSION_ID and run number to gitignored local runtime state. Set `SISO_AGENT_STATE` to choose a different explicit state path.
 
 ## Step 2: Log Your Boot
 - **Action:** Log a BOOT event to timeline

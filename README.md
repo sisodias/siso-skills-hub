@@ -4,7 +4,7 @@ Central registry, CLI, dependency graph, templates, pipelines, and bundled sourc
 
 This Hub is not one giant skill and it is not the whole Agents operating stack. A **skill** is one atomic repeatable capability. A **playbook** composes skills with prompts, tools, gates, and evidence; playbooks live in the separate Agent Playbook repository. The Hub makes skills discoverable and installable whether their source is bundled here or promoted to an independent repository.
 
-See [`PROMOTION.md`](PROMOTION.md) for how users can fork the whole Hub or one independently released skill without relying on Git submodules.
+See [`PROMOTION.md`](PROMOTION.md) for how users can fork the whole Hub or one independently released skill without relying on Git submodules. The evidence-backed current decisions are readable in [`docs/skill-repository-map.html`](docs/skill-repository-map.html) and machine-readable in [`registry/promotion-assessments.json`](registry/promotion-assessments.json).
 
 ## Quick Start
 

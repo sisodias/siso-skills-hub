@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 
 _SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, _SCRIPT_DIR)
-from _shared_config import load_config, load_state
+from _shared_config import load_config, load_state, save_state
 
 
 def init_agent(task_id: str = None):
@@ -62,6 +62,7 @@ def init_agent(task_id: str = None):
         "session_started_at": now
     }
     state.update(new_state)
+    save_state(state)
 
     conn.close()
 

@@ -24,6 +24,15 @@ Promote a skill to its own repository when at least one is true:
 
 A folder name alone is not a promotion reason.
 
+## Current catalog assessment
+
+The 2026-07-30 direct-source pass found no immediate repository promotions. That is deliberate: ten entries belong with Playbooks, three are adapters over one task/state system that must be reconciled with Agent Brain, ten are stale environment recipes that need replacement or retirement, four remain cheap bundled capabilities, and Web Search is the first individual-skill candidate after its missing tests, provider abstraction, and adoption evidence exist.
+
+- Human map: [`docs/skill-repository-map.html`](docs/skill-repository-map.html)
+- Machine decisions: [`registry/promotion-assessments.json`](registry/promotion-assessments.json)
+
+All decisions are provisional. A new adoption receipt or independent maintainer can change the recommendation without changing the skill's identity.
+
 ## After promotion: independent source, pinned catalog entry
 
 The skill repository owns its source, license, tests, releases, and contribution workflow. Its Hub entry records:

@@ -12,6 +12,7 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "registry" / "skills_registry.json"
+ASSESSMENTS = ROOT / "registry" / "promotion-assessments.json"
 SKILLS = ROOT / "registry" / "skills"
 IGNORED = {".git", "__pycache__", "node_modules"}
 
@@ -24,12 +25,30 @@ entries = json.loads(REGISTRY.read_text()).get("skills", [])
 ids = [entry["skill_id"] for entry in entries]
 assert entries and len(ids) == len(set(ids)), "registry skill IDs must be non-empty and unique"
 
+assessment_entries = json.loads(ASSESSMENTS.read_text()).get("assessments", [])
+assessment_ids = [entry["skill_id"] for entry in assessment_entries]
+assert len(assessment_ids) == len(set(assessment_ids)), "promotion assessment IDs must be unique"
+assert set(assessment_ids) == set(ids), "promotion assessments must cover exactly the registered skills"
+known_kinds = {"atomic_skill", "tool_adapter", "playbook_step", "orchestration_playbook", "system_adapter", "environment_recipe", "catalog_meta_skill"}
+known_recommendations = {"stay_bundled", "move_to_playbook", "reconcile_system_then_keep_adapter", "retire_or_replace", "candidate_after_evidence"}
+for entry in assessment_entries:
+    assert entry["capability_kind"] in known_kinds, f"unknown capability kind for {entry['skill_id']}"
+    assert entry["recommendation"] in known_recommendations, f"unknown recommendation for {entry['skill_id']}"
+    assert entry["decision_status"] == "provisional", f"first-pass decision must remain provisional for {entry['skill_id']}"
+    assert entry.get("reason") and entry.get("target") and entry.get("evidence"), f"assessment evidence incomplete for {entry['skill_id']}"
+
 for entry in entries:
     candidates = list(SKILLS.glob(f"*/{entry['skill_id']}"))
     assert len(candidates) == 1, f"expected one bundled source for {entry['skill_id']}, found {len(candidates)}"
     assert (candidates[0] / "SKILL.md").is_file(), f"missing SKILL.md for {entry['skill_id']}"
     if entry.get("remote_url"):
         assert re.fullmatch(r"[0-9a-f]{40}", entry.get("commit_hash") or ""), f"remote skill {entry['skill_id']} needs a full commit pin"
+
+runtime_artifact_names = {"state.json"}
+runtime_artifact_suffixes = (".db", ".db-wal", ".db-shm", ".sqlite", ".sqlite-wal", ".sqlite-shm")
+for path in SKILLS.rglob("*"):
+    if path.is_file():
+        assert path.name not in runtime_artifact_names and not path.name.endswith(runtime_artifact_suffixes), f"runtime artifact committed under skills: {path.relative_to(ROOT)}"
 
 for path in ROOT.rglob("*.py"):
     if not IGNORED.intersection(path.parts):
@@ -53,8 +72,30 @@ with tempfile.TemporaryDirectory(prefix="siso-skills-hub-check-") as directory:
     target = Path(directory) / "installed"
     run(["python3", "scripts/skills", "install", "gitsearch", "--target", str(target)], env=env, stdout=subprocess.DEVNULL)
     assert (target / "gitsearch" / "SKILL.md").is_file(), "disposable skill installation did not materialize source"
+    state_path = Path(directory) / "agent-state.json"
+    env.update({
+        "SISO_AGENT_STATE": str(state_path),
+        "SISO_AGENT_ID": "agent-test",
+        "SISO_AGENT_ROLE": "tester",
+        "SISO_AGENT_DEPARTMENT": "verification",
+        "SISO_AGENT_ROOT": directory,
+    })
+    probe = """
+import importlib.util, json, pathlib, sys
+module_path = pathlib.Path(sys.argv[1])
+spec = importlib.util.spec_from_file_location('shared_config_probe', module_path)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+config = module.load_config()
+assert config['db_path'] == sys.argv[2]
+assert config['agent_id'] == 'agent-test'
+module.save_state({'session': 'synthetic'})
+assert module.load_state() == {'session': 'synthetic'}
+"""
+    run(["python3", "-c", probe, str(SKILLS / "global" / "os-database" / "scripts" / "_shared_config.py"), env["SISO_SYSTEM_DB"]], env=env, stdout=subprocess.DEVNULL)
 
 run(["python3", "scripts/build_index.py", "--check"])
+run(["python3", "scripts/build_promotion_map.py", "--check"])
 
 patterns = [
     re.compile("/" + "Users" + "/"),

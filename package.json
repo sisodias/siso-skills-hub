@@ -5,6 +5,7 @@
   "description": "Registry, CLI, dependencies, templates, pipelines, and source receipts for SISO agent skills.",
   "scripts": {
     "build:index": "python3 scripts/build_index.py",
+    "build:promotion-map": "python3 scripts/build_promotion_map.py",
     "check:index": "python3 scripts/build_index.py --check",
     "test": "python3 scripts/check.py"
   }
