@@ -66,7 +66,6 @@ All meta agents go in:
 ${SISO_WORKSPACE}/agent_os/agents/
 ```
 
-## Available Models
+## Model selection
 
-- `MiniMax-M2.5-highspeed` - Fast
-- `claude-sonnet-4-6` - Claude Sonnet
+Model lanes are governed by the global model-policy; do not hardcode model IDs here.
