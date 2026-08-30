@@ -929,7 +929,12 @@
       "name": "Skills Hub Usage",
       "description": "Navigate, discover, install, and use skills from the SISO Skills Hub",
       "category": "global",
-      "tags": ["skills-hub", "discovery", "navigation", "self-help"],
+      "tags": [
+        "skills-hub",
+        "discovery",
+        "navigation",
+        "self-help"
+      ],
       "version": "1.0.0",
       "author": "SISO Team",
       "repo_url": null,
@@ -945,8 +950,12 @@
         "skill": "echo 'SISO_HUB env var must point to skills_hub directory'"
       },
       "files": {
-        "required": ["SKILL.md"],
-        "optional": ["README.md"]
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
       },
       "metadata": {
         "user_invocable": true,
@@ -958,7 +967,12 @@
       "name": "Check Status",
       "description": "Check the current status of a pipeline run by reading progress files",
       "category": "pipeline",
-      "tags": ["pipeline", "status", "progress", "workflow"],
+      "tags": [
+        "pipeline",
+        "status",
+        "progress",
+        "workflow"
+      ],
       "version": "1.0.0",
       "author": "SISO Team",
       "repo_url": null,
@@ -974,7 +988,9 @@
         "skill": "echo 'No additional setup required'"
       },
       "files": {
-        "required": ["SKILL.md"],
+        "required": [
+          "SKILL.md"
+        ],
         "optional": []
       },
       "metadata": {
@@ -987,7 +1003,12 @@
       "name": "Create Progress",
       "description": "Initialize or update progress.md for a pipeline run",
       "category": "pipeline",
-      "tags": ["pipeline", "progress", "logging", "workflow"],
+      "tags": [
+        "pipeline",
+        "progress",
+        "logging",
+        "workflow"
+      ],
       "version": "1.0.0",
       "author": "SISO Team",
       "repo_url": null,
@@ -1003,7 +1024,9 @@
         "skill": "echo 'No additional setup required'"
       },
       "files": {
-        "required": ["SKILL.md"],
+        "required": [
+          "SKILL.md"
+        ],
         "optional": []
       },
       "metadata": {
@@ -1016,7 +1039,12 @@
       "name": "Read JobTicket",
       "description": "Read and validate a JobTicket JSON file from inbox",
       "category": "pipeline",
-      "tags": ["pipeline", "jobticket", "inbox", "workflow"],
+      "tags": [
+        "pipeline",
+        "jobticket",
+        "inbox",
+        "workflow"
+      ],
       "version": "1.0.0",
       "author": "SISO Team",
       "repo_url": null,
@@ -1032,7 +1060,9 @@
         "skill": "echo 'No additional setup required'"
       },
       "files": {
-        "required": ["SKILL.md"],
+        "required": [
+          "SKILL.md"
+        ],
         "optional": []
       },
       "metadata": {
@@ -1045,7 +1075,12 @@
       "name": "Pass to Next",
       "description": "Pass context to the next agent in the pipeline by writing output files",
       "category": "pipeline",
-      "tags": ["pipeline", "handoff", "workflow", "agent-communication"],
+      "tags": [
+        "pipeline",
+        "handoff",
+        "workflow",
+        "agent-communication"
+      ],
       "version": "1.0.0",
       "author": "SISO Team",
       "repo_url": null,
@@ -1061,12 +1096,174 @@
         "skill": "echo 'No additional setup required'"
       },
       "files": {
-        "required": ["SKILL.md"],
+        "required": [
+          "SKILL.md"
+        ],
         "optional": []
       },
       "metadata": {
         "user_invocable": true,
         "status": "stable"
+      }
+    },
+    {
+      "skill_id": "classify-by-reading",
+      "name": "Classify By Reading",
+      "description": "Classify files from their content before assigning consequential current/stale/dead/duplicate/archive verdicts.",
+      "category": "global",
+      "tags": [
+        "safety",
+        "classification",
+        "cleanup",
+        "evidence"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": false,
+        "status": "stable",
+        "source_commit": "269c8ecd00724d8ab99cb2b260d0f5f52e921771",
+        "ownership": "canonical-hub"
+      }
+    },
+    {
+      "skill_id": "prove-before-claim",
+      "name": "Prove Before Claim",
+      "description": "Require a falsifying probe before making a verifiable system claim or accepting an unverified success report.",
+      "category": "global",
+      "tags": [
+        "verification",
+        "evidence",
+        "claims",
+        "safety"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": false,
+        "status": "stable",
+        "source_commit": "269c8ecd00724d8ab99cb2b260d0f5f52e921771",
+        "ownership": "canonical-hub"
+      }
+    },
+    {
+      "skill_id": "skills-catalog",
+      "name": "Skills Catalog",
+      "description": "Locate the current skill or router for a capability without relying on a stale duplicated inventory.",
+      "category": "global",
+      "tags": [
+        "skills",
+        "discovery",
+        "routing",
+        "catalog"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": false,
+        "status": "stable",
+        "source_commit": "269c8ecd00724d8ab99cb2b260d0f5f52e921771",
+        "ownership": "canonical-hub"
+      }
+    },
+    {
+      "skill_id": "unified-code-search",
+      "name": "Unified Code Search",
+      "description": "Navigate a local codebase through native Serena symbol, reference, outline, and call-hierarchy queries.",
+      "category": "code",
+      "tags": [
+        "code-navigation",
+        "serena",
+        "symbols",
+        "references"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": false,
+        "status": "stable",
+        "source_commit": "269c8ecd00724d8ab99cb2b260d0f5f52e921771",
+        "ownership": "canonical-hub"
       }
     }
   ]

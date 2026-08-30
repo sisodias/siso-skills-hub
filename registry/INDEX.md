@@ -12,6 +12,7 @@
 | agent-setup | Create new agent from V4 template with memory system pre-configured | bundled |
 | analyze_task | Analyze a task and decompose into user stories | bundled |
 | implement_story | Implement a single user story with tests | bundled |
+| unified-code-search | Navigate a local codebase through native Serena symbol, reference, outline, and call-hierarchy queries. | bundled |
 
 ### communication
 
@@ -43,7 +44,10 @@
 
 | Skill | Description | Source |
 |---|---|---|
+| classify-by-reading | Classify files from their content before assigning consequential current/stale/dead/duplicate/archive verdicts. | bundled |
 | os-database | Core Agent OS Database for telemetry, tasks, and timeline tracking | bundled |
+| prove-before-claim | Require a falsifying probe before making a verifiable system claim or accepting an unverified success report. | bundled |
+| skills-catalog | Locate the current skill or router for a capability without relying on a stale duplicated inventory. | bundled |
 | skills-hub-usage | Navigate, discover, install, and use skills from the SISO Skills Hub | bundled |
 | subagents | Spawn and manage parallel subagents for concurrent task execution | bundled |
 
@@ -74,6 +78,6 @@
 
 ---
 
-**Total: 28 skills**
+**Total: 32 skills**
 
 Use `python3 scripts/skills list`, `search <query>`, or `info <skill>` to explore.
