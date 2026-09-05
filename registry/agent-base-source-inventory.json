@@ -1,0 +1,737 @@
+{
+  "schema_version": 1,
+  "record_type": "agent_base_source_inventory",
+  "observed_at": "2026-09-05",
+  "source_repository": "SISO_Agent_Base",
+  "source_checkout_commit": "1c85f3742309d7d53199abcf3434d9167240aecf",
+  "source_worktree_state": "dirty_snapshot_preserved",
+  "historical_claim": {
+    "definition_count": 120,
+    "state": "unverified_historical_count"
+  },
+  "observed": {
+    "definition_count": 79,
+    "source_directory_count": 80,
+    "non_definition_directories": [
+      "_archive"
+    ],
+    "repo_local_projection_entries": 158,
+    "prior_three_home_path_entries": 237
+  },
+  "method": "Luna independently enumerated current owning definitions and matched all 79 content hashes to the prior complete-definition reading. No resources, runtime, or whole-repository commit review is implied.",
+  "authority": "Source inventory only. Not an installation, retirement, deletion, dependency-success, or runtime authority list.",
+  "source_license": "MIT, Copyright (c) 2026 SISO; see agent-base-LICENSE.txt",
+  "records": [
+    {
+      "skill_id": "adversary",
+      "source_path": "templates/profile/skills/adversary/SKILL.md",
+      "source_sha256": "62aa6fac9f11e496093c4dac1c94448b75a1b0baf07127f2603740c72ece6c4e",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "agent-architecture",
+      "source_path": "templates/profile/skills/agent-architecture/SKILL.md",
+      "source_sha256": "b18ca9cac06eed00743f5081ad7c784f038e35dada40a94096ef1e987f609218",
+      "content_kind": "mixed",
+      "provisional_disposition": "candidate_for_reviewed_hub_adapter",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "agent-comms",
+      "source_path": "templates/profile/skills/agent-comms/SKILL.md",
+      "source_sha256": "ca930d9364d8fc99f5be9f9061ccd813e0978f99e02aa2f0c359899398e8ae36",
+      "content_kind": "private_environment_recipe",
+      "provisional_disposition": "needs_reconciliation",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "async-codex-review",
+      "source_path": "templates/profile/skills/async-codex-review/SKILL.md",
+      "source_sha256": "ec12bdcac8c820c1a03a2a4b9355162d3137d8edb5f10fcf907655152bf414cd",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "brain",
+      "source_path": "templates/profile/skills/brain/SKILL.md",
+      "source_sha256": "69f92dcf9c97f009a4ca89ccf2d5439476c2520d4a29f993844b254d83055f8b",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "catgpt",
+      "source_path": "templates/profile/skills/catgpt/SKILL.md",
+      "source_sha256": "f029dd05ed16a6110334d272c6d73c258e24ca5c12a4f4bc49ca9c901ce6862c",
+      "content_kind": "system_adapter",
+      "provisional_disposition": "candidate_for_reviewed_hub_adapter",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "chatgpt-deep-research",
+      "source_path": "templates/profile/skills/chatgpt-deep-research/SKILL.md",
+      "source_sha256": "76a3ef00f750237af15bd090ffedcc7628234b0fa6bb06d2d816527d9ce42526",
+      "content_kind": "system_adapter",
+      "provisional_disposition": "candidate_for_reviewed_hub_adapter",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "checkmark",
+      "source_path": "templates/profile/skills/checkmark/SKILL.md",
+      "source_sha256": "7f0100e2fb508e3371858702beb340d239edf8f4f4c0796f9041c87661c720bb",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "classify-by-reading",
+      "source_path": "templates/profile/skills/classify-by-reading/SKILL.md",
+      "source_sha256": "b3e0362fb61084f874db843c7fbbcbc1d3b1f3994fd6481456f0afb97c585bcf",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "clone-website",
+      "source_path": "templates/profile/skills/clone-website/SKILL.md",
+      "source_sha256": "c74d161a1e26ace594140ee5753133e7a644b685e70805f18f53ea712eb67ecf",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "code-search-campaign",
+      "source_path": "templates/profile/skills/code-search-campaign/SKILL.md",
+      "source_sha256": "0bfd4b5d76d8e71ec0043c29c6ffc75996a8e40f51f64b21b6541ac4b3d05dd1",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "codex-companion",
+      "source_path": "templates/profile/skills/codex-companion/SKILL.md",
+      "source_sha256": "115862ff0dd304f127062c9aa7e355d40434249b8ce49fb27fc45a382931e240",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "codex-dispatch",
+      "source_path": "templates/profile/skills/codex-dispatch/SKILL.md",
+      "source_sha256": "6532509bdc99db103c22a5edbf0f86b62dd5df3b8ad13b2c5263e6c08bfd0c22",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "conduct",
+      "source_path": "templates/profile/skills/conduct/SKILL.md",
+      "source_sha256": "edc93e9324fb0093684a0da950495a35b0502e4d4d578ab790d086aca9ebba6d",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "context-relay",
+      "source_path": "templates/profile/skills/context-relay/SKILL.md",
+      "source_sha256": "76455fc1cbe821c333dfeeeeb3c76fc47d994732b7d48bfb15d8926e23d56ca4",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "dedup-primitive",
+      "source_path": "templates/profile/skills/dedup-primitive/SKILL.md",
+      "source_sha256": "47c827980ab4785b5dd3d62a8165aaf3bf845527436404a614ab2c181aff7f15",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "design-directions",
+      "source_path": "templates/profile/skills/design-directions/SKILL.md",
+      "source_sha256": "7f1a8059f57540b4e6cb112d30e33e45584845657f4515463d1fdb34bcb4d8f3",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "disk-cleanup",
+      "source_path": "templates/profile/skills/disk-cleanup/SKILL.md",
+      "source_sha256": "8f019431cbd954940c90b3f2305f98759ea4c674c614e3ef808f2970711d2152",
+      "content_kind": "private_environment_recipe",
+      "provisional_disposition": "needs_reconciliation",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "falsifiable-investigation",
+      "source_path": "templates/profile/skills/falsifiable-investigation/SKILL.md",
+      "source_sha256": "d32bf4ed3969c413641476fcee2fd5e60b76e81ec0a51c4f80b2b23ff5767b9c",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "fan-out",
+      "source_path": "templates/profile/skills/fan-out/SKILL.md",
+      "source_sha256": "c60c4e609e221d232bb202aaae53882296e9c32b32900b59f43add0e981c0846",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "firecrawl-agent",
+      "source_path": "templates/profile/skills/firecrawl-agent/SKILL.md",
+      "source_sha256": "8571279bdcc9a4cf72f3ee71da95902117d77350926a8cad7f55872f5c2681a7",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "firecrawl-crawl",
+      "source_path": "templates/profile/skills/firecrawl-crawl/SKILL.md",
+      "source_sha256": "62869a7eb36b49c826df6ffc3c220d010bc39bc79ae738ed22fedf8ad91de99a",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "firecrawl-download",
+      "source_path": "templates/profile/skills/firecrawl-download/SKILL.md",
+      "source_sha256": "46933da3e29d6ef723c6f813a5f17900c0e1de1a65e100d04840a9270bc17ba6",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "firecrawl-instruct",
+      "source_path": "templates/profile/skills/firecrawl-instruct/SKILL.md",
+      "source_sha256": "242afe1572bff3abee1935f5f7de17d7b2965cbfefa97a883041727491e3d86c",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "firecrawl-map",
+      "source_path": "templates/profile/skills/firecrawl-map/SKILL.md",
+      "source_sha256": "74210869dae9ae0d094d081585edc4f28a9e623c65ee45d714e435c2b6bdbfc8",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "firecrawl-scrape",
+      "source_path": "templates/profile/skills/firecrawl-scrape/SKILL.md",
+      "source_sha256": "05d6c8b688ec733ce31a5ffd9dff935af4cc4b5e6fedc3bc86b15cf32703683b",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "firecrawl-search",
+      "source_path": "templates/profile/skills/firecrawl-search/SKILL.md",
+      "source_sha256": "405a27fe4261e3b837b8c939aa0c16b1508989e323eba6dbac4031a49119d535",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "firecrawl",
+      "source_path": "templates/profile/skills/firecrawl/SKILL.md",
+      "source_sha256": "e3d39e97603cb988f8a4ef6f79333bd49682ea4b385d430c18853fc9cd7411d8",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "flywheel",
+      "source_path": "templates/profile/skills/flywheel/SKILL.md",
+      "source_sha256": "d6dea8a7fd6e0df59c98c98c976f4fc2a3f1a86fc45a44b851cecb3f099f1320",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "forge-skill",
+      "source_path": "templates/profile/skills/forge-skill/SKILL.md",
+      "source_sha256": "2d59389670c59564d2d4dd853aa240e0193f4c9becc105afdaaa095fc7f0f8a5",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "gh-cli",
+      "source_path": "templates/profile/skills/gh-cli/SKILL.md",
+      "source_sha256": "a077a66105899b9c57611375eb692226ff70dc3fe974d9819072cb779913d551",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "gitsearch",
+      "source_path": "templates/profile/skills/gitsearch/SKILL.md",
+      "source_sha256": "f5fccf033ae7a4110fa6519b352ecd7243c723897fbd7d886599e61353010640",
+      "content_kind": "system_adapter",
+      "provisional_disposition": "candidate_for_reviewed_hub_adapter",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "graphify",
+      "source_path": "templates/profile/skills/graphify/SKILL.md",
+      "source_sha256": "2673dc70e02b0ccc669100cf048457ca5e92fb6a764d9ec9123d3029fe964847",
+      "content_kind": "mixed",
+      "provisional_disposition": "candidate_for_reviewed_hub_adapter",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "headroom",
+      "source_path": "templates/profile/skills/headroom/SKILL.md",
+      "source_sha256": "2ba8159e797ae02cf48c95be31d011c72699f726707564bce4a2cf0563079422",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "herdr",
+      "source_path": "templates/profile/skills/herdr/SKILL.md",
+      "source_sha256": "bf711e9cc8f5d8e22a1d2c9456af97008c475c2dad06f18224002a4308156435",
+      "content_kind": "system_adapter",
+      "provisional_disposition": "candidate_for_reviewed_hub_adapter",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "implement",
+      "source_path": "templates/profile/skills/implement/SKILL.md",
+      "source_sha256": "65da6e11caa7f375a430fd426d8694d3eeec261e8896bd462160aa0262c2c5a2",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "insights-ask",
+      "source_path": "templates/profile/skills/insights-ask/SKILL.md",
+      "source_sha256": "f87578caec32e994663cd79f2eb9552acbf203d77c0206aa5715fe28a0bca10b",
+      "content_kind": "private_environment_recipe",
+      "provisional_disposition": "needs_reconciliation",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "iso",
+      "source_path": "templates/profile/skills/iso/SKILL.md",
+      "source_sha256": "2b047f7fff82a3d79f44f4a69d38556a691ecc7bf8f2eb01fc1cec38ae75b56d",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "legibility-floor",
+      "source_path": "templates/profile/skills/legibility-floor/SKILL.md",
+      "source_sha256": "cd0e9b0169dd2821763e57623556e01186a5a1c014f0f59a5a0af320eac4dc87",
+      "content_kind": "mixed",
+      "provisional_disposition": "candidate_for_reviewed_hub_adapter",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "model-routing",
+      "source_path": "templates/profile/skills/model-routing/SKILL.md",
+      "source_sha256": "a9b69fbc884fb55b386d0460f7c195a75b7058205b5a3edbf5cf95b92aaa8965",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "multisearch",
+      "source_path": "templates/profile/skills/multisearch/SKILL.md",
+      "source_sha256": "7a683444f0e4180c299f5afc83291862ee0987ac3284515785c8996f0f29bb29",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "oracle-checkpoint",
+      "source_path": "templates/profile/skills/oracle-checkpoint/SKILL.md",
+      "source_sha256": "9e17e596d52fd0407330f433bbb653f343cfdaa200e6f6b194fbb203e758c9fd",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "orchestrate",
+      "source_path": "templates/profile/skills/orchestrate/SKILL.md",
+      "source_sha256": "02185e6da6e74eaa7e1baa320bcb37e86655c555c0df2003cf60752cfb53d1d7",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "orchestration-playbook",
+      "source_path": "templates/profile/skills/orchestration-playbook/SKILL.md",
+      "source_sha256": "3663ac64c95a874938a0e435efc3447dcca0579b1cdc513d8cf820e865413ff6",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "page-deep-dive-verify",
+      "source_path": "templates/profile/skills/page-deep-dive-verify/SKILL.md",
+      "source_sha256": "20c3cb38119528508a0e77f9205f5d0f10219f70cb34b7a385dbd49e151b9572",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "page-deep-dive",
+      "source_path": "templates/profile/skills/page-deep-dive/SKILL.md",
+      "source_sha256": "c813f37a1b28f7757e20c60e6d681ddf971eaef22e246a31439d3e9b4035f999",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "page-flow-analysis",
+      "source_path": "templates/profile/skills/page-flow-analysis/SKILL.md",
+      "source_sha256": "9f06e2e221ab2f573819d1e2439c8476cf7658312c3eb1b4638d172dd8f80740",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "pb-codenav",
+      "source_path": "templates/profile/skills/pb-codenav/SKILL.md",
+      "source_sha256": "aef17841265b4819e23c2c902bd9cc14b85c9bab0142a80d8cd422cfb4f9e7fd",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "pb-frontend",
+      "source_path": "templates/profile/skills/pb-frontend/SKILL.md",
+      "source_sha256": "ee538aed461a2fb48d0597fa67ef06883cb5f91f4b1db5f5395daf2296e2a1b3",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "pb-orchestration",
+      "source_path": "templates/profile/skills/pb-orchestration/SKILL.md",
+      "source_sha256": "16d4e7d79a1320a49b068135680b4a04c5cccd8e341a4c0319c240beccb9e0c6",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "pb-research",
+      "source_path": "templates/profile/skills/pb-research/SKILL.md",
+      "source_sha256": "5223695349987a839f5f62c58230ea14087c4eeaa4ef8aaed670ce79a670e24e",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "pb-system",
+      "source_path": "templates/profile/skills/pb-system/SKILL.md",
+      "source_sha256": "5870916d7eae81f4573673d6e613edca84681d23d316197e74d75d3259de90a6",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "pb-verification",
+      "source_path": "templates/profile/skills/pb-verification/SKILL.md",
+      "source_sha256": "522af78b746aae419f438f0fa1cae09852d2f7bfe43b9a38a8e4152b62454db9",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "playwright-cli",
+      "source_path": "templates/profile/skills/playwright-cli/SKILL.md",
+      "source_sha256": "54f7b8bbce95335d27f1fc7d4ab58dad138722653d4fe06fdafe9bb87e64ad8e",
+      "content_kind": "system_adapter",
+      "provisional_disposition": "candidate_for_reviewed_hub_adapter",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "ponytail",
+      "source_path": "templates/profile/skills/ponytail/SKILL.md",
+      "source_sha256": "120f96d0b3e5199a4c93169fc0760f614d4df0a0402e429957392d0c920e9ff6",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "preflight-lessons",
+      "source_path": "templates/profile/skills/preflight-lessons/SKILL.md",
+      "source_sha256": "3af50868be17ddd2d901e5d947910a709fc19190a79c44e9e7ce8c58d98c6436",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "prove-before-claim",
+      "source_path": "templates/profile/skills/prove-before-claim/SKILL.md",
+      "source_sha256": "2705b7fdd4c42291a824f6b0dcf866c43374398f8287b49c721eaa103d388b0a",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "reflect",
+      "source_path": "templates/profile/skills/reflect/SKILL.md",
+      "source_sha256": "04027174006fee3de5b784904b1cc29960adffef978f805af7e0be50ae47843a",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "runtime-reminders",
+      "source_path": "templates/profile/skills/runtime-reminders/SKILL.md",
+      "source_sha256": "80f5312c192f2beb411af9203b11d6c3f45e1fa170370ba8d7c81f342739979d",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "session-checkpoint",
+      "source_path": "templates/profile/skills/session-checkpoint/SKILL.md",
+      "source_sha256": "3a5a181ea68b2a2ee4a0a35d88e50e4da6a4141f23abdf44b03b9f9e702a1a56",
+      "content_kind": "system_adapter",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "ship-gate",
+      "source_path": "templates/profile/skills/ship-gate/SKILL.md",
+      "source_sha256": "5ec135e0acc4c68cdf7de18f94350f2490d8df9a0254f1a47e1106a226e0ff69",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "siso-capabilities",
+      "source_path": "templates/profile/skills/siso-capabilities/SKILL.md",
+      "source_sha256": "eb9e9d8f21234b9e4233457bf54d2e1bc7c1941f492aff40a100daaec12624ff",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "siso-codex",
+      "source_path": "templates/profile/skills/siso-codex/SKILL.md",
+      "source_sha256": "f2987e0ce13d291c17d74c4c3af308893389ffdc8708b8c8d3a2e67017d3dad4",
+      "content_kind": "mixed",
+      "provisional_disposition": "candidate_for_reviewed_hub_adapter",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "siso-graph",
+      "source_path": "templates/profile/skills/siso-graph/SKILL.md",
+      "source_sha256": "d44a7aac5acbcb0e6a26938a5dfe8da8670e6bffdab69d75b7f4c2a7b24bd5c2",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "siso-lsp",
+      "source_path": "templates/profile/skills/siso-lsp/SKILL.md",
+      "source_sha256": "07d5f3c3a3d2d6cf6272fda862ec7daaf70a1541b1e6f48fb917b6056b9cb7f9",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "skill",
+      "source_path": "templates/profile/skills/skill/SKILL.md",
+      "source_sha256": "925ac12b5c6bfafe0e49aaf962c9d98d8f12443e8ee9f49aa207e10862d3e1ec",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "skills-catalog",
+      "source_path": "templates/profile/skills/skills-catalog/SKILL.md",
+      "source_sha256": "cd68072c3c3ce111bc7727d36fb0a05ea12f562a6dd284829056ba1fdb9e8746",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "source-reference",
+      "source_path": "templates/profile/skills/source-reference/SKILL.md",
+      "source_sha256": "82dfd1bf9438d640e84fe5fc79a3e70b775d8cbf0acfda781dc3a168216aa212",
+      "content_kind": "system_adapter",
+      "provisional_disposition": "candidate_for_reviewed_hub_adapter",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "sourcegraph",
+      "source_path": "templates/profile/skills/sourcegraph/SKILL.md",
+      "source_sha256": "7c0f8cc7169831501b18451081540f830d9e014cba1090f2604d7c4f1142d098",
+      "content_kind": "system_adapter",
+      "provisional_disposition": "candidate_for_reviewed_hub_adapter",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "subagents",
+      "source_path": "templates/profile/skills/subagents/SKILL.md",
+      "source_sha256": "841d47f1434302b39b01b40f4ed1f6b31b1c7c373868d94b55ebaab47a4f87e2",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "task",
+      "source_path": "templates/profile/skills/task/SKILL.md",
+      "source_sha256": "37653ff499693c2179f86f9a3805738820bc5465b75bb3852e430473d586312c",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "telemetry",
+      "source_path": "templates/profile/skills/telemetry/SKILL.md",
+      "source_sha256": "c51c3302ce1f87120aad3badc5e612f68093cfeb432e4151e4c32bd5bf62cf14",
+      "content_kind": "system_adapter",
+      "provisional_disposition": "candidate_for_reviewed_hub_adapter",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "transcript-compact",
+      "source_path": "templates/profile/skills/transcript-compact/SKILL.md",
+      "source_sha256": "e548ad025b6127c01c4655b29cc2d3851cc4ede5e8c6aa4ac372b9f784d4d0aa",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "ui-science",
+      "source_path": "templates/profile/skills/ui-science/SKILL.md",
+      "source_sha256": "1092f3e8da84d84df04ab2c74dce7567e05bd1439c0fda3d4581759d41dbdb96",
+      "content_kind": "mixed",
+      "provisional_disposition": "candidate_for_reviewed_hub_adapter",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "unified-code-search",
+      "source_path": "templates/profile/skills/unified-code-search/SKILL.md",
+      "source_sha256": "650a0f764732dc17dec9103dc0aeddfd1524b01cda7614d296b3f662f23a4287",
+      "content_kind": "atomic_capability",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "verifiable-frontend",
+      "source_path": "templates/profile/skills/verifiable-frontend/SKILL.md",
+      "source_sha256": "db18f07dc82bb60377253bb19f440be0486892ff74fbbd027b81c7a820d95713",
+      "content_kind": "playbook",
+      "provisional_disposition": "playbook_candidate",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "verify-surface",
+      "source_path": "templates/profile/skills/verify-surface/SKILL.md",
+      "source_sha256": "3a208c4f7c51c43d03f706359e5ff8b64fbbf951e67a1575e1765dec73fe9243",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "websearch",
+      "source_path": "templates/profile/skills/websearch/SKILL.md",
+      "source_sha256": "4a40d40574be8c2f7849f614dfa56757eb1aa7c0eaf50ce95c8064c26a5ac58b",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    },
+    {
+      "skill_id": "xsearch",
+      "source_path": "templates/profile/skills/xsearch/SKILL.md",
+      "source_sha256": "84549800e2b46110368495b65715757bdaa60742466f30c7822b525032ac793a",
+      "content_kind": "unverified",
+      "provisional_disposition": "retain_source_inventory",
+      "definition_read_coverage": "Prior complete SKILL.md reading reused after Luna rechecked its hash; referenced resources remain unverified.",
+      "dependencies_verified": false
+    }
+  ]
+}

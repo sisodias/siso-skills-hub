@@ -9,6 +9,17 @@ different projection. A failed copy retains its incomplete target for inspection
 Agent Base remains source inventory/compatibility material. Its historical
 definitions are not an automatic installation or deletion list.
 
+The [Agent Base Source Inventory](docs/AGENT-BASE-SOURCE-INVENTORY.md) reconciles
+the historical count with 79 current, hash-checked definitions. It does not admit
+them automatically to the installed catalog.
+
+For a material repo-local checkpoint, use [writeback](registry/skills/global/writeback/SKILL.md).
+It complements the original owner-writeback adapter and mirrors one exact line
+to the existing ledger with retry-safe append semantics. To check fresh harness
+discovery without a model turn, run `python3 scripts/probe_skill_discovery.py
+--harness codex owner-writeback owner-handoff skill-author writeback` (or `claude`).
+The probe reports only these skills; unrelated catalog errors remain explicit.
+
 This Hub is not one giant skill and it is not the whole Agents operating stack. A **skill** is one atomic repeatable capability. A **playbook** composes skills with prompts, tools, gates, and evidence; playbooks live in the separate Agent Playbook repository. The Hub makes skills discoverable and installable whether their source is bundled here or promoted to an independent repository.
 
 See [`PROMOTION.md`](PROMOTION.md) for how users can fork the whole Hub or one independently released skill without relying on Git submodules. The evidence-backed current decisions are readable in [`docs/skill-repository-map.html`](docs/skill-repository-map.html) and machine-readable in [`registry/promotion-assessments.json`](registry/promotion-assessments.json).
