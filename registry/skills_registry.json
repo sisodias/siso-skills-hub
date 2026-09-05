@@ -1,6 +1,23 @@
 {
   "skills": [
     {
+      "skill_id": "publish",
+      "name": "Publish static site",
+      "description": "Publish a reviewed static directory or HTML file to an authorized public Cloudflare Pages project with exact readback and a caller handoff receipt.",
+      "category": "devops",
+      "tags": ["static", "cloudflare", "publication"],
+      "version": "0.1.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": { "skills": [], "packages": [] },
+      "install_commands": { "system": "echo 'Requires Node.js and caller-pinned Wrangler'", "skill": "echo 'No automatic credential or provider setup'" },
+      "files": { "required": ["SKILL.md", "scripts/publish.mjs"], "optional": [] },
+      "metadata": { "user_invocable": true, "status": "experimental" }
+    },
+    {
       "skill_id": "agent-builder",
       "name": "Agent Builder",
       "description": "Create new agents from the SISO v3 agent template",

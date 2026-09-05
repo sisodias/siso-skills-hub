@@ -37,6 +37,7 @@
 | cmux-browser | Control CMUX browser for automated testing and browser interactions | bundled |
 | github | Complete GitHub workflow for SISO codebase - branch, commit, push, merge | bundled |
 | gitsearch | Search GitHub for code, repos, issues, and PRs | bundled |
+| publish | Publish a reviewed static directory or HTML file to an authorized public Cloudflare Pages project with exact readback and a caller handoff receipt. | bundled |
 | vercel | Deploy SISO Internal Lab to Vercel | bundled |
 
 ### global
@@ -78,6 +79,6 @@
 
 ---
 
-**Total: 32 skills**
+**Total: 33 skills**
 
 Use `python3 scripts/skills list`, `search <query>`, or `info <skill>` to explore.
