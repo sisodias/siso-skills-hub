@@ -63,6 +63,7 @@ def probe(harness, cwd, expected):
             matches = {item['name']: {key: item[key] for key in ('path', 'enabled', 'scope')}
                        for item in skills if item['name'] in expected}
             errors = sum(len(row['errors']) for row in rows)
+            catalog_errors = [error for row in rows for error in row['errors']]
         else:
             send({'type': 'control_request', 'request_id': 'plays-skill-probe',
                   'request': {'subtype': 'initialize'}})
@@ -73,10 +74,12 @@ def probe(harness, cwd, expected):
             commands = response['response'].get('commands', [])
             matches = {item['name']: {'discovered': True} for item in commands if item['name'] in expected}
             errors = None
+            catalog_errors = []
         missing = sorted(set(expected) - set(matches))
         disabled = sorted(name for name, value in matches.items() if value.get('enabled') is False)
         return dict(harness=harness, fresh_process=True, model_turns=0, matches=matches,
                     missing=missing, disabled=disabled, other_catalog_errors=errors,
+                    catalog_errors=catalog_errors[:3] if missing else [],
                     passed=not missing and not disabled)
     finally:
         process.stdin.close()
