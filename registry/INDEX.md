@@ -49,6 +49,7 @@
 | skill-author | Author, register, validate and safely install one reviewed skill from its owning source. | bundled |
 | skills-hub-usage | Navigate, discover, install, and use skills from the SISO Skills Hub | bundled |
 | subagents | Spawn and manage parallel subagents for concurrent task execution | bundled |
+| writeback | Append one material owner line to a repository log and mirror it to the existing Agent Zero ledger, with safe retries. | bundled |
 
 ### pipeline
 
@@ -77,6 +78,6 @@
 
 ---
 
-**Total: 31 skills**
+**Total: 32 skills**
 
 Use `python3 scripts/skills list`, `search <query>`, or `info <skill>` to explore.
