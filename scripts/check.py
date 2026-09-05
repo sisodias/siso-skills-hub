@@ -146,6 +146,7 @@ assert stats['count'] == 1 and stats['success_rate'] == 1.0
     assert telemetry_db.is_file()
 
 run(["python3", "scripts/test_skills_installer.py"], stdout=subprocess.DEVNULL)
+run(["python3", "scripts/test_writeback.py"], stdout=subprocess.DEVNULL)
 
 telemetry_sources = ["skills_telemetry.py", "skills_health_monitor.py", "skills_diagnose.py", "skills_recommend.py"]
 for name in telemetry_sources:

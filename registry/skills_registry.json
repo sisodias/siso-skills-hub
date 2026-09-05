@@ -1190,6 +1190,44 @@
         "status": "experimental",
         "ownership": "playbook-adapter"
       }
+    },
+    {
+      "skill_id": "writeback",
+      "name": "Owner Log Mirror",
+      "description": "Append one material owner line to a repository log and mirror it to the existing Agent Zero ledger, with safe retries.",
+      "category": "global",
+      "tags": [
+        "owner",
+        "writeback",
+        "continuity"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": [
+          "python3"
+        ]
+      },
+      "install_commands": {
+        "system": "echo 'Python 3 required'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md",
+          "scripts/writeback.py"
+        ],
+        "optional": []
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable"
+      }
     }
   ]
 }
