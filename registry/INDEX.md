@@ -44,6 +44,9 @@
 | Skill | Description | Source |
 |---|---|---|
 | os-database | Core Agent OS Database for telemetry, tasks, and timeline tracking | bundled |
+| owner-handoff | Use the owning Playbook's preservation, cold-read and single-writer handoff gate. | bundled |
+| owner-writeback | Persist owned material state and append an index pointer through the consuming project's existing adapter. | bundled |
+| skill-author | Author, register, validate and safely install one reviewed skill from its owning source. | bundled |
 | skills-hub-usage | Navigate, discover, install, and use skills from the SISO Skills Hub | bundled |
 | subagents | Spawn and manage parallel subagents for concurrent task execution | bundled |
 
@@ -74,6 +77,6 @@
 
 ---
 
-**Total: 28 skills**
+**Total: 31 skills**
 
 Use `python3 scripts/skills list`, `search <query>`, or `info <skill>` to explore.

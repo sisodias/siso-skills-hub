@@ -1,6 +1,13 @@
 # Skills Hub
 
-Central registry, CLI, dependency graph, templates, pipelines, and bundled source snapshots for SISO agent skills. The current catalog contains 28 skills across 8 categories.
+Central registry, CLI, dependency graph, templates, pipelines, and bundled source snapshots for SISO agent skills. `registry/skills_registry.json` is the current catalog; installed harness directories are projections, not competing authoring homes.
+
+For one tested author/register/install workflow, read
+[`skill-author`](registry/skills/global/skill-author/SKILL.md). Installation is
+collision-refusing and supports `--dry-run`; it never overwrites an existing
+different projection. A failed copy retains its incomplete target for inspection.
+Agent Base remains source inventory/compatibility material. Its historical
+definitions are not an automatic installation or deletion list.
 
 This Hub is not one giant skill and it is not the whole Agents operating stack. A **skill** is one atomic repeatable capability. A **playbook** composes skills with prompts, tools, gates, and evidence; playbooks live in the separate Agent Playbook repository. The Hub makes skills discoverable and installable whether their source is bundled here or promoted to an independent repository.
 
@@ -171,11 +178,12 @@ health = usage_freq × success_rate × latency_score × context_diversity
    cp -r templates/skill/ registry/skills/<category>/<new-skill>/
    ```
 
-2. Fill in `SKILL.md` with frontmatter and description
+2. Fill in `SKILL.md` with nonempty name/description and task-specific instructions.
 
 3. Add to registry:
    ```bash
-   # Edit skills_registry.json manually, or:
+   # Edit skills_registry.json and matching promotion-assessments.json.
+   # validate checks an existing registration; it does not create one.
    python3 scripts/skills validate <new-skill>
    ```
 
