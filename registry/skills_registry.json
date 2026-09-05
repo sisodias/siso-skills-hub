@@ -1,6 +1,23 @@
 {
   "skills": [
     {
+      "skill_id": "gls",
+      "name": "Register in the Great Library",
+      "description": "Add reviewed Work, Release, Source Inventory and question metadata through the Library's schema and full verification gate.",
+      "category": "devops",
+      "tags": ["registry", "metadata", "publication"],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": { "skills": [], "packages": [] },
+      "install_commands": { "system": "echo 'Use the intended Library checkout with Node.js 20 or newer'", "skill": "echo 'No automatic repository or credential setup'" },
+      "files": { "required": ["SKILL.md"], "optional": [] },
+      "metadata": { "user_invocable": true, "status": "experimental" }
+    },
+    {
       "skill_id": "publish",
       "name": "Publish static site",
       "description": "Publish a reviewed static directory or HTML file to an authorized public Cloudflare Pages project with exact readback and a caller handoff receipt.",

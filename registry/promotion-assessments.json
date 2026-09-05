@@ -13,6 +13,16 @@
   ],
   "assessments": [
     {
+      "skill_id": "gls",
+      "capability_kind": "atomic_skill",
+      "recommendation": "stay_bundled",
+      "decision_status": "provisional",
+      "target": "Skills Hub instruction adapter over the Library-owned CLI",
+      "reason": "The Library owns registry behavior and validation. The Hub owns discovery and installation of the bounded registration instructions, with an exact reviewed source pointer.",
+      "blockers": [],
+      "evidence": [{ "kind": "source_review", "reference": "https://github.com/sisodias/great-library-of-siso/blob/8f17a5e30322742e827251e55bc9980fe2b51eb8/bin/gls", "observed_at": "2026-09-06" }]
+    },
+    {
       "skill_id": "publish",
       "capability_kind": "atomic_skill",
       "recommendation": "stay_bundled",
