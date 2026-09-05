@@ -85,7 +85,7 @@ def _contains(data: bytes, entry: bytes) -> bool:
 
 
 def _append(path: Path, data: bytes) -> None:
-    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_APPEND | os.O_NOFOLLOW, 0o644)
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_APPEND | os.O_NOFOLLOW | os.O_NONBLOCK, 0o600)
     try:
         st = os.fstat(fd)
         if not stat.S_ISREG(st.st_mode):
@@ -108,12 +108,12 @@ def _append(path: Path, data: bytes) -> None:
 
 def validate_entry(entry: str) -> bytes:
     raw = entry.encode("utf-8")
-    if not raw or len(raw) > MAX_BYTES or "\n" in entry or "\r" in entry:
+    if not raw or len(raw) > MAX_BYTES or entry.splitlines() != [entry]:
         raise WritebackError("entry must be one nonempty UTF-8 line no longer than 16KiB")
     if any(ord(ch) < 32 or ord(ch) == 127 for ch in entry):
         raise WritebackError("entry contains control characters")
     fields = entry.split(SEP)
-    if len(fields) != 4 or any(not field for field in fields):
+    if len(fields) != 4 or any(not field.strip() for field in fields):
         raise WritebackError("entry must contain exactly 4 nonempty fields separated by ' · '")
     try:
         stamp = datetime.fromisoformat(fields[0].replace("Z", "+00:00"))
@@ -139,7 +139,7 @@ def run(repo: Path, a0_root: Path, entry: str) -> int:
     lock = _safe_child(a0_root, "ledger", "OWNERS.md.p5.lock")
     _check_file(lock)
     try:
-        fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+        fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
     except FileExistsError as exc:
         raise WritebackError("writeback lock is held") from exc
     lock_identity = None
@@ -166,7 +166,7 @@ def run(repo: Path, a0_root: Path, entry: str) -> int:
     finally:
         os.close(fd)
         try:
-            current = lock.stat()
+            current = lock.lstat()
             if lock_identity is not None and (current.st_dev, current.st_ino) == (lock_identity.st_dev, lock_identity.st_ino):
                 lock.unlink()
         except OSError:

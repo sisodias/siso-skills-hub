@@ -53,7 +53,7 @@ def main():
         assert all(local.count(e.encode()) == mirrored.count(e.encode()) == 1 for e in entries)
         # Validation happens against real targets and does not mutate either file.
         before_local = local; before_mirror = mirrored
-        for bad in ("bad", "2026-09-05T12:00:00 · P5_OWNER · x · y", "2026-09-05T12:00:00+00:00 · p5 · x · y", "2026-09-05T12:00:00+00:00 · P5_OWNER · x\ny · y"):
+        for bad in ("bad", "2026-09-05T12:00:00 · P5_OWNER · x · y", "2026-09-05T12:00:00+00:00 · p5 · x · y", "2026-09-05T12:00:00+00:00 · P5_OWNER · x\ny · y", ENTRY + "\u2028", ENTRY.replace("what", "x\u2029y"), "2026-09-05T12:00:00Z · P5_OWNER ·   · path.md"):
             result = call(repo, root, bad); assert result.returncode != 0 and result.stderr.startswith("writeback failed:")
             assert (repo / ".agents/owners.log").read_bytes() == before_local
             assert (root / "ledger/OWNERS.md").read_bytes() == before_mirror
