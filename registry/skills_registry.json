@@ -929,7 +929,12 @@
       "name": "Skills Hub Usage",
       "description": "Navigate, discover, install, and use skills from the SISO Skills Hub",
       "category": "global",
-      "tags": ["skills-hub", "discovery", "navigation", "self-help"],
+      "tags": [
+        "skills-hub",
+        "discovery",
+        "navigation",
+        "self-help"
+      ],
       "version": "1.0.0",
       "author": "SISO Team",
       "repo_url": null,
@@ -945,8 +950,12 @@
         "skill": "echo 'SISO_HUB env var must point to skills_hub directory'"
       },
       "files": {
-        "required": ["SKILL.md"],
-        "optional": ["README.md"]
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
       },
       "metadata": {
         "user_invocable": true,
@@ -958,7 +967,12 @@
       "name": "Check Status",
       "description": "Check the current status of a pipeline run by reading progress files",
       "category": "pipeline",
-      "tags": ["pipeline", "status", "progress", "workflow"],
+      "tags": [
+        "pipeline",
+        "status",
+        "progress",
+        "workflow"
+      ],
       "version": "1.0.0",
       "author": "SISO Team",
       "repo_url": null,
@@ -974,7 +988,9 @@
         "skill": "echo 'No additional setup required'"
       },
       "files": {
-        "required": ["SKILL.md"],
+        "required": [
+          "SKILL.md"
+        ],
         "optional": []
       },
       "metadata": {
@@ -987,7 +1003,12 @@
       "name": "Create Progress",
       "description": "Initialize or update progress.md for a pipeline run",
       "category": "pipeline",
-      "tags": ["pipeline", "progress", "logging", "workflow"],
+      "tags": [
+        "pipeline",
+        "progress",
+        "logging",
+        "workflow"
+      ],
       "version": "1.0.0",
       "author": "SISO Team",
       "repo_url": null,
@@ -1003,7 +1024,9 @@
         "skill": "echo 'No additional setup required'"
       },
       "files": {
-        "required": ["SKILL.md"],
+        "required": [
+          "SKILL.md"
+        ],
         "optional": []
       },
       "metadata": {
@@ -1016,7 +1039,12 @@
       "name": "Read JobTicket",
       "description": "Read and validate a JobTicket JSON file from inbox",
       "category": "pipeline",
-      "tags": ["pipeline", "jobticket", "inbox", "workflow"],
+      "tags": [
+        "pipeline",
+        "jobticket",
+        "inbox",
+        "workflow"
+      ],
       "version": "1.0.0",
       "author": "SISO Team",
       "repo_url": null,
@@ -1032,7 +1060,9 @@
         "skill": "echo 'No additional setup required'"
       },
       "files": {
-        "required": ["SKILL.md"],
+        "required": [
+          "SKILL.md"
+        ],
         "optional": []
       },
       "metadata": {
@@ -1045,7 +1075,12 @@
       "name": "Pass to Next",
       "description": "Pass context to the next agent in the pipeline by writing output files",
       "category": "pipeline",
-      "tags": ["pipeline", "handoff", "workflow", "agent-communication"],
+      "tags": [
+        "pipeline",
+        "handoff",
+        "workflow",
+        "agent-communication"
+      ],
       "version": "1.0.0",
       "author": "SISO Team",
       "repo_url": null,
@@ -1061,12 +1096,99 @@
         "skill": "echo 'No additional setup required'"
       },
       "files": {
-        "required": ["SKILL.md"],
+        "required": [
+          "SKILL.md"
+        ],
         "optional": []
       },
       "metadata": {
         "user_invocable": true,
         "status": "stable"
+      }
+    },
+    {
+      "skill_id": "skill-author",
+      "name": "Skill Author",
+      "description": "Author, register, validate and safely install one reviewed skill from its owning source.",
+      "category": "global",
+      "version": "1.0.0",
+      "tags": [
+        "authoring",
+        "installation",
+        "provenance"
+      ],
+      "dependencies": {
+        "skills": [],
+        "packages": [
+          "python3",
+          "node"
+        ]
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable",
+        "ownership": "canonical-hub"
+      }
+    },
+    {
+      "skill_id": "owner-writeback",
+      "name": "Owner Writeback",
+      "description": "Persist owned material state and append an index pointer through the consuming project's existing adapter.",
+      "category": "global",
+      "version": "1.0.0",
+      "tags": [
+        "writeback",
+        "continuity",
+        "evidence"
+      ],
+      "dependencies": {
+        "skills": [],
+        "packages": [
+          "node"
+        ]
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "stable",
+        "ownership": "consumer-adapter"
+      }
+    },
+    {
+      "skill_id": "owner-handoff",
+      "name": "Owner Handoff",
+      "description": "Use the owning Playbook's preservation, cold-read and single-writer handoff gate.",
+      "category": "global",
+      "version": "1.0.0",
+      "tags": [
+        "handoff",
+        "continuity",
+        "evidence"
+      ],
+      "dependencies": {
+        "skills": [],
+        "packages": [
+          "node"
+        ]
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "experimental",
+        "ownership": "playbook-adapter"
       }
     }
   ]

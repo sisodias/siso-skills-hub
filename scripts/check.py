@@ -79,7 +79,7 @@ with tempfile.TemporaryDirectory(prefix="siso-skills-hub-check-") as directory:
     env["SISO_SYSTEM_DB"] = str(Path(directory) / "system.sqlite")
     for skill_id in ids:
         run(["python3", "scripts/skills", "validate", skill_id], env=env, stdout=subprocess.DEVNULL)
-    target = Path(directory) / "installed"
+    target = Path(directory).resolve() / "installed"
     run(["python3", "scripts/skills", "install", "gitsearch", "--target", str(target)], env=env, stdout=subprocess.DEVNULL)
     assert (target / "gitsearch" / "SKILL.md").is_file(), "disposable skill installation did not materialize source"
     state_path = Path(directory) / "agent-state.json"
@@ -144,6 +144,8 @@ assert stats['count'] == 1 and stats['success_rate'] == 1.0
                             cwd=ROOT, env=telemetry_env, text=True, capture_output=True, check=True)
     assert json.loads(health.stdout)["total_events"] == 1
     assert telemetry_db.is_file()
+
+run(["python3", "scripts/test_skills_installer.py"], stdout=subprocess.DEVNULL)
 
 telemetry_sources = ["skills_telemetry.py", "skills_health_monitor.py", "skills_diagnose.py", "skills_recommend.py"]
 for name in telemetry_sources:

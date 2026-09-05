@@ -8,6 +8,8 @@ import os
 import shutil
 import sys
 import time
+import re
+import tempfile
 from pathlib import Path
 
 HUB_ROOT = Path(__file__).parent.parent
@@ -20,6 +22,117 @@ except ImportError:
     TELEMETRY_ENABLED = False
 REGISTRY_FILE = HUB_ROOT / "registry/skills_registry.json"
 SKILLS_DIR = HUB_ROOT / "registry/skills"
+SAFE_ID = re.compile(r"^[a-z0-9][a-z0-9_-]*$")
+RUNTIME_NAMES = {".git", "node_modules", "state.json"}
+RUNTIME_SUFFIXES = (".db", ".db-wal", ".db-shm", ".sqlite", ".sqlite3", ".sqlite-wal", ".sqlite-shm", ".jsonl", ".ndjson", ".pem", ".key", ".p12")
+SECRET_NAMES = ("id_rsa", "id_ed25519", "credentials.json", "secrets.json")
+
+
+def _safe_relative(value, label):
+    if not isinstance(value, str) or not value or Path(value).is_absolute():
+        raise ValueError(f"invalid {label} path")
+    path = Path(value)
+    if any(part in ("", ".", "..") for part in path.parts):
+        raise ValueError(f"invalid {label} path")
+    return path
+
+
+def _validate_source(skill_id, entry, skill_dir, check_location=True):
+    if not SAFE_ID.fullmatch(skill_id):
+        raise ValueError(f"invalid skill ID: {skill_id}")
+    category = entry.get("category")
+    if not isinstance(category, str) or not SAFE_ID.fullmatch(category):
+        raise ValueError(f"invalid category for {skill_id}")
+    source_root = SKILLS_DIR.resolve()
+    resolved_dir = skill_dir.resolve()
+    if check_location and not str(resolved_dir).startswith(str(source_root) + os.sep):
+        raise ValueError("skill path escapes the registered source root")
+    if not skill_dir.is_dir() or skill_dir.is_symlink():
+        raise ValueError("skill source must be a real directory")
+    required = entry.get("files", {}).get("required", ["SKILL.md"])
+    for value in required:
+        rel = _safe_relative(value, "required")
+        path = skill_dir / rel
+        if not path.is_file() or path.is_symlink():
+            raise ValueError(f"missing or unsafe required file: {value}")
+    text = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
+    if not text.startswith("---\n") or "\n---\n" not in text[4:]:
+        raise ValueError("SKILL.md requires YAML frontmatter")
+    header = text[4:text.index("\n---\n", 4)]
+    fields = {line.split(":", 1)[0].strip() for line in header.splitlines() if ":" in line}
+    values = {}
+    for line in header.splitlines():
+        if ":" in line:
+            key, value = line.split(":", 1)
+            values[key.strip()] = value.strip().strip("'\"")
+    if not {"name", "description"}.issubset(fields) or not values.get("name") or not values.get("description"):
+        raise ValueError("SKILL.md frontmatter requires name and description")
+    for path in skill_dir.rglob("*"):
+        rel = path.relative_to(skill_dir)
+        if any(part in ("", ".", "..") for part in rel.parts):
+            raise ValueError("unsafe source path")
+        if path.name in RUNTIME_NAMES or path.name in SECRET_NAMES or path.name == '.env' or path.name.startswith('.env.') or path.name.endswith(RUNTIME_SUFFIXES):
+            raise ValueError(f"runtime or secret payload is not installable: {rel}")
+        if path.is_symlink():
+            resolved = path.resolve()
+            if not str(resolved).startswith(str(skill_dir.resolve()) + os.sep):
+                raise ValueError(f"symlink escapes skill source: {rel}")
+
+
+def _same_projection(left, right):
+    if left.is_symlink() or right.is_symlink():
+        return left.is_symlink() and right.is_symlink() and os.readlink(left) == os.readlink(right)
+    if left.is_dir() != right.is_dir() or left.is_file() != right.is_file():
+        return False
+    if left.is_file():
+        return left.read_bytes() == right.read_bytes()
+    left_items = {p.name for p in left.iterdir()}
+    right_items = {p.name for p in right.iterdir()}
+    return left_items == right_items and all(_same_projection(left / n, right / n) for n in left_items)
+
+
+def _materialize(skill_dir, target_dir, link=False):
+    target_dir = Path(target_dir)
+    parent = target_dir.parent
+    cursor = parent
+    while cursor != cursor.parent:
+        if cursor.is_symlink():
+            raise ValueError(f"target parent may not be a symlink: {cursor}")
+        cursor = cursor.parent
+    target_dir.parent.mkdir(parents=True, exist_ok=True)
+    lock = target_dir.parent / f".{target_dir.name}.install-lock"
+    try:
+        os.mkdir(lock)
+    except FileExistsError:
+        raise FileExistsError(f"another install is in progress for: {target_dir}")
+    try:
+        if target_dir.exists() or target_dir.is_symlink():
+            if link and target_dir.is_symlink() and target_dir.resolve() == skill_dir.resolve():
+                return "unchanged"
+            if not link and target_dir.is_dir() and _same_projection(skill_dir, target_dir):
+                return "unchanged"
+            raise FileExistsError(f"refusing to overwrite existing target: {target_dir}")
+        # mkdir is an exclusive no-replace claim, including when a competing
+        # process creates the target between preflight and materialization.
+        if link:
+            os.symlink(skill_dir.resolve(), target_dir)
+        else:
+            os.mkdir(target_dir)
+            try:
+                # Expose the discovery entrypoint last. On failure retain the
+                # incomplete target for inspection rather than deleting a path
+                # another writer may have touched after our exclusive claim.
+                for child in sorted(skill_dir.iterdir(), key=lambda p: p.name == 'SKILL.md'):
+                    destination = target_dir / child.name
+                    if child.is_dir() and not child.is_symlink():
+                        shutil.copytree(child, destination, symlinks=True)
+                    else:
+                        shutil.copy2(child, destination, follow_symlinks=False) if not child.is_symlink() else os.symlink(os.readlink(child), destination)
+            except Exception as exc:
+                raise OSError(f"incomplete target retained for inspection: {target_dir}: {exc}") from exc
+    finally:
+        shutil.rmtree(lock, ignore_errors=True)
+    return "installed"
 
 
 def load_registry():
@@ -163,16 +276,46 @@ def cmd_install(args):
     else:
         skill_id = skill_spec
 
+    registry = load_registry()
+    skill_entry = next((s for s in registry.get("skills", []) if s.get("skill_id") == skill_id), None)
+    try:
+        if not SAFE_ID.fullmatch(skill_id):
+            raise ValueError(f"invalid skill ID: {skill_id}")
+        if skill_entry is None:
+            raise ValueError(f"Skill '{skill_id}' not found in registry")
+        if not isinstance(skill_entry.get('category'), str) or not SAFE_ID.fullmatch(skill_entry['category']):
+            raise ValueError('invalid skill category')
+        if args.agent and not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]*', args.agent):
+            raise ValueError('invalid agent name; use explicit --target for a path')
+        if version:
+            raise ValueError("caller-selected versions are refused; use the reviewed registry version/pin")
+        if skill_entry.get("remote_url") and not re.fullmatch(r"[0-9a-f]{40}", skill_entry.get("commit_hash") or ""):
+            raise ValueError("remote skill is missing a full reviewed commit SHA")
+    except ValueError as exc:
+        print(f"Error: {exc}")
+        return 1
+
     # Find skill directory (search recursively in category subdirs)
     skill_dir = find_skill_dir(skill_id)
 
+    if not skill_dir and args.agent:
+        print("Error: remote skills require explicit --target; staged source cannot establish an agent workspace")
+        return 1
+    if not skill_dir and args.link:
+        print("Error: remote skills require copy installation; a temporary checkout cannot back a durable link")
+        return 1
+
+    # A dry run never clones, downloads, stages, or mutates Hub source.
+    if args.dry_run and not skill_dir:
+        if skill_entry.get("remote_url"):
+            print(f"Plan: fetch reviewed remote {skill_id} at {skill_entry['commit_hash']} -> requested target")
+        else:
+            print(f"Error: Skill '{skill_id}' source is unavailable for dry-run")
+            return 1
+        return 0
+
     # If not found locally, try to clone from remote
     if not skill_dir:
-        # Check registry for remote_url
-        with open(REGISTRY_FILE) as f:
-            registry = json.load(f)
-
-        skill_entry = next((s for s in registry["skills"] if s["skill_id"] == skill_id), None)
         remote_url = skill_entry.get("remote_url") if skill_entry else None
         pinned_revision = skill_entry.get("commit_hash") if skill_entry else None
 
@@ -186,23 +329,29 @@ def cmd_install(args):
                     subprocess.run(["git", "clone", remote_url, str(clone_dir)],
                                  check=True, capture_output=True, text=True)
 
-                    # A caller-selected version overrides the registry pin. Otherwise
-                    # materialize the exact reviewed commit recorded by the Hub.
-                    revision = version or pinned_revision
-                    if revision:
-                        subprocess.run(["git", "checkout", "--detach", revision],
+                    # Always materialize the exact reviewed commit recorded by the Hub.
+                    subprocess.run(["git", "checkout", "--detach", pinned_revision],
                                      check=True, capture_output=True, text=True, cwd=clone_dir)
 
-                    # Materialize a plain source snapshot under its category. The Hub
-                    # is a registry, not a tree of nested Git repositories.
-                    category = skill_entry.get("category", "uncategorized")
-                    target_skill_dir = SKILLS_DIR / category / skill_id
-                    if target_skill_dir.exists():
-                        shutil.rmtree(target_skill_dir)
-                    shutil.copytree(clone_dir, target_skill_dir, ignore=shutil.ignore_patterns(".git"))
-                    skill_dir = target_skill_dir
-                    print(f"Cloned {skill_id} from {remote_url}")
-                except subprocess.CalledProcessError as e:
+                    # Validate a temporary source snapshot; never mutate the Hub.
+                    with tempfile.TemporaryDirectory() as staging:
+                        staged = Path(staging) / skill_id
+                        shutil.copytree(clone_dir, staged, ignore=shutil.ignore_patterns(".git"))
+                        _validate_source(skill_id, skill_entry, staged, check_location=False)
+                        # Keep the remote snapshot temporary; install only to the requested target.
+                        if args.target:
+                            target_dir = Path(args.target) / skill_id
+                        else:
+                            target_dir = Path(os.path.expanduser("~/.claude/skills")) / skill_id
+                        result = _materialize(staged, target_dir)
+                        print(f"{'Linked' if args.link else 'Installed'} {skill_id} -> {target_dir}" + (" (unchanged)" if result == "unchanged" else ""))
+                        if TELEMETRY_ENABLED:
+                            track(skill_id, success=True, context="install")
+                        return 0
+                except (subprocess.CalledProcessError, ValueError, OSError) as e:
+                    if not isinstance(e, subprocess.CalledProcessError):
+                        print(f"Error installing remote skill: {e}")
+                        return 1
                     print(f"Error cloning from {remote_url}: {e.stderr}")
                     return 1
         else:
@@ -217,6 +366,12 @@ def cmd_install(args):
             track(skill_id, success=False, error_type="not_found", context="install")
         return 1
 
+    try:
+        _validate_source(skill_id, skill_entry, skill_dir)
+    except (ValueError, OSError) as exc:
+        print(f"Error: validation failed: {exc}")
+        return 1
+
     # Resolve target
     if args.agent:
         target_dir = resolve_agent_skill_path(args.agent, skill_dir)
@@ -226,32 +381,20 @@ def cmd_install(args):
     else:
         target_dir = Path(os.path.expanduser("~/.claude/skills")) / skill_id
 
-    target_dir.parent.mkdir(parents=True, exist_ok=True)
-
-    if args.link:
-        # Create symlink
-        if target_dir.exists():
-            if target_dir.is_symlink():
-                target_dir.unlink()
-            else:
-                shutil.rmtree(target_dir)
-        os.symlink(skill_dir.resolve(), target_dir)
-        print(f"Linked {skill_id} -> {target_dir}")
-    else:
-        # Copy
-        if target_dir.exists():
-            shutil.rmtree(target_dir)
-        try:
-            shutil.copytree(skill_dir, target_dir, symlinks=True)
-            print(f"Installed {skill_id} -> {target_dir}")
-        except shutil.Error as e:
-            # Handle broken symlinks gracefully — skip them
-            import errno
-            real_errors = [err for err in e.args[0]
-                           if err[0].errno not in (errno.ENOENT, errno.ELOOP)]
-            if real_errors:
-                print(f"Warning: some files could not be copied: {real_errors}")
-            print(f"Installed {skill_id} -> {target_dir} (with some warnings)")
+    if args.dry_run:
+        if target_dir.exists() or target_dir.is_symlink():
+            same = (args.link and target_dir.is_symlink() and target_dir.resolve() == skill_dir.resolve()) or (not args.link and not target_dir.is_symlink() and target_dir.is_dir() and _same_projection(skill_dir, target_dir))
+            if not same:
+                print(f"Error: existing projection differs: {target_dir}")
+                return 1
+        print(f"Plan: {'link' if args.link else 'copy'} {skill_id} -> {target_dir}")
+        return 0
+    try:
+        result = _materialize(skill_dir, target_dir, link=args.link)
+    except (ValueError, OSError, shutil.Error) as exc:
+        print(f"Error: install refused: {exc}")
+        return 1
+    print(f"{'Linked' if args.link else 'Installed'} {skill_id} -> {target_dir}" + (" (unchanged)" if result == "unchanged" else ""))
 
     if TELEMETRY_ENABLED:
         track(skill_id, success=True, context="install")
@@ -274,34 +417,21 @@ def cmd_validate(args):
 
     if not skill_entry:
         print(f"Error: Skill '{skill_id}' not found in registry")
-        if TELEMETRY_ENABLED:
-            track(skill_id, success=False, error_type="not_in_registry", context="validate")
         return 1
 
     # Check skill directory
     skill_dir = find_skill_dir(skill_id)
     if not skill_dir:
         print(f"Error: Skill directory for '{skill_id}' not found")
-        if TELEMETRY_ENABLED:
-            track(skill_id, success=False, error_type="missing_dir", context="validate")
         return 1
 
-    # Check required files
-    required_files = skill_entry.get('files', {}).get('required', ['SKILL.md'])
-    missing = []
-    for f in required_files:
-        if not (skill_dir / f).exists():
-            missing.append(f)
-
-    if missing:
-        print(f"Validation FAILED: Missing required files: {', '.join(missing)}")
-        if TELEMETRY_ENABLED:
-            track(skill_id, success=False, error_type="missing_files", context="validate")
+    try:
+        _validate_source(skill_id, skill_entry, skill_dir)
+    except (ValueError, OSError) as exc:
+        print(f"Validation FAILED: {exc}")
         return 1
 
     print(f"Validation PASSED: {skill_id} has all required files")
-    if TELEMETRY_ENABLED:
-        track(skill_id, success=True, context="validate")
     return 0
 
 
@@ -652,6 +782,7 @@ def main():
     p_install.add_argument('--target', help='Target directory (default: ~/.claude/skills/)')
     p_install.add_argument('--agent', help='Install into agent\'s skill directory (auto-detects full/bare pattern)')
     p_install.add_argument('--link', action='store_true', help='Symlink instead of copy')
+    p_install.add_argument('--dry-run', action='store_true', help='Show bounded install plan without writing')
     p_install.set_defaults(func=cmd_install)
 
     # update

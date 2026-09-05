@@ -12,38 +12,645 @@
     "Repository promotion never changes the skill identity recorded by the Hub."
   ],
   "assessments": [
-    {"skill_id":"agent-builder","capability_kind":"environment_recipe","recommendation":"retire_or_replace","decision_status":"provisional","target":"Project OS or Runtime-owned agent scaffolding","reason":"The current V3 template recipe points at an obsolete private workspace shape and has no independently versioned template payload.","blockers":["compare V3 and V4 successors","publish template contract","remove private workspace assumptions"],"evidence":[{"kind":"source_review","reference":"registry/skills/code/agent-builder/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"agent-commander","capability_kind":"orchestration_playbook","recommendation":"retire_or_replace","decision_status":"provisional","target":"Agent Playbook / Herdr operations","reason":"This is a multi-step CMUX operating scenario with machine workspace examples; Herdr is the current workspace substrate.","blockers":["translate intent to Herdr","remove machine workspace identifiers","add a verification receipt"],"evidence":[{"kind":"source_review","reference":"registry/skills/communication/agent-commander/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"analyze_task","capability_kind":"playbook_step","recommendation":"move_to_playbook","decision_status":"provisional","target":"SISO Agent Playbook analyze-and-implement flow","reason":"The capability is one phase of a larger delivery sequence and communicates through stories.json rather than an independent tool contract.","blockers":["version shared story schema","move with its consuming flow"],"evidence":[{"kind":"source_review","reference":"registry/skills/code/analyze_task/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"cli-runner","capability_kind":"environment_recipe","recommendation":"retire_or_replace","decision_status":"provisional","target":"Runtime host-adapter documentation","reason":"The file is a private launcher/model inventory, not a stable executable capability, and its agent paths are environment-specific.","blockers":["derive from Runtime manifest","remove private model and path inventory"],"evidence":[{"kind":"source_review","reference":"registry/skills/communication/cli-runner/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"cmux","capability_kind":"tool_adapter","recommendation":"retire_or_replace","decision_status":"provisional","target":"Herdr skill or preserved external-tool recipe","reason":"The instructions are tied to CMUX and private example workspaces while the current stack uses Herdr as its workspace substrate.","blockers":["confirm any remaining CMUX consumers","preserve useful upstream commands","replace private examples"],"evidence":[{"kind":"source_review","reference":"registry/skills/devops/cmux/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"cmux-browser","capability_kind":"tool_adapter","recommendation":"retire_or_replace","decision_status":"provisional","target":"Herdr browser adapter or generic browser capability","reason":"Hardcoded workspace and surface identifiers make the current browser recipe a machine snapshot rather than a reusable capability.","blockers":["remove hardcoded workspace and surface IDs","select current browser substrate","prove against a fixture"],"evidence":[{"kind":"source_review","reference":"registry/skills/devops/cmux-browser/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"github","capability_kind":"environment_recipe","recommendation":"retire_or_replace","decision_status":"provisional","target":"generic GitHub contribution playbook","reason":"The current recipe is specific to one Internal Lab checkout and mixes universal Git rules with one project's branch policy.","blockers":["separate generic GitHub capability from project policy","add repository-local policy discovery"],"evidence":[{"kind":"source_review","reference":"registry/skills/devops/github/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"gitsearch","capability_kind":"atomic_skill","recommendation":"stay_bundled","decision_status":"provisional","target":"Skills Hub","reason":"It is a small coherent GitHub CLI search capability, but has no independent adoption, maintainer, release cadence, or test surface that justifies repository overhead.","blockers":["collect independent adoption evidence before promotion"],"evidence":[{"kind":"source_review","reference":"registry/skills/devops/gitsearch/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"implement_story","capability_kind":"playbook_step","recommendation":"move_to_playbook","decision_status":"provisional","target":"SISO Agent Playbook analyze-and-implement flow","reason":"Implementation, tests, commit, and progress handoff form one phase of a composed delivery playbook.","blockers":["replace fixed main-branch assumption","version progress and result contracts"],"evidence":[{"kind":"source_review","reference":"registry/skills/code/implement_story/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"meta-commander","capability_kind":"orchestration_playbook","recommendation":"retire_or_replace","decision_status":"provisional","target":"Agent Zero / Herdr operating playbook","reason":"Hardcoded CMUX workspace numbers and a historical agent roster make this live-topology state, not portable skill source.","blockers":["remove topology snapshot","derive agents from registry","translate to current workspace substrate"],"evidence":[{"kind":"source_review","reference":"registry/skills/communication/meta-commander/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"multisearch","capability_kind":"orchestration_playbook","recommendation":"move_to_playbook","decision_status":"provisional","target":"SISO Agent Playbook research flow","reason":"It explicitly composes Web Search, GitHub Search, X Search, parallel agents, and synthesis; composition is the defining playbook case.","blockers":["replace hardcoded helper paths","define per-source receipts and synthesis gate"],"evidence":[{"kind":"source_review","reference":"registry/skills/data/multisearch/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"playwright","capability_kind":"tool_adapter","recommendation":"stay_bundled","decision_status":"provisional","target":"Skills Hub","reason":"The commands are a thin adapter to an external CLI; project-specific examples should be generalized before adoption evidence can justify a repository.","blockers":["remove Internal Lab target assumptions","pin and verify the external CLI contract"],"evidence":[{"kind":"source_review","reference":"registry/skills/testing/playwright/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"pm-tasks","capability_kind":"deprecated_adapter","recommendation":"retire_after_adapter","decision_status":"accepted","target":"SISO Agent Brain task/state API","reason":"It has no independent outcome. The direct-SQL wrapper and task-versus-step update bug were replaced by a temporary Agent Brain alias with service-generated IDs.","blockers":["remove after the final PM consumer adopts siso-brain directly"],"evidence":[{"kind":"source_review","reference":"registry/skills/system/pm-tasks/SKILL.md","observed_at":"2026-07-30"},{"kind":"behavior_receipt","reference":"Lordsisodia/siso-agent-brain@d7fc475cea99c0cec606a7a6c6ed92a483aa6095:LEGACY-TASK-STATE-ASSESSMENT.json","observed_at":"2026-07-30"}]},
-    {"skill_id":"task-commander","capability_kind":"orchestration_playbook","recommendation":"move_to_playbook","decision_status":"provisional","target":"Agent Playbook task-dispatch flow","reason":"It composes Brain task selection, handoff construction, host delivery, and result recording. The transitional Hub entry now uses stable Brain commands and contains no SQL or topology snapshot.","blockers":["move the full composition to Agent Playbooks","add a live Herdr delivery receipt","version the handoff acceptance contract"],"evidence":[{"kind":"source_review","reference":"registry/skills/communication/task-commander/SKILL.md","observed_at":"2026-07-30"},{"kind":"consumer_inventory","reference":"registry/legacy-task-consumers.json","observed_at":"2026-07-30"}]},
-    {"skill_id":"task-manager","capability_kind":"system_adapter","recommendation":"keep_thin_adapter","decision_status":"accepted","target":"SISO Agent Brain task/state API","reason":"Task lifecycle, atomic role claims, and versioned artifacts now live behind Agent Brain. The skill retains familiar commands but owns no database and exposes no raw SQL.","blockers":[],"evidence":[{"kind":"source_review","reference":"registry/skills/system/task-manager/SKILL.md","observed_at":"2026-07-30"},{"kind":"behavior_receipt","reference":"Lordsisodia/siso-agent-brain@d7fc475cea99c0cec606a7a6c6ed92a483aa6095:docs/TASK-STATE-MIGRATION.html","observed_at":"2026-07-30"}]},
-    {"skill_id":"vercel","capability_kind":"environment_recipe","recommendation":"retire_or_replace","decision_status":"provisional","target":"generic deployment playbook plus project-local configuration","reason":"The useful deployment sequence is coupled to one private product, repository, Vercel project, and test command.","blockers":["separate provider adapter from project deployment policy","discover project configuration locally"],"evidence":[{"kind":"source_review","reference":"registry/skills/devops/vercel/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"verify_story","capability_kind":"playbook_step","recommendation":"move_to_playbook","decision_status":"provisional","target":"SISO Agent Playbook analyze-and-implement flow","reason":"It consumes story acceptance criteria and implementation branches as the verification phase of one delivery playbook.","blockers":["version evidence verdict schema","make branch and test discovery repository-aware"],"evidence":[{"kind":"source_review","reference":"registry/skills/code/verify_story/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"websearch","capability_kind":"tool_adapter","recommendation":"candidate_after_evidence","decision_status":"provisional","target":"independent Web Search skill repository after promotion gates pass","reason":"It has a coherent executable adapter and broad potential adoption, but is provider-specific, has no tests, and has no evidence of independent consumers or release cadence.","blockers":["add synthetic transport tests","make provider and model explicit configuration","define citation/error contract","record independent adoption"],"evidence":[{"kind":"source_review","reference":"registry/skills/data/websearch/SKILL.md","observed_at":"2026-07-30"},{"kind":"source_review","reference":"registry/skills/data/websearch/scripts/perplexity_search.py","observed_at":"2026-07-30"}]},
-    {"skill_id":"workspace","capability_kind":"environment_recipe","recommendation":"retire_or_replace","decision_status":"provisional","target":"Project OS repository-local documentation","reason":"A static map of one private workspace belongs with that project and becomes stale when treated as a global skill.","blockers":["replace with repository-local discovery","remove private product and database assumptions"],"evidence":[{"kind":"source_review","reference":"registry/skills/system/workspace/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"xsearch","capability_kind":"tool_adapter","recommendation":"stay_bundled","decision_status":"provisional","target":"Skills Hub","reason":"This thin search recipe has no executable or independent lifecycle and currently reaches through a hardcoded helper path; it should stay cheap while generalized.","blockers":["replace hardcoded helper path","define source/citation behavior","prove independent adoption before promotion"],"evidence":[{"kind":"source_review","reference":"registry/skills/data/xsearch/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"agent-setup","capability_kind":"environment_recipe","recommendation":"retire_or_replace","decision_status":"provisional","target":"Project OS or Runtime-owned agent scaffolding","reason":"The V4 setup recipe installs a specific memory system and absolute hooks, while agent-builder documents V3; neither exposes a current portable template contract.","blockers":["reconcile V3/V4 template generations","remove absolute hook generation","publish fixture-tested scaffold"],"evidence":[{"kind":"source_review","reference":"registry/skills/code/agent-setup/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"os-database","capability_kind":"mixed_legacy_system","recommendation":"decompose_then_retire","decision_status":"accepted","target":"Agent Brain + Project OS + Runtime + Skills Hub + Agent Playbooks","reason":"Direct comparison proved the folder combines independently changing outcomes. Canonical task state moved to Brain; fixture-backed imports now pass; Skills telemetry is decoupled; project hierarchy, sessions, playbooks, automation, and tools retain separate owners.","blockers":["review a real local database with the dry-run importer","inventory consumers outside this public repository before removing preserved source"],"evidence":[{"kind":"source_review","reference":"registry/skills/global/os-database/SKILL.md","observed_at":"2026-07-30"},{"kind":"consumer_inventory","reference":"registry/legacy-task-consumers.json","observed_at":"2026-07-30"},{"kind":"classification_receipt","reference":"Lordsisodia/siso-agent-brain@ed50bec86f5cfb86cc5c84ebfce97fad595598b4:LEGACY-TASK-STATE-ASSESSMENT.json","observed_at":"2026-07-30"}]},
-    {"skill_id":"subagents","capability_kind":"orchestration_playbook","recommendation":"move_to_playbook","decision_status":"provisional","target":"SISO Agent Playbook orchestration flow","reason":"The document chooses when and how to compose multiple agents; it is coordination policy rather than one atomic capability.","blockers":["make runtime/tool syntax provider-neutral","replace unconditional parallelism with bounded routing policy"],"evidence":[{"kind":"source_review","reference":"registry/skills/global/subagents/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"skills-hub-usage","capability_kind":"catalog_meta_skill","recommendation":"stay_bundled","decision_status":"provisional","target":"Skills Hub","reason":"This is the Hub's own discovery and installation adapter; separating it would create a circular release dependency with no independent value.","blockers":["keep commands synchronized with the Hub CLI"],"evidence":[{"kind":"source_review","reference":"registry/skills/global/skills-hub-usage/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"check_status","capability_kind":"playbook_step","recommendation":"move_to_playbook","decision_status":"provisional","target":"SISO Agent Playbook pipeline flow","reason":"It interprets the progress artifacts of one named pipeline and has no outcome outside that playbook.","blockers":["move with pipeline schemas","replace filesystem assumptions with versioned artifacts"],"evidence":[{"kind":"source_review","reference":"registry/skills/pipeline/check_status/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"create_progress","capability_kind":"playbook_step","recommendation":"move_to_playbook","decision_status":"provisional","target":"SISO Agent Playbook pipeline flow","reason":"It initializes one playbook's progress artifact and should version with the workflow that consumes it.","blockers":["define append/concurrency semantics","move with progress schema"],"evidence":[{"kind":"source_review","reference":"registry/skills/pipeline/create_progress/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"read_job_ticket","capability_kind":"playbook_step","recommendation":"move_to_playbook","decision_status":"provisional","target":"SISO Agent Playbook pipeline flow","reason":"It validates the JobTicket contract for one pipeline and discovers files implicitly from a named inbox.","blockers":["publish JobTicket schema","require explicit input path","move with consuming playbook"],"evidence":[{"kind":"source_review","reference":"registry/skills/pipeline/read_job_ticket/SKILL.md","observed_at":"2026-07-30"}]},
-    {"skill_id":"pass_to_next","capability_kind":"playbook_step","recommendation":"move_to_playbook","decision_status":"provisional","target":"SISO Agent Playbook pipeline flow","reason":"The fixed role sequence, handoff schema, inbox paths, and completion format are all properties of one composed workflow.","blockers":["version handoff schema","remove fixed filesystem topology","move with role graph"],"evidence":[{"kind":"source_review","reference":"registry/skills/pipeline/pass_to_next/SKILL.md","observed_at":"2026-07-30"}]}
+    {
+      "skill_id": "agent-builder",
+      "capability_kind": "environment_recipe",
+      "recommendation": "retire_or_replace",
+      "decision_status": "provisional",
+      "target": "Project OS or Runtime-owned agent scaffolding",
+      "reason": "The current V3 template recipe points at an obsolete private workspace shape and has no independently versioned template payload.",
+      "blockers": [
+        "compare V3 and V4 successors",
+        "publish template contract",
+        "remove private workspace assumptions"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/code/agent-builder/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "agent-commander",
+      "capability_kind": "orchestration_playbook",
+      "recommendation": "retire_or_replace",
+      "decision_status": "provisional",
+      "target": "Agent Playbook / Herdr operations",
+      "reason": "This is a multi-step CMUX operating scenario with machine workspace examples; Herdr is the current workspace substrate.",
+      "blockers": [
+        "translate intent to Herdr",
+        "remove machine workspace identifiers",
+        "add a verification receipt"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/communication/agent-commander/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "analyze_task",
+      "capability_kind": "playbook_step",
+      "recommendation": "move_to_playbook",
+      "decision_status": "provisional",
+      "target": "SISO Agent Playbook analyze-and-implement flow",
+      "reason": "The capability is one phase of a larger delivery sequence and communicates through stories.json rather than an independent tool contract.",
+      "blockers": [
+        "version shared story schema",
+        "move with its consuming flow"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/code/analyze_task/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "cli-runner",
+      "capability_kind": "environment_recipe",
+      "recommendation": "retire_or_replace",
+      "decision_status": "provisional",
+      "target": "Runtime host-adapter documentation",
+      "reason": "The file is a private launcher/model inventory, not a stable executable capability, and its agent paths are environment-specific.",
+      "blockers": [
+        "derive from Runtime manifest",
+        "remove private model and path inventory"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/communication/cli-runner/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "cmux",
+      "capability_kind": "tool_adapter",
+      "recommendation": "retire_or_replace",
+      "decision_status": "provisional",
+      "target": "Herdr skill or preserved external-tool recipe",
+      "reason": "The instructions are tied to CMUX and private example workspaces while the current stack uses Herdr as its workspace substrate.",
+      "blockers": [
+        "confirm any remaining CMUX consumers",
+        "preserve useful upstream commands",
+        "replace private examples"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/devops/cmux/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "cmux-browser",
+      "capability_kind": "tool_adapter",
+      "recommendation": "retire_or_replace",
+      "decision_status": "provisional",
+      "target": "Herdr browser adapter or generic browser capability",
+      "reason": "Hardcoded workspace and surface identifiers make the current browser recipe a machine snapshot rather than a reusable capability.",
+      "blockers": [
+        "remove hardcoded workspace and surface IDs",
+        "select current browser substrate",
+        "prove against a fixture"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/devops/cmux-browser/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "github",
+      "capability_kind": "environment_recipe",
+      "recommendation": "retire_or_replace",
+      "decision_status": "provisional",
+      "target": "generic GitHub contribution playbook",
+      "reason": "The current recipe is specific to one Internal Lab checkout and mixes universal Git rules with one project's branch policy.",
+      "blockers": [
+        "separate generic GitHub capability from project policy",
+        "add repository-local policy discovery"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/devops/github/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "gitsearch",
+      "capability_kind": "atomic_skill",
+      "recommendation": "stay_bundled",
+      "decision_status": "provisional",
+      "target": "Skills Hub",
+      "reason": "It is a small coherent GitHub CLI search capability, but has no independent adoption, maintainer, release cadence, or test surface that justifies repository overhead.",
+      "blockers": [
+        "collect independent adoption evidence before promotion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/devops/gitsearch/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "implement_story",
+      "capability_kind": "playbook_step",
+      "recommendation": "move_to_playbook",
+      "decision_status": "provisional",
+      "target": "SISO Agent Playbook analyze-and-implement flow",
+      "reason": "Implementation, tests, commit, and progress handoff form one phase of a composed delivery playbook.",
+      "blockers": [
+        "replace fixed main-branch assumption",
+        "version progress and result contracts"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/code/implement_story/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "meta-commander",
+      "capability_kind": "orchestration_playbook",
+      "recommendation": "retire_or_replace",
+      "decision_status": "provisional",
+      "target": "Agent Zero / Herdr operating playbook",
+      "reason": "Hardcoded CMUX workspace numbers and a historical agent roster make this live-topology state, not portable skill source.",
+      "blockers": [
+        "remove topology snapshot",
+        "derive agents from registry",
+        "translate to current workspace substrate"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/communication/meta-commander/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "multisearch",
+      "capability_kind": "orchestration_playbook",
+      "recommendation": "move_to_playbook",
+      "decision_status": "provisional",
+      "target": "SISO Agent Playbook research flow",
+      "reason": "It explicitly composes Web Search, GitHub Search, X Search, parallel agents, and synthesis; composition is the defining playbook case.",
+      "blockers": [
+        "replace hardcoded helper paths",
+        "define per-source receipts and synthesis gate"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/data/multisearch/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "playwright",
+      "capability_kind": "tool_adapter",
+      "recommendation": "stay_bundled",
+      "decision_status": "provisional",
+      "target": "Skills Hub",
+      "reason": "The commands are a thin adapter to an external CLI; project-specific examples should be generalized before adoption evidence can justify a repository.",
+      "blockers": [
+        "remove Internal Lab target assumptions",
+        "pin and verify the external CLI contract"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/testing/playwright/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "pm-tasks",
+      "capability_kind": "deprecated_adapter",
+      "recommendation": "retire_after_adapter",
+      "decision_status": "accepted",
+      "target": "SISO Agent Brain task/state API",
+      "reason": "It has no independent outcome. The direct-SQL wrapper and task-versus-step update bug were replaced by a temporary Agent Brain alias with service-generated IDs.",
+      "blockers": [
+        "remove after the final PM consumer adopts siso-brain directly"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/system/pm-tasks/SKILL.md",
+          "observed_at": "2026-07-30"
+        },
+        {
+          "kind": "behavior_receipt",
+          "reference": "Lordsisodia/siso-agent-brain@d7fc475cea99c0cec606a7a6c6ed92a483aa6095:LEGACY-TASK-STATE-ASSESSMENT.json",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "task-commander",
+      "capability_kind": "orchestration_playbook",
+      "recommendation": "move_to_playbook",
+      "decision_status": "provisional",
+      "target": "Agent Playbook task-dispatch flow",
+      "reason": "It composes Brain task selection, handoff construction, host delivery, and result recording. The transitional Hub entry now uses stable Brain commands and contains no SQL or topology snapshot.",
+      "blockers": [
+        "move the full composition to Agent Playbooks",
+        "add a live Herdr delivery receipt",
+        "version the handoff acceptance contract"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/communication/task-commander/SKILL.md",
+          "observed_at": "2026-07-30"
+        },
+        {
+          "kind": "consumer_inventory",
+          "reference": "registry/legacy-task-consumers.json",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "task-manager",
+      "capability_kind": "system_adapter",
+      "recommendation": "keep_thin_adapter",
+      "decision_status": "accepted",
+      "target": "SISO Agent Brain task/state API",
+      "reason": "Task lifecycle, atomic role claims, and versioned artifacts now live behind Agent Brain. The skill retains familiar commands but owns no database and exposes no raw SQL.",
+      "blockers": [],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/system/task-manager/SKILL.md",
+          "observed_at": "2026-07-30"
+        },
+        {
+          "kind": "behavior_receipt",
+          "reference": "Lordsisodia/siso-agent-brain@d7fc475cea99c0cec606a7a6c6ed92a483aa6095:docs/TASK-STATE-MIGRATION.html",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "vercel",
+      "capability_kind": "environment_recipe",
+      "recommendation": "retire_or_replace",
+      "decision_status": "provisional",
+      "target": "generic deployment playbook plus project-local configuration",
+      "reason": "The useful deployment sequence is coupled to one private product, repository, Vercel project, and test command.",
+      "blockers": [
+        "separate provider adapter from project deployment policy",
+        "discover project configuration locally"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/devops/vercel/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "verify_story",
+      "capability_kind": "playbook_step",
+      "recommendation": "move_to_playbook",
+      "decision_status": "provisional",
+      "target": "SISO Agent Playbook analyze-and-implement flow",
+      "reason": "It consumes story acceptance criteria and implementation branches as the verification phase of one delivery playbook.",
+      "blockers": [
+        "version evidence verdict schema",
+        "make branch and test discovery repository-aware"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/code/verify_story/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "websearch",
+      "capability_kind": "tool_adapter",
+      "recommendation": "candidate_after_evidence",
+      "decision_status": "provisional",
+      "target": "independent Web Search skill repository after promotion gates pass",
+      "reason": "It has a coherent executable adapter and broad potential adoption, but is provider-specific, has no tests, and has no evidence of independent consumers or release cadence.",
+      "blockers": [
+        "add synthetic transport tests",
+        "make provider and model explicit configuration",
+        "define citation/error contract",
+        "record independent adoption"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/data/websearch/SKILL.md",
+          "observed_at": "2026-07-30"
+        },
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/data/websearch/scripts/perplexity_search.py",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "workspace",
+      "capability_kind": "environment_recipe",
+      "recommendation": "retire_or_replace",
+      "decision_status": "provisional",
+      "target": "Project OS repository-local documentation",
+      "reason": "A static map of one private workspace belongs with that project and becomes stale when treated as a global skill.",
+      "blockers": [
+        "replace with repository-local discovery",
+        "remove private product and database assumptions"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/system/workspace/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "xsearch",
+      "capability_kind": "tool_adapter",
+      "recommendation": "stay_bundled",
+      "decision_status": "provisional",
+      "target": "Skills Hub",
+      "reason": "This thin search recipe has no executable or independent lifecycle and currently reaches through a hardcoded helper path; it should stay cheap while generalized.",
+      "blockers": [
+        "replace hardcoded helper path",
+        "define source/citation behavior",
+        "prove independent adoption before promotion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/data/xsearch/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "agent-setup",
+      "capability_kind": "environment_recipe",
+      "recommendation": "retire_or_replace",
+      "decision_status": "provisional",
+      "target": "Project OS or Runtime-owned agent scaffolding",
+      "reason": "The V4 setup recipe installs a specific memory system and absolute hooks, while agent-builder documents V3; neither exposes a current portable template contract.",
+      "blockers": [
+        "reconcile V3/V4 template generations",
+        "remove absolute hook generation",
+        "publish fixture-tested scaffold"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/code/agent-setup/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "os-database",
+      "capability_kind": "mixed_legacy_system",
+      "recommendation": "decompose_then_retire",
+      "decision_status": "accepted",
+      "target": "Agent Brain + Project OS + Runtime + Skills Hub + Agent Playbooks",
+      "reason": "Direct comparison proved the folder combines independently changing outcomes. Canonical task state moved to Brain; fixture-backed imports now pass; Skills telemetry is decoupled; project hierarchy, sessions, playbooks, automation, and tools retain separate owners.",
+      "blockers": [
+        "review a real local database with the dry-run importer",
+        "inventory consumers outside this public repository before removing preserved source"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/global/os-database/SKILL.md",
+          "observed_at": "2026-07-30"
+        },
+        {
+          "kind": "consumer_inventory",
+          "reference": "registry/legacy-task-consumers.json",
+          "observed_at": "2026-07-30"
+        },
+        {
+          "kind": "classification_receipt",
+          "reference": "Lordsisodia/siso-agent-brain@ed50bec86f5cfb86cc5c84ebfce97fad595598b4:LEGACY-TASK-STATE-ASSESSMENT.json",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "subagents",
+      "capability_kind": "orchestration_playbook",
+      "recommendation": "move_to_playbook",
+      "decision_status": "provisional",
+      "target": "SISO Agent Playbook orchestration flow",
+      "reason": "The document chooses when and how to compose multiple agents; it is coordination policy rather than one atomic capability.",
+      "blockers": [
+        "make runtime/tool syntax provider-neutral",
+        "replace unconditional parallelism with bounded routing policy"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/global/subagents/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "skills-hub-usage",
+      "capability_kind": "catalog_meta_skill",
+      "recommendation": "stay_bundled",
+      "decision_status": "provisional",
+      "target": "Skills Hub",
+      "reason": "This is the Hub's own discovery and installation adapter; separating it would create a circular release dependency with no independent value.",
+      "blockers": [
+        "keep commands synchronized with the Hub CLI"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/global/skills-hub-usage/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "check_status",
+      "capability_kind": "playbook_step",
+      "recommendation": "move_to_playbook",
+      "decision_status": "provisional",
+      "target": "SISO Agent Playbook pipeline flow",
+      "reason": "It interprets the progress artifacts of one named pipeline and has no outcome outside that playbook.",
+      "blockers": [
+        "move with pipeline schemas",
+        "replace filesystem assumptions with versioned artifacts"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/pipeline/check_status/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "create_progress",
+      "capability_kind": "playbook_step",
+      "recommendation": "move_to_playbook",
+      "decision_status": "provisional",
+      "target": "SISO Agent Playbook pipeline flow",
+      "reason": "It initializes one playbook's progress artifact and should version with the workflow that consumes it.",
+      "blockers": [
+        "define append/concurrency semantics",
+        "move with progress schema"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/pipeline/create_progress/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "read_job_ticket",
+      "capability_kind": "playbook_step",
+      "recommendation": "move_to_playbook",
+      "decision_status": "provisional",
+      "target": "SISO Agent Playbook pipeline flow",
+      "reason": "It validates the JobTicket contract for one pipeline and discovers files implicitly from a named inbox.",
+      "blockers": [
+        "publish JobTicket schema",
+        "require explicit input path",
+        "move with consuming playbook"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/pipeline/read_job_ticket/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "pass_to_next",
+      "capability_kind": "playbook_step",
+      "recommendation": "move_to_playbook",
+      "decision_status": "provisional",
+      "target": "SISO Agent Playbook pipeline flow",
+      "reason": "The fixed role sequence, handoff schema, inbox paths, and completion format are all properties of one composed workflow.",
+      "blockers": [
+        "version handoff schema",
+        "remove fixed filesystem topology",
+        "move with role graph"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/pipeline/pass_to_next/SKILL.md",
+          "observed_at": "2026-07-30"
+        }
+      ]
+    },
+    {
+      "skill_id": "skill-author",
+      "capability_kind": "catalog_meta_skill",
+      "recommendation": "stay_bundled",
+      "decision_status": "accepted",
+      "target": "Skills Hub author/validate/install lifecycle",
+      "reason": "One catalog capability reuses the existing registry, validation and collision-safe installer without assuming all historical source is installable.",
+      "blockers": [],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "scripts/test_skills_installer.py",
+          "observed_at": "2026-09-05"
+        }
+      ]
+    },
+    {
+      "skill_id": "owner-writeback",
+      "capability_kind": "system_adapter",
+      "recommendation": "keep_thin_adapter",
+      "decision_status": "accepted",
+      "target": "Consuming project's durable owner writeback implementation",
+      "reason": "The Hub owns discovery instructions; actual private owner state, registry pointers and host binding remain with the consuming project.",
+      "blockers": [
+        "Consumer must expose its tested existing writeback adapter"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/global/owner-writeback/SKILL.md",
+          "observed_at": "2026-09-05"
+        }
+      ]
+    },
+    {
+      "skill_id": "owner-handoff",
+      "capability_kind": "system_adapter",
+      "recommendation": "keep_thin_adapter",
+      "decision_status": "provisional",
+      "target": "Agent Playbook owner-continuity procedure and consumer runtime",
+      "reason": "A readiness adapter points to the composed Playbook; it neither installs event hooks nor claims a live successor release from fixture checks.",
+      "blockers": [
+        "Real owner event wiring and coordinated single-writer release need consumer acceptance"
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/global/owner-handoff/SKILL.md",
+          "observed_at": "2026-09-05"
+        }
+      ]
+    }
   ],
   "evidence": [
-    {"kind":"source_review","reference":"registry/skills/*/*/SKILL.md","observed_at":"2026-07-30","summary":"All 28 registered skill definitions were read directly before classification."},
-    {"kind":"source_review","reference":"registry/skills/global/os-database and registry/skills/system/task-manager","observed_at":"2026-07-30","summary":"The three task/state entries were compared at documentation, executable, configuration, schema, and test boundaries."},
-    {"kind":"promotion_gate","reference":"PROMOTION.md","observed_at":"2026-07-30","summary":"No folder currently proves independent adoption, ownership, release cadence, and a coherent standalone verification surface strongly enough for immediate repository promotion."}
+    {
+      "kind": "source_review",
+      "reference": "registry/skills/*/*/SKILL.md",
+      "observed_at": "2026-07-30",
+      "summary": "All 28 registered skill definitions were read directly before classification."
+    },
+    {
+      "kind": "source_review",
+      "reference": "registry/skills/global/os-database and registry/skills/system/task-manager",
+      "observed_at": "2026-07-30",
+      "summary": "The three task/state entries were compared at documentation, executable, configuration, schema, and test boundaries."
+    },
+    {
+      "kind": "promotion_gate",
+      "reference": "PROMOTION.md",
+      "observed_at": "2026-07-30",
+      "summary": "No folder currently proves independent adoption, ownership, release cadence, and a coherent standalone verification surface strongly enough for immediate repository promotion."
+    }
   ]
 }
