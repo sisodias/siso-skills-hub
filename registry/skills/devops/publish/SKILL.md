@@ -1,6 +1,7 @@
 ---
 name: publish
 description: Publish a reviewed static directory or self-contained HTML file to an explicitly authorized public Cloudflare Pages project and append an exact delivery receipt to the caller's handoff. Not for private client pages or server apps.
+version: 0.1.1
 ---
 
 # Publish one static surface
@@ -27,7 +28,10 @@ node scripts/publish.mjs --input /absolute/public-output --project chosen-projec
 ```
 
 The helper stages an immutable upload copy, rejects symlinks, hidden/source files,
-common secrets and local paths, and applies Pages size/count bounds. This is a
+common secrets and local paths, and applies Pages size/count bounds plus a
+128 MiB aggregate memory budget. Larger outputs need separate publications.
+It checks the actual handoff destination is writable and outside the upload
+even when an ancestor directory is a filesystem alias. This is a
 mechanical backstop, not a substitute for reading and rights/privacy review.
 An HTML input must be self-contained; use a directory for local assets.
 
