@@ -37,7 +37,7 @@ async function inspect(file, name) {
   if (stat.isSymbolicLink()) throw new Error(`Symlink refused: ${name}`);
   if (name.split('/').some(part => part.startsWith('.') || ['node_modules', 'functions'].includes(part))) throw new Error(`Hidden or source path refused: ${name}`);
   if (stat.isDirectory()) { for (const child of (await readdir(file)).sort()) await inspect(join(file, child), name ? `${name}/${child}` : child); return; }
-  if (!stat.isFile() || stat.size > 25 * 1024 * 1024 || !allowed.has(extname(name)) || /^(?:package(?:-lock)?\.json|wrangler\..*|AGENTS\.md|SKILL\.md)$/i.test(name.split('/').at(-1))) throw new Error(`Not a bounded static asset: ${name}`);
+  if (!stat.isFile() || stat.size > 25 * 1024 * 1024 || (!allowed.has(extname(name)) && name !== '_headers') || /^(?:package(?:-lock)?\.json|wrangler\..*|AGENTS\.md|SKILL\.md)$/i.test(name.split('/').at(-1))) throw new Error(`Not a bounded static asset: ${name}`);
   if (files.length >= 20000) throw new Error('Pages file count exceeded');
   if (totalBytes + stat.size > maxTotalBytes) throw new Error('Static upload exceeds the 128 MiB memory budget; split the publication');
   const bytes = await readFile(file);

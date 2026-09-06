@@ -23,7 +23,7 @@
       "description": "Publish a reviewed static directory or HTML file to an authorized public Cloudflare Pages project with exact readback and a caller handoff receipt.",
       "category": "devops",
       "tags": ["static", "cloudflare", "publication"],
-      "version": "0.1.1",
+      "version": "0.1.2",
       "author": "SISO Team",
       "repo_url": null,
       "commit_hash": null,

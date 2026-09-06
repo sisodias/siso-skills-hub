@@ -12,6 +12,27 @@ test('public preflight accepts static assets and fails closed at publication bou
   const run = (extra = [], publicFlag = true) => spawnSync(process.execPath, [fileURLToPath(new URL('./publish.mjs', import.meta.url)), '--input', input, '--project', 'fixture', '--handoff', handoff, '--wrangler', 'unused.js', '--dry-run', ...(publicFlag ? ['--public'] : []), ...extra], { encoding: 'utf8' });
   try {
     assert.equal(run().status, 0);
+    const headers = join(input, '_headers');
+    await writeFile(headers, '/catalog.json\n  Access-Control-Allow-Origin: *\n');
+    const accepted = run();
+    assert.equal(accepted.status, 0, accepted.stderr);
+    assert.equal(JSON.parse(accepted.stdout).files, 2);
+    assert.equal(await readFile(headers, 'utf8'), '/catalog.json\n  Access-Control-Allow-Origin: *\n');
+    await writeFile(headers, '/*\n  X-Private: /' + 'Users/fixture/private\n');
+    assert.match(run().stderr, /Publication scan failed: _headers/);
+    await writeFile(headers, '/*\n  X-Token: gh' + 'p_' + 'x'.repeat(20));
+    assert.match(run().stderr, /Publication scan failed: _headers/);
+    await rm(headers);
+    await symlink(handoff, headers);
+    assert.match(run().stderr, /Symlink refused: _headers/);
+    await rm(headers);
+    await mkdir(join(input, 'nested'));
+    await writeFile(join(input, 'nested', '_headers'), '/*\n  X-Test: value\n');
+    assert.match(run().stderr, /Not a bounded static asset: nested\/_headers/);
+    await rm(join(input, 'nested'), { recursive: true });
+    await writeFile(join(input, '_other'), 'not a supported control file');
+    assert.notEqual(run().status, 0);
+    await rm(join(input, '_other'));
     assert.notEqual(run([], false).status, 0);
     assert.notEqual(run(['--handoff', join(input, 'handoff.md')]).status, 0);
     const alias = join(root, 'alias');

@@ -30,7 +30,7 @@
       "target": "Skills Hub / devops / publish",
       "reason": "One bounded static publication capability with an explicit public boundary and exact artifact readback; the Library is the first consumer.",
       "blockers": [],
-      "evidence": [{ "kind": "source_review", "reference": "registry/skills/devops/publish/SKILL.md", "observed_at": "2026-09-05" }]
+      "evidence": [{ "kind": "source_review", "reference": "registry/skills/devops/publish/SKILL.md", "observed_at": "2026-09-05" }, { "kind": "source_review", "reference": "registry/skills/devops/publish/scripts/publish.test.mjs", "observed_at": "2026-09-06" }]
     },
     {"skill_id":"agent-builder","capability_kind":"environment_recipe","recommendation":"retire_or_replace","decision_status":"provisional","target":"Project OS or Runtime-owned agent scaffolding","reason":"The current V3 template recipe points at an obsolete private workspace shape and has no independently versioned template payload.","blockers":["compare V3 and V4 successors","publish template contract","remove private workspace assumptions"],"evidence":[{"kind":"source_review","reference":"registry/skills/code/agent-builder/SKILL.md","observed_at":"2026-07-30"}]},
     {"skill_id":"agent-commander","capability_kind":"orchestration_playbook","recommendation":"retire_or_replace","decision_status":"provisional","target":"Agent Playbook / Herdr operations","reason":"This is a multi-step CMUX operating scenario with machine workspace examples; Herdr is the current workspace substrate.","blockers":["translate intent to Herdr","remove machine workspace identifiers","add a verification receipt"],"evidence":[{"kind":"source_review","reference":"registry/skills/communication/agent-commander/SKILL.md","observed_at":"2026-07-30"}]},
