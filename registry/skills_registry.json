@@ -1,6 +1,189 @@
 {
   "skills": [
     {
+      "skill_id": "bounded-tool-output",
+      "name": "Bounded tool output",
+      "description": "Keep diagnostic results small and recover precisely from truncated logs, broad searches and oversized API responses.",
+      "category": "code",
+      "tags": [
+        "context",
+        "diagnostics",
+        "efficiency"
+      ],
+      "version": "0.1.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "remote_url": null,
+      "commit_hash": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": []
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "experimental"
+      }
+    },
+    {
+      "skill_id": "trace-to-regression",
+      "name": "Trace to regression",
+      "description": "Convert observed agent failures into source-linked regression cases and scoped skill or harness corrections.",
+      "category": "code",
+      "tags": [
+        "evals",
+        "skills",
+        "efficiency"
+      ],
+      "version": "0.1.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "remote_url": null,
+      "commit_hash": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": []
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "experimental"
+      }
+    },
+    {
+      "skill_id": "chat-on-steroids",
+      "name": "Chat On Steroids desktop bridge",
+      "description": "Use an explicitly configured local Desktop MCP bridge for authorized browser work, with OS-consent gates and fresh window identities; no cookie extraction or automatic chat loops.",
+      "category": "devops",
+      "tags": [
+        "desktop",
+        "browser",
+        "mcp",
+        "chatgpt",
+        "macos"
+      ],
+      "version": "0.1.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "remote_url": null,
+      "commit_hash": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'Requires Node.js and an owner-approved Chat On Steroids Desktop bridge'",
+        "skill": "echo 'No automatic software execution, OS permission grants, browser-storage access or worker spawning'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md",
+          "scripts/desktop-client.mjs",
+          "references/review.md"
+        ],
+        "optional": [
+          "scripts/test-client.mjs"
+        ]
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "experimental"
+      }
+    },
+    {
+      "skill_id": "siso-workspace",
+      "name": "SISO Workspace",
+      "description": "Use SISO Workspace MCP apps for machine metrics, permitted filesystem operations, shell/Python execution and durable remote jobs.",
+      "category": "devops",
+      "tags": [
+        "mcp",
+        "remote-execution",
+        "metrics",
+        "durable-jobs"
+      ],
+      "version": "1.1.0",
+      "author": "SISO Team",
+      "repo_url": "https://github.com/sisodias/siso-workspace",
+      "remote_url": "https://github.com/sisodias/siso-workspace.git",
+      "commit_hash": "e6c8de37a93758cf29e8aad66bef9f87bc5761c0",
+      "published_at": "2026-09-06",
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'Requires an explicitly connected SISO Workspace MCP app'",
+        "skill": "echo 'No automatic server enrollment, credential or service changes'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": []
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "experimental"
+      }
+    },
+    {
+      "skill_id": "publish",
+      "name": "Publish static site",
+      "description": "Publish a reviewed static directory or HTML file to an authorized public Cloudflare Pages project with exact readback and a caller handoff receipt.",
+      "category": "devops",
+      "tags": [
+        "static",
+        "cloudflare",
+        "publication"
+      ],
+      "version": "0.1.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'Requires Node.js and caller-pinned Wrangler'",
+        "skill": "echo 'No automatic credential or provider setup'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md",
+          "scripts/publish.mjs"
+        ],
+        "optional": []
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "experimental"
+      }
+    },
+    {
       "skill_id": "agent-builder",
       "name": "Agent Builder",
       "description": "Create new agents from the SISO v3 agent template",
@@ -1107,6 +1290,166 @@
       }
     },
     {
+      "skill_id": "classify-by-reading",
+      "name": "Classify By Reading",
+      "description": "Classify files from their content before assigning consequential current/stale/dead/duplicate/archive verdicts.",
+      "category": "global",
+      "tags": [
+        "safety",
+        "classification",
+        "cleanup",
+        "evidence"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": false,
+        "status": "stable",
+        "source_commit": "269c8ecd00724d8ab99cb2b260d0f5f52e921771",
+        "ownership": "canonical-hub"
+      }
+    },
+    {
+      "skill_id": "prove-before-claim",
+      "name": "Prove Before Claim",
+      "description": "Require a falsifying probe before making a verifiable system claim or accepting an unverified success report.",
+      "category": "global",
+      "tags": [
+        "verification",
+        "evidence",
+        "claims",
+        "safety"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": false,
+        "status": "stable",
+        "source_commit": "269c8ecd00724d8ab99cb2b260d0f5f52e921771",
+        "ownership": "canonical-hub"
+      }
+    },
+    {
+      "skill_id": "skills-catalog",
+      "name": "Skills Catalog",
+      "description": "Locate the current skill or router for a capability without relying on a stale duplicated inventory.",
+      "category": "global",
+      "tags": [
+        "skills",
+        "discovery",
+        "routing",
+        "catalog"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": false,
+        "status": "stable",
+        "source_commit": "269c8ecd00724d8ab99cb2b260d0f5f52e921771",
+        "ownership": "canonical-hub"
+      }
+    },
+    {
+      "skill_id": "unified-code-search",
+      "name": "Unified Code Search",
+      "description": "Navigate a local codebase through native Serena symbol, reference, outline, and call-hierarchy queries.",
+      "category": "code",
+      "tags": [
+        "code-navigation",
+        "serena",
+        "symbols",
+        "references"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'No system dependencies'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": [
+          "README.md"
+        ]
+      },
+      "metadata": {
+        "user_invocable": false,
+        "status": "stable",
+        "source_commit": "269c8ecd00724d8ab99cb2b260d0f5f52e921771",
+        "ownership": "canonical-hub"
+      }
+    },
+    {
       "skill_id": "skill-author",
       "name": "Skill Author",
       "description": "Author, register, validate and safely install one reviewed skill from its owning source.",
@@ -1227,6 +1570,34 @@
       "metadata": {
         "user_invocable": true,
         "status": "stable"
+      }
+    },
+    {
+      "skill_id": "contabo-vps",
+      "name": "Contabo VPS",
+      "description": "Connect to, provision and debug a Contabo VPS. Encodes the reinstall-is-the-fix rule and the host-key diagnosis.",
+      "category": "devops",
+      "tags": [
+        "infrastructure",
+        "vps",
+        "contabo",
+        "ssh",
+        "provisioning"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": "",
+      "remote_url": "",
+      "commit_hash": "",
+      "published_at": "2026-09-09T10:13:55.764781+00:00",
+      "dependencies": [],
+      "install_commands": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "metadata": {
+        "host": "siso-vps",
+        "learned_from": "2026-09-09 provisioning of 13.140.182.104"
       }
     }
   ]
