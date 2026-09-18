@@ -1,6 +1,57 @@
 {
   "skills": [
     {
+      "skill_id": "component-review-gallery",
+      "name": "Component review gallery",
+      "description": "Build a client-facing web gallery that shows several design options for one component using the client's real brand assets, and publishes it to a shareable URL they can open on a phone.",
+      "category": "code",
+      "tags": [
+        "frontend",
+        "design-review",
+        "client-work",
+        "cloudflare-pages"
+      ],
+      "version": "0.1.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "remote_url": null,
+      "commit_hash": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "node --version",
+        "skill": "npx wrangler@4 is fetched on first deploy"
+      },
+      "files": {
+        "required": [
+          "SKILL.md",
+          "assets/examples/footer.js",
+          "assets/template/deploy.sh",
+          "assets/template/gallery.config.json",
+          "assets/template/scripts/check.mjs",
+          "assets/template/scripts/shots.mjs",
+          "assets/template/site/components/registry.js",
+          "assets/template/site/components/example.js",
+          "assets/template/site/components/shared.js",
+          "assets/template/site/index.html",
+          "assets/template/site/render.html",
+          "assets/template/site/review.html",
+          "assets/template/site/styles/review.css",
+          "assets/template/site/_headers",
+          "references/writing-variants.md",
+          "scripts/new-gallery.mjs"
+        ],
+        "optional": []
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "experimental"
+      }
+    },
+    {
       "skill_id": "bounded-tool-output",
       "name": "Bounded tool output",
       "description": "Keep diagnostic results small and recover precisely from truncated logs, broad searches and oversized API responses.",
@@ -870,7 +921,7 @@
     {
       "skill_id": "websearch",
       "name": "Web Search",
-      "description": "Search the web using Perplexity Sonar via OpenRouter",
+      "description": "Search the web using Perplexity Sonar via OpenRouter when the user requests web research or the task needs current external information.",
       "category": "data",
       "tags": [
         "search",
@@ -1332,7 +1383,7 @@
     {
       "skill_id": "prove-before-claim",
       "name": "Prove Before Claim",
-      "description": "Require a falsifying probe before making a verifiable system claim or accepting an unverified success report.",
+      "description": "Verify live-state, completion, and changed-contract claims with the smallest applicable probe while reusing existing evidence.",
       "category": "global",
       "tags": [
         "verification",
@@ -1599,6 +1650,35 @@
         "host": "siso-vps",
         "learned_from": "2026-09-09 provisioning of 13.140.182.104"
       }
+    },
+    {
+      "skill_id": "jev-judgment",
+      "name": "Jev judgment",
+      "description": "Get a fast second opinion before asserting a conclusion \u2014 does my evidence actually support this claim? Also screens untrusted text and ranks candidates by meaning. ~$0.00002 and ~600ms per check.",
+      "category": "global",
+      "tags": [
+        "verification",
+        "judgment",
+        "jev",
+        "typesafe",
+        "decision-model",
+        "guardrail"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "remote_url": null,
+      "commit_hash": null,
+      "published_at": null,
+      "dependencies": null,
+      "install_commands": null,
+      "files": {
+        "required": [
+          "SKILL.md",
+          "jev.py"
+        ]
+      },
+      "metadata": null
     }
   ]
 }
