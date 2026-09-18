@@ -1679,6 +1679,35 @@
         ]
       },
       "metadata": null
+    },
+    {
+      "skill_id": "ui-pick",
+      "name": "UI pick",
+      "description": "Rank the 137 curated UI components against a stated need in one ~1.5s parallel Jev call for $0.0006. Reads the curator's verbatim note as intent. Ranks only; design-lab decides by looking.",
+      "category": "global",
+      "tags": [
+        "ui",
+        "components",
+        "ranking",
+        "jev",
+        "21st",
+        "design"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "remote_url": null,
+      "commit_hash": null,
+      "published_at": null,
+      "dependencies": null,
+      "install_commands": null,
+      "files": {
+        "required": [
+          "SKILL.md",
+          "pick.py"
+        ]
+      },
+      "metadata": null
     }
   ]
 }
