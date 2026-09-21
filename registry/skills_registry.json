@@ -5,34 +5,71 @@
       "name": "Register in the Great Library",
       "description": "Add reviewed Work, Release, Source Inventory and question metadata through the Library's schema and full verification gate.",
       "category": "devops",
-      "tags": ["registry", "metadata", "publication"],
+      "tags": [
+        "registry",
+        "metadata",
+        "publication"
+      ],
       "version": "1.0.0",
       "author": "SISO Team",
       "repo_url": null,
       "commit_hash": null,
       "remote_url": null,
       "published_at": null,
-      "dependencies": { "skills": [], "packages": [] },
-      "install_commands": { "system": "echo 'Use the intended Library checkout with Node.js 20 or newer'", "skill": "echo 'No automatic repository or credential setup'" },
-      "files": { "required": ["SKILL.md"], "optional": [] },
-      "metadata": { "user_invocable": true, "status": "experimental" }
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'Use the intended Library checkout with Node.js 20 or newer'",
+        "skill": "echo 'No automatic repository or credential setup'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": []
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "experimental"
+      }
     },
     {
       "skill_id": "publish",
       "name": "Publish static site",
       "description": "Publish a reviewed static directory or HTML file to an authorized public Cloudflare Pages project with exact readback and a caller handoff receipt.",
       "category": "devops",
-      "tags": ["static", "cloudflare", "publication"],
+      "tags": [
+        "static",
+        "cloudflare",
+        "publication"
+      ],
       "version": "0.1.2",
       "author": "SISO Team",
       "repo_url": null,
       "commit_hash": null,
       "remote_url": null,
       "published_at": null,
-      "dependencies": { "skills": [], "packages": [] },
-      "install_commands": { "system": "echo 'Requires Node.js and caller-pinned Wrangler'", "skill": "echo 'No automatic credential or provider setup'" },
-      "files": { "required": ["SKILL.md", "scripts/publish.mjs"], "optional": [] },
-      "metadata": { "user_invocable": true, "status": "experimental" }
+      "dependencies": {
+        "skills": [],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'Requires Node.js and caller-pinned Wrangler'",
+        "skill": "echo 'No automatic credential or provider setup'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md",
+          "scripts/publish.mjs"
+        ],
+        "optional": []
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "experimental"
+      }
     },
     {
       "skill_id": "agent-builder",
@@ -1262,6 +1299,47 @@
         "user_invocable": true,
         "status": "stable"
       }
+    },
+    {
+      "skill_id": "jev-judgment",
+      "name": "Jev agent checks",
+      "description": "Optional intent, completion and progress checks; eligible model/skill/tool selection; bounded Camofox search/navigation; and shadow-only context relevance through the existing OpenRouter transport.",
+      "category": "global",
+      "tags": [
+        "verification",
+        "intent",
+        "completion",
+        "routing",
+        "jev",
+        "decision-model",
+        "browser",
+        "camofox",
+        "context"
+      ],
+      "version": "1.3.0",
+      "author": "SISO Team",
+      "repo_url": "https://github.com/sisodias/jev-agent-skills",
+      "remote_url": "https://github.com/sisodias/jev-agent-skills.git",
+      "commit_hash": "0b7c1962acddb396021a69f94b89a11470f064cd",
+      "published_at": "2026-09-21",
+      "dependencies": [],
+      "install_commands": [],
+      "files": {
+        "required": [
+          "SKILL.md",
+          "jev.py",
+          "harness.py",
+          "references/packets.md",
+          "references/research.md",
+          "browser.py",
+          "references/browser.md",
+          "browser_loop.py",
+          "context.py",
+          "README.md",
+          "LICENSE"
+        ]
+      },
+      "metadata": {}
     }
   ]
 }

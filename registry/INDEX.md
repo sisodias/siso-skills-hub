@@ -45,6 +45,7 @@
 
 | Skill | Description | Source |
 |---|---|---|
+| jev-judgment | Optional intent, completion and progress checks; eligible model/skill/tool selection; bounded Camofox search/navigation; and shadow-only context relevance through the existing OpenRouter transport. | independent |
 | os-database | Core Agent OS Database for telemetry, tasks, and timeline tracking | bundled |
 | owner-handoff | Use the owning Playbook's preservation, cold-read and single-writer handoff gate. | bundled |
 | owner-writeback | Persist owned material state and append an index pointer through the consuming project's existing adapter. | bundled |
@@ -80,6 +81,6 @@
 
 ---
 
-**Total: 34 skills**
+**Total: 35 skills**
 
 Use `python3 scripts/skills list`, `search <query>`, or `info <skill>` to explore.

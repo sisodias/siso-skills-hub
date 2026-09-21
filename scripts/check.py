@@ -32,7 +32,7 @@ assessment_ids = [entry["skill_id"] for entry in assessment_entries]
 assert len(assessment_ids) == len(set(assessment_ids)), "promotion assessment IDs must be unique"
 assert set(assessment_ids) == set(ids), "promotion assessments must cover exactly the registered skills"
 known_kinds = {"atomic_skill", "tool_adapter", "playbook_step", "orchestration_playbook", "system_adapter", "environment_recipe", "catalog_meta_skill", "deprecated_adapter", "mixed_legacy_system"}
-known_recommendations = {"stay_bundled", "move_to_playbook", "reconcile_system_then_keep_adapter", "retire_or_replace", "candidate_after_evidence", "keep_thin_adapter", "retire_after_adapter", "decompose_then_retire"}
+known_recommendations = {"promoted", "stay_bundled", "move_to_playbook", "reconcile_system_then_keep_adapter", "retire_or_replace", "candidate_after_evidence", "keep_thin_adapter", "retire_after_adapter", "decompose_then_retire"}
 for entry in assessment_entries:
     assert entry["capability_kind"] in known_kinds, f"unknown capability kind for {entry['skill_id']}"
     assert entry["recommendation"] in known_recommendations, f"unknown recommendation for {entry['skill_id']}"
@@ -147,6 +147,7 @@ assert stats['count'] == 1 and stats['success_rate'] == 1.0
 
 run(["python3", "scripts/test_skills_installer.py"], stdout=subprocess.DEVNULL)
 run(["python3", "scripts/test_writeback.py"], stdout=subprocess.DEVNULL)
+run(["python3", "-B", "-m", "unittest", "discover", "-s", "registry/skills/global/jev-judgment/tests", "-p", "test_*.py"], stdout=subprocess.DEVNULL)
 
 telemetry_sources = ["skills_telemetry.py", "skills_health_monitor.py", "skills_diagnose.py", "skills_recommend.py"]
 for name in telemetry_sources:

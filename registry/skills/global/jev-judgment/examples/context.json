@@ -1,0 +1,8 @@
+{
+  "request": "Export the catalog without changing the live site.",
+  "blocks": [
+    {"id": "goal", "source": "current request", "text": "Keep the export local.", "pinned": true},
+    {"id": "error", "source": "check output", "text": "Error: the saved file was empty.", "error": true},
+    {"id": "background", "source": "old notes", "text": "Unrelated historical menu text."}
+  ]
+}
