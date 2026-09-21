@@ -1,0 +1,13 @@
+{
+  "request": "Search the docs for export and open the export guide.",
+  "user_id": "jev-example",
+  "session_key": "docs",
+  "tab_id": "existing-tab-id",
+  "allowed_prefixes": ["https://example.test/docs/"],
+  "max_steps": 3,
+  "controls": [
+    {"id": "query", "kind": "fill", "role": "textbox", "name": "Search docs", "text": "export", "url_prefix": "https://example.test/docs/"},
+    {"id": "search", "kind": "click", "role": "button", "name": "Search", "after": ["query"], "url_prefix": "https://example.test/docs/"}
+  ],
+  "success": {"url_prefix": "https://example.test/docs/export", "snapshot_contains": ["Export guide"]}
+}

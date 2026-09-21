@@ -14,6 +14,7 @@ ASSESSMENTS = ROOT / "registry" / "promotion-assessments.json"
 OUTPUT = ROOT / "docs" / "skill-repository-map.html"
 
 LABELS = {
+    "promoted": "Independent repository",
     "stay_bundled": "Stay bundled",
     "move_to_playbook": "Move to Playbook",
     "reconcile_system_then_keep_adapter": "Reconcile system",
@@ -70,7 +71,7 @@ def render():
   <section>
     <h2>The evolving assessment</h2>
     <div class="numbers">{cards}</div>
-    <p class="callout"><b>Promote as standalone skill repositories now: zero.</b> Direct comparison has resolved the task/database family: Agent Brain owns state, Task Manager becomes its thin adapter, PM Tasks retires after migration, and OS Database decomposes across system boundaries.</p>
+    <p class="callout"><b>Independent skill repositories: {counts.get("promoted", 0)}.</b> Direct comparison has resolved the task/database family: Agent Brain owns state, Task Manager becomes its thin adapter, PM Tasks retires after migration, and OS Database decomposes across system boundaries.</p>
   </section>
 
   <section>

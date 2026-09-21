@@ -1,0 +1,14 @@
+{
+  "request": "Fix the parser and verify the regression test.",
+  "requirements": [
+    {
+      "id": "fix",
+      "text": "The parser accepts the documented input.",
+      "evidence": [
+        {"source": "test output", "text": "Regression test passed; exit 0."}
+      ]
+    }
+  ],
+  "checks": [{"name": "regression", "passed": true}],
+  "open_items": []
+}

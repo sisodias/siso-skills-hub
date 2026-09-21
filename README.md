@@ -24,6 +24,16 @@ This Hub is not one giant skill and it is not the whole Agents operating stack. 
 
 See [`PROMOTION.md`](PROMOTION.md) for how users can fork the whole Hub or one independently released skill without relying on Git submodules. The evidence-backed current decisions are readable in [`docs/skill-repository-map.html`](docs/skill-repository-map.html) and machine-readable in [`registry/promotion-assessments.json`](registry/promotion-assessments.json).
 
+## Independently released skills
+
+[Jev Agent Skills](https://github.com/sisodias/jev-agent-skills) provides optional
+intent, completion and progress checks, eligible candidate selection, bounded
+Camofox browser navigation and shadow context relevance. The MIT-licensed public
+repository includes installation instructions, examples and 51 offline tests.
+Its `jev-judgment` entry here is pinned to the reviewed v1.3.0 source commit;
+the bundled snapshot supports normal Hub installation. Each adopter supplies
+their own OpenRouter key; browser use also needs an existing Camofox service.
+
 ## Quick Start
 
 ```bash
