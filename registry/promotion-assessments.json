@@ -840,6 +840,23 @@
       "target": "Skills Hub / global / ui-pick",
       "reason": "One bounded capability: semantic ranking of the curated 21st.dev picks against a stated need, using each pick's verbatim curator note as intent. Complements design-lab (which decides by rendering) rather than duplicating it; Jev is text-only and cannot see.",
       "evidence": "Measured on the live 137-entry picks.jsonl: 'login screen' returned the two sign-in cards at 0.90/0.88; 'notifications dropdown' three notification components at 0.75/0.70/0.60; 'live streaming stats' four charts at 0.89/0.88/0.79/0.71. A deliberate negative case ('data table with sorting') topped out at 0.47, correctly signalling the bank has no strong match. 1.3-1.9s and $0.00062 per full ranking."
+    },
+    {
+      "skill_id": "ui-iteration-round",
+      "capability_kind": "atomic_skill",
+      "recommendation": "stay_bundled",
+      "decision_status": "provisional",
+      "target": "Skills Hub / code / ui-iteration-round",
+      "reason": "One bounded workflow: a UI iteration round (his words, shots, five-plus specified ideas per item, one coder, before/after with Added/Changed/Kept bullets). Written 2026-09-24 after Shaan judged a thin, subtractive round as 'regressed on everything'.",
+      "blockers": [
+        "Exercised on one project (HALO model app, Dashboard widgets, round 2) at the time of writing; a second project is not yet demonstrated."
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "apps/oracle-streaming lane oracle-worker/src/renderer/public/review/widget-review/ (round 1 = the failure it fixes; round 2 = first use)"
+        }
+      ]
     }
   ],
   "evidence": [

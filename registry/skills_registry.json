@@ -1708,6 +1708,46 @@
         ]
       },
       "metadata": null
+    },
+    {
+      "skill_id": "ui-iteration-round",
+      "name": "UI iteration round",
+      "description": "Run one round of UI iteration on pages or widgets Shaan has seen: his words first, shots before at his ratio, at least five specified improvement ideas per item (his own first, additive, never removing what he picked), one coder, shots after, and a before/after page with Added / Changed / Kept bullets per item.",
+      "category": "code",
+      "tags": [
+        "frontend",
+        "design-review",
+        "ui-iteration",
+        "before-after"
+      ],
+      "version": "0.1.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "remote_url": null,
+      "commit_hash": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [
+          "shaan-report"
+        ],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "node --version",
+        "skill": "none — copy templates/ next to the round's shots"
+      },
+      "files": {
+        "required": [
+          "SKILL.md",
+          "templates/compare.html",
+          "templates/round.example.json"
+        ],
+        "optional": []
+      },
+      "metadata": {
+        "user_invocable": true,
+        "status": "experimental"
+      }
     }
   ]
 }
