@@ -18,7 +18,7 @@ if HUB_SKILL not in sys.path:
 import jev  # noqa: E402
 
 PICKS = os.path.expanduser(
-    "~/SISO_Workspace/siso-ui-base/registry/curated/picks.jsonl")
+    "~/SISO_Workspace/Great_Library_of_SISO/banks/siso-ui-base/registry/curated/picks.jsonl")
 BATCH = 70          # keeps state+questions well inside Jev's 32k ceiling
 
 
