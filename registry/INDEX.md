@@ -57,6 +57,7 @@
 | owner-handoff | Use the owning Playbook's preservation, cold-read and single-writer handoff gate. | bundled |
 | owner-writeback | Persist owned material state and append an index pointer through the consuming project's existing adapter. | bundled |
 | prove-before-claim | Verify live-state, completion, and changed-contract claims with the smallest applicable probe while reusing existing evidence. | bundled |
+| siso-work | Claim a task and post check-ins on the Work page Shaan reads (sisolabs.space/agents) with one command, siso-work. Identity comes from herdr, the project from the agent's name or repo. | bundled |
 | skill-author | Author, register, validate and safely install one reviewed skill from its owning source. | bundled |
 | skills-catalog | Locate the current skill or router for a capability without relying on a stale duplicated inventory. | bundled |
 | skills-hub-usage | Navigate, discover, install, and use skills from the SISO Skills Hub | bundled |
@@ -91,6 +92,6 @@
 
 ---
 
-**Total: 45 skills**
+**Total: 46 skills**
 
 Use `python3 scripts/skills list`, `search <query>`, or `info <skill>` to explore.

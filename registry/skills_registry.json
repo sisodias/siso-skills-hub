@@ -1708,6 +1708,36 @@
         ]
       },
       "metadata": null
+    },
+    {
+      "skill_id": "siso-work",
+      "name": "SISO work check-ins",
+      "description": "Claim a task and post check-ins on the Work page Shaan reads (sisolabs.space/agents) with one command, siso-work. Identity comes from herdr, the project from the agent's name or repo.",
+      "category": "global",
+      "tags": [
+        "work",
+        "tasks",
+        "check-in",
+        "agents",
+        "herdr",
+        "internal-labs"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "remote_url": null,
+      "commit_hash": null,
+      "published_at": null,
+      "dependencies": null,
+      "install_commands": null,
+      "files": {
+        "required": [
+          "SKILL.md"
+        ]
+      },
+      "metadata": {
+        "cli_source": "siso-internal-labs:ops/siso/agents-hub/bin/siso-work"
+      }
     }
   ]
 }
