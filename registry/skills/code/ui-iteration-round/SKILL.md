@@ -19,6 +19,22 @@ That round failed for three reasons:
 
 This skill is the fix. Follow it in order.
 
+## First: is he here? Then walk, don't run a round
+
+Shaan, 2026-09-24 04:14, after round 2: "you've got to show me the app so I can visually actually
+see it and then I'll go through review no need for screenshots and we'll go through comp by comp
+because this is too slow these UI runs … me telling you more directly what should be done is
+probably better and maybe a b testing some components".
+
+- **He's available:** don't start a round. Give him the running app, one deep link per screen in
+  walking order, and change each comp as he talks. When he's torn between two versions of a comp, put
+  both on screen (a URL switch like `?read=a|b`, or two tiles side by side) and let him pick by
+  looking.
+- **He's away:** run this skill. It is the fallback, not the default.
+- **Before a walk**, sort his earlier asks into built, partly built, not built and his call, each
+  with a link to where it shows (the model app's is `public/review/feedback-ledger/`). He'll check
+  it against what he remembers saying.
+
 ## 0. Read his words first (no shots yet)
 
 For every item in the round, collect:
