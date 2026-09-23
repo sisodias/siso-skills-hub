@@ -21,6 +21,7 @@
   .lists h3 { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; margin: 0 0 4px; }
   .lists ul { margin: 0; padding-left: 18px; } .lists li { margin-bottom: 3px; }
   .add h3 { color: var(--add); } .chg h3 { color: var(--chg); } .keep h3 { color: var(--keep); }
+  .extra { display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-top: 12px; }
   details { margin-top: 10px; } summary { cursor: pointer; color: var(--muted); font-weight: 650; }
   .idea { margin: 6px 0 0 4px; font-size: 13px; } .idea b { color: var(--ink); } .idea span { color: var(--muted); }
   .his { background:#fff7fa; border-radius: 10px; padding: 8px 12px; margin-bottom: 10px; font-size: 13px; color:#334155; }
@@ -46,7 +47,7 @@ fetch('round.json').then((r) => r.json()).then((d) => {
     const img = (dir) => `${dir}/${pat.replace('{id}', it.id)}`
     const his = it.his && (it.his.asked || []).length ? `<div class="his"><b>He asked:</b> ${it.his.asked.map(esc).join(' · ')}</div>` : ''
     const ideas = (it.ideas || []).map((i) => `<div class="idea"><b>${esc(i.id)}${i.chosen ? ' ✓' : i.parked ? ' (next round)' : ''}</b> ${esc(i.what)} <span>— why: ${esc(i.why)}; data: ${esc(i.data)}; comp: ${esc(i.comp)}</span></div>`).join('')
-    return `<section><h2>${esc(it.label)}</h2>${his}<div class="pair"><figure><figcaption>Before</figcaption><img loading="lazy" src="${img(d.shots.before)}" alt="${esc(it.label)} before"></figure><figure><figcaption>After</figcaption><img loading="lazy" src="${img(d.shots.after)}" alt="${esc(it.label)} after" onerror="this.outerHTML='<div style=&quot;border:1px dashed #cbd5e1;border-radius:10px;padding:40px 12px;text-align:center;color:#64748b&quot;>After: being built</div>'"></figure></div><div class="lists"><div class="add"><h3>Added</h3>${list(it.added)}</div><div class="chg"><h3>Changed</h3>${list(it.changed)}</div><div class="keep"><h3>Kept (his picks)</h3>${list(it.kept)}</div></div><details><summary>All ${(it.ideas || []).length} ideas</summary>${ideas}</details></section>`
+    return `<section><h2>${esc(it.label)}</h2>${his}<div class="pair"><figure><figcaption>Before</figcaption><img loading="lazy" src="${img(d.shots.before)}" alt="${esc(it.label)} before"></figure><figure><figcaption>After</figcaption><img loading="lazy" src="${img(d.shots.after)}" alt="${esc(it.label)} after" onerror="this.outerHTML='<div style=&quot;border:1px dashed #cbd5e1;border-radius:10px;padding:40px 12px;text-align:center;color:#64748b&quot;>After: being built</div>'"></figure></div>${(it.extra || []).length ? `<div class="extra">${it.extra.map((x) => `<figure><figcaption>${esc(x.caption)}</figcaption><img loading="lazy" src="${esc(x.src)}" alt="${esc(x.caption)}"></figure>`).join('')}</div>` : ''}<div class="lists"><div class="add"><h3>Added</h3>${list(it.added)}</div><div class="chg"><h3>Changed</h3>${list(it.changed)}</div><div class="keep"><h3>Kept (his picks)</h3>${list(it.kept)}</div></div><details><summary>All ${(it.ideas || []).length} ideas</summary>${ideas}</details></section>`
   }).join('')
 })
 </script>

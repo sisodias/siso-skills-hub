@@ -89,8 +89,16 @@ For each item write **five or more** ideas, his first. Each idea is one bullet w
   - Before | After at 2000;
   - **Added**, **Changed** and **Kept (his picks)** as bullets;
   - the ideas that were parked.
+- **Shoot the states too.** A switch, carousel, expand or scroll can't be judged from its default
+  shot. Click each one, shoot it into `after/states/`, and list them per item under `extra`
+  (`{src, caption}`); the compare page shows them. Model-app example:
+  `_review/widget-review-states.mjs`.
 - **Look at the after-shots at full size before telling him.** Compare each against its before and
-  against his words. If an item got worse, fix it or roll it back first, and say so.
+  against his words. If an item got worse, fix it or roll it back first, and say so. Round 2 of the
+  model-app review caught three problems this way that tests and gates had passed:
+  - a list that grew its card to 1233 px and stretched its neighbour;
+  - chart bars drawn in an undefined colour (black);
+  - a "Last time" offer missing because the widget read the wrong goal source.
 
 ## 6. Report, then his verdict
 
