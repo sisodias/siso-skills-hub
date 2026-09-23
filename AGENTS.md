@@ -1,5 +1,7 @@
 # Agent guide
 
+**In one line:** Central registry and CLI for SISO agent skills: discovery, authoring, installation, dependencies, templates and source receipts. District: `SISO_Agents` (`~/SISO_Workspace/SISO_Agents/siso-skills-hub`).
+
 The Skills Hub owns atomic capability discovery, source receipts, installation, dependencies, telemetry adapters, templates, and pipeline references.
 
 - Do not place whole-agent runtimes, Agent Zero, Herdr, Foundry, or composed operating playbooks here.
