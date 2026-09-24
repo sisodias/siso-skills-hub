@@ -43,6 +43,16 @@ Rules the map is built on:
 - **No compat links, no symlinked second paths.** One path per thing.
 - **Nothing in Downloads, Desktop, Documents or `~` that you made and want kept.** Put it in its district.
 
+### Hidden folders (ADR 0015)
+
+- **`.agents/` is the one agent folder in a repo**, whatever the harness: `HANDOFF.md`, `memory/`, `source/`, `tasks/`,
+  `skills/`, `briefs/`, `runs/`. Do not start a `.memory/`, `.plans/`, `.scratch/`, `.orchestrate/` or `.tasks/`.
+- `.claude/`, `.codex/`, `.cursor/` hold that harness's config only. `.uihub/` is the UI loop (siso-project-os).
+- Tool state (`.omc/`, `.playwright-cli/`, `.wrangler/`, `.serena/cache/`, `.claude/session-context/`) is never
+  committed; the machine-wide git ignore already hides it.
+- A hook (`estate-guard`) blocks a new folder at the top of `~/SISO_Workspace` or in `~`, and a worktree outside
+  `_data/worktrees/`. If it blocks you, it says where the thing goes.
+
 ## 3. The one command for each move
 
 ```bash
@@ -83,7 +93,8 @@ the top of `~/SISO_Workspace`.
 
 1. Your branch is pushed. Nothing you made is only on this laptop unless it belongs in a data plane.
 2. Scratch files are gone. Use `mktemp -d "${TMPDIR%/}/.siso-ephemeral-<task>.XXXXXX"` with an exit trap.
-3. If you created, moved or retired any folder, run `estate doctor`. It must show 0 failures.
+3. If you created, moved or retired any folder, run `estate refresh --light` (the maps update themselves) and
+   `estate doctor`. It must show 0 failures.
 4. **Found a mess outside your task?** That means a second copy, a folder in the wrong district, loose files with no
    home, a stray in `~`, or a key in a file. Do not fix other people's things in passing. Report it and carry on:
    ```bash
