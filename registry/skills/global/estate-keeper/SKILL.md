@@ -26,6 +26,7 @@ If it exists, use it. Do not make a second copy, a `-v2`, a `-new` or a clone "j
 |---|---|
 | SISO's own product | `SISO_Agency/apps/<repo>` (several repos: one folder holding them) |
 | client work | `SISO_Agency/clients/<brand>/code/<repo>` plus `docs/` and `manifest.md` |
+| HALO's work (the HALO CRM, Oracle streaming, Kellman, its brands) | `HALO_Agency/<area>`; Cam's code stays in `crm/repo/` |
 | the agency itself (its sites, HQ, industries) | `SISO_Agency/hq/` |
 | the Software Factory | `SISO_Agency/factory/` |
 | how agents work (brain, hooks, skills, runtime, Agent Zero) | `SISO_Agents/<repo>` (`agent-zero/` for every Agent Zero) |
@@ -70,7 +71,7 @@ python3 $E/tools/reference-index.py drop <clone> --why "..."           # drop a 
 - **Big or binary data does not go in git.** That means corpora, recordings, databases, exports and anything over 10 MB.
   Keep it under `_data/`, or in the project's ignored folder with an encrypted data plane. The planes are listed in
   `$E/plan/data-planes.json`; ask `ESTATE` to add one.
-- **HALO code is never copied off Cam's repo** (`SISO_Agency/clients/halo/crm`). Not into sisodias, not into notes, not into a backup.
+- **HALO code is never copied off Cam's repo** (`HALO_Agency/crm`). Not into sisodias, not into notes, not into a backup.
 
 ## 5. Other agents' work
 
