@@ -857,6 +857,22 @@
           "reference": "apps/oracle-streaming lane oracle-worker/src/renderer/public/review/widget-review/ (round 1 = the failure it fixes; round 2 = first use)"
         }
       ]
+    },
+    {
+      "skill_id": "estate-keeper",
+      "capability_kind": "atomic_skill",
+      "recommendation": "stay_bundled",
+      "decision_status": "accepted",
+      "target": "Bundled Skills Hub atomic capability",
+      "reason": "Shaan 24 Sep: every agent needs to know how to keep the estate clean; the rules and tools it points to are owned by SISO_Agents/siso-estate, so this stays a bundled global skill rather than its own repo.",
+      "blockers": [],
+      "evidence": [
+        {
+          "kind": "source_receipt",
+          "reference": "SISO_Agents/siso-estate/.agents/source/2026-09-23-shaan-verbatim.md",
+          "observed_at": "2026-09-24"
+        }
+      ]
     }
   ],
   "evidence": [

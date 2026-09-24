@@ -1748,6 +1748,48 @@
         "user_invocable": true,
         "status": "experimental"
       }
+    },
+    {
+      "skill_id": "estate-keeper",
+      "name": "Estate Keeper",
+      "description": "Keep Shaan's laptop estate clean while working: look before making anything, put new things in their district, one command per move, keys and big files out of git, other agents' work untouched, and report messes to the Estate Manager's inbox.",
+      "category": "global",
+      "tags": [
+        "estate",
+        "filesystem",
+        "cleanup",
+        "layout",
+        "keys"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [
+          "classify-by-reading"
+        ],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'Needs ~/SISO_Workspace and the estate command'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": []
+      },
+      "metadata": {
+        "user_invocable": false,
+        "status": "stable",
+        "ownership": "canonical-hub",
+        "consumer": "every agent on Shaan's laptop (Claude, Codex, omp)",
+        "source_of_rules": "SISO_Agents/siso-estate (AGENTS.md, docs/adr)"
+      }
     }
   ]
 }
