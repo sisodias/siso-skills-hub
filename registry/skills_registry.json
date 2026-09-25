@@ -1303,6 +1303,49 @@
         ]
       },
       "metadata": {}
+    },
+    {
+      "skill_id": "laptop-health",
+      "name": "Laptop Health",
+      "description": "Diagnose and fix a slow or overloaded MacBook with the laptop-health command: power and Low Power Mode first, then CPU speed, RAM, who makes the load, what keeps spawning processes, and leftover servers and browsers. Never kills agents.",
+      "category": "global",
+      "tags": [
+        "laptop",
+        "performance",
+        "load",
+        "memory",
+        "processes",
+        "cleanup"
+      ],
+      "version": "1.0.0",
+      "author": "SISO Team",
+      "repo_url": null,
+      "commit_hash": null,
+      "remote_url": null,
+      "published_at": null,
+      "dependencies": {
+        "skills": [
+          "prove-before-claim"
+        ],
+        "packages": []
+      },
+      "install_commands": {
+        "system": "echo 'Needs ~/SISO_Workspace/SISO_Agents/laptop-health and laptop-health on PATH'",
+        "skill": "echo 'No additional setup required'"
+      },
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": []
+      },
+      "metadata": {
+        "user_invocable": false,
+        "status": "stable",
+        "ownership": "canonical-hub",
+        "consumer": "every agent on Shaan's laptop (Claude, Codex, omp)",
+        "source_of_rules": "SISO_Agents/laptop-health (AGENTS.md, bin/laptop-health, keep.txt)"
+      }
     }
   ]
 }

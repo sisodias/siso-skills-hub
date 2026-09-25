@@ -86,6 +86,24 @@
         }
       ],
       "blockers": []
+    },
+    {
+      "skill_id": "laptop-health",
+      "capability_kind": "atomic_skill",
+      "recommendation": "stay_bundled",
+      "decision_status": "provisional",
+      "target": "Skills Hub / global / laptop-health",
+      "reason": "Thin skill over the laptop-health CLI, whose house (SISO_Agents/laptop-health) owns the playbook, keep list and tests. Exercised on the 25 Sep 2026 load storm: found Low Power Mode capping the P-cores, herdr fork bursts and stale servers.",
+      "blockers": [
+        "Only one machine (Shaan's M1 MacBook) so far."
+      ],
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "registry/skills/global/laptop-health/SKILL.md",
+          "observed_at": "2026-09-25"
+        }
+      ]
     }
   ],
   "evidence": [
