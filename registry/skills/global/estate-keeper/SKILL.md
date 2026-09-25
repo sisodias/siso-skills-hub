@@ -29,7 +29,7 @@ does something already do this job; is it code, data or a run.
 
 | It serves | It goes in |
 |---|---|
-| a partner agency's own systems | `SISO_Agency/partners/<agency>/` (HALO is still at `HALO_Agency/` until its move) |
+| a partner agency's own systems | `SISO_Agency/partners/<agency>/` |
 | one of a partner's clients | `SISO_Agency/partners/<agency>/clients/<brand>/` |
 | a client that came without a partner | `SISO_Agency/clients/<brand>/` |
 | how SISO runs itself (sites, HQ, industries) | `SISO_Agency/hq/<function>` |
@@ -85,7 +85,7 @@ python3 $E/tools/reference-index.py drop <clone> --why "..."           # drop a 
 - **Big or binary data does not go in git.** That means corpora, recordings, databases, exports and anything over 10 MB.
   Keep it under `_data/`, or in the project's ignored folder with an encrypted data plane. The planes are listed in
   `$E/plan/data-planes.json`; ask `ESTATE` to add one.
-- **HALO code is never copied off Cam's repo** (`HALO_Agency/crm`). Not into sisodias, not into notes, not into a backup.
+- **HALO code is never copied off Cam's repo** (`SISO_Agency/partners/halo/crm`). Not into sisodias, not into notes, not into a backup.
 
 ## 5. Other agents' work
 
