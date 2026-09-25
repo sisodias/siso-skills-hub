@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>{{CLIENT}} component options</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/review.css" />
+  </head>
+  <body>
+    <header class="bar">
+      <div class="bar-inner">
+        <div class="brandrow">
+          <span class="mark" aria-hidden="true"></span>
+          <strong>{{CLIENT}} design review</strong>
+        </div>
+        <h1>Component options</h1>
+        <p class="brief">
+          Each page shows one part of the site, built several different ways with the real logo, links,
+          images and copy. Open one on your phone, look through the options, and tell us which you prefer.
+        </p>
+      </div>
+    </header>
+    <main>
+      <ul class="index-list" id="list"></ul>
+    </main>
+    <script type="module">
+      import { COMPONENTS, ORDER } from './components/registry.js';
+
+      const list = document.getElementById('list');
+      for (const id of ORDER) {
+        const component = COMPONENTS[id];
+        if (!component) continue;
+        const li = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = `/review.html?c=${component.id}`;
+        link.innerHTML =
+          `<span class="status">${component.status ?? 'In review'} · ${component.variants.length} options</span>` +
+          `<span class="label">${component.label}</span>` +
+          `<span class="desc">${component.summary}</span>`;
+        li.append(link);
+        list.append(li);
+      }
+    </script>
+  </body>
+</html>

@@ -19,6 +19,12 @@ laptop-health churn 30       # what keeps starting processes (every fork/exec, b
 laptop-health mem            # real memory by kind and the biggest processes
 laptop-health strays         # leftovers, dry run;  laptop-health clean  stops them
 laptop-health history         # battery vs charger timeline, agent sessions per hour
+laptop-health hogs 15        # the load by owning agent pane + waste tips (local whisper, uncapped vitest, own Chrome...)
+laptop-health hogs --tell    # ...and message those agents (only into an empty input box, once an hour per tip)
+laptop-health servers        # every dev server: RAM, clients, folder, owning agent
+laptop-health who <pid>      # which agent pane (or launchd service) a process belongs to
+laptop-health tell <pane|name> "msg"   # safe one-line message to an agent pane
+laptop-health watch          # last passes of the 10-min persistent job (com.siso.laptop-health-watch)
 health                       # Shaan's way in: opens the laptop-health agent here (health codex|omp|siso, health tab)
 ```
 
@@ -39,5 +45,8 @@ CPU-speed probe use passwordless `sudo` (it works on this laptop).
   your Chrome with no windows, agent Chromes whose owner is gone, the idle chrome-devtools-axi browser, and polling
   loops from ended sessions. Shaan's own servers are in `SISO_Agents/laptop-health/keep.txt`; add to it when he says
   a thing is his.
+- **Before you start heavy work yourself**, avoid the patterns in `SISO_Agents/laptop-health/tips.json`: transcribe
+  audio with Groq (Keychain `com.siso.groq-api`), not local whisper; `heavy -- vitest --maxWorkers=2`; `tsc-inc`;
+  `shot` instead of your own Playwright Chrome; stop the dev server you started when you are done.
 - A bug in someone else's tool: `estate report "<what, where, numbers>"`. New findings go in the house's
   `.agents/HANDOFF.md` and the known offenders table.

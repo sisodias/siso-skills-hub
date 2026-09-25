@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Component preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Fredoka:wght@500;600;700&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* The variant CSS is appended after this block. */
+      html, body { margin: 0; min-height: 100%; }
+      body { background: #120620; }
+      .page-above { min-height: 12vh; }
+      .stack { display: flex; flex-direction: column; min-height: 100vh; }
+      .stack > .footer { margin-top: auto; }
+      [hidden] { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <div class="stack" id="stack">
+      <div class="page-above" aria-hidden="true"></div>
+    </div>
+    <script type="module">
+      import { getComponent } from './components/registry.js';
+
+      const params = new URLSearchParams(location.search);
+      const componentId = params.get('c') || 'footer';
+      const variantId = params.get('v') || '1';
+
+      const component = getComponent(componentId);
+      const variant = component?.variants.find((v) => v.id === variantId) ?? component?.variants[0];
+
+      if (!component || !variant) {
+        document.body.innerHTML =
+          '<p style="color:#ECE4F5;font:15px system-ui;padding:40px">Unknown component or option.</p>';
+      } else {
+        const style = document.createElement('style');
+        style.textContent = component.baseCss + '\n' + variant.css;
+        document.head.append(style);
+
+        const holder = document.createElement('div');
+        holder.innerHTML = variant.html.trim();
+        document.getElementById('stack').append(holder.firstElementChild);
+
+        document.title = `${component.label} · ${variant.name} — {{CLIENT}} review`;
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "round": 2,
+  "page": "Dashboard widgets",
+  "viewports": ["2000x1250", "1440x900"],
+  "shots": { "before": "shots", "after": "after/shots", "pattern": "{id}@2000.png" },
+  "items": [
+    {
+      "id": "activity",
+      "label": "Activity",
+      "his": {
+        "picked": ["the heatmap", "the list of last nights"],
+        "asked": ["\"all time it shows this heat map if you click month it shows month if you show week it shows this streak card in the week\""],
+        "neutral": []
+      },
+      "ideas": [
+        { "id": "A1", "what": "A segmented All time / Month / Week switch in the head: All time = the heatmap, Month = a month calendar, Week = the streak week", "why": "his idea; one card, three scales", "data": "sessions by day (buildHeatmap) exists", "comp": "tabs-base (his note: 'really cool')", "risk": "none — adds a control", "chosen": true },
+        { "id": "A2", "what": "…", "why": "…", "data": "…", "comp": "…", "risk": "…", "chosen": false, "parked": true }
+      ],
+      "added": ["The All time / Month / Week switch"],
+      "changed": [],
+      "kept": ["The heatmap (All time)", "The last-nights list"],
+      "verdict": ""
+    }
+  ]
+}

@@ -110,7 +110,7 @@ def get_ghost_skills(registered_skills, invoked_skills):
             ghosts.append({
                 "skill_id": sid,
                 "category": registered_skills[sid].get("category", "unknown"),
-                "status": registered_skills[sid].get("metadata", {}).get("status", "unknown"),
+                "status": (registered_skills[sid].get("metadata") or {}).get("status", "unknown"),
             })
     return sorted(ghosts, key=lambda x: x["skill_id"])
 
