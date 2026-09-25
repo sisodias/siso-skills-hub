@@ -17,6 +17,7 @@
 
 | Skill | Description | Source |
 |---|---|---|
+| adhd-agent-output | The standard way every SISO agent writes to Shaan: next action first, numbered steps, state restated as X of Y, concrete time estimates, verified wins, at most 5 items, no preamble/recap/closers. | bundled |
 | agent-commander | Create workspaces, start agents, and communicate with them via CMUX | bundled |
 | cli-runner | Run SISO CLI commands and interact with agents | bundled |
 | meta-commander | Communicate with META agents in the SISO ecosystem | bundled |
@@ -81,6 +82,6 @@
 
 ---
 
-**Total: 35 skills**
+**Total: 36 skills**
 
 Use `python3 scripts/skills list`, `search <query>`, or `info <skill>` to explore.
