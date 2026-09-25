@@ -1643,9 +1643,12 @@
       "published_at": "2026-09-09T10:13:55.764781+00:00",
       "dependencies": [],
       "install_commands": [],
-      "files": [
-        "SKILL.md"
-      ],
+      "files": {
+        "required": [
+          "SKILL.md"
+        ],
+        "optional": []
+      },
       "metadata": {
         "host": "siso-vps",
         "learned_from": "2026-09-09 provisioning of 13.140.182.104"
@@ -1654,7 +1657,7 @@
     {
       "skill_id": "jev-judgment",
       "name": "Jev judgment",
-      "description": "Get a fast second opinion before asserting a conclusion \u2014 does my evidence actually support this claim? Also screens untrusted text and ranks candidates by meaning. ~$0.00002 and ~600ms per check.",
+      "description": "Get a fast second opinion before asserting a conclusion — does my evidence actually support this claim? Also screens untrusted text and ranks candidates by meaning. ~$0.00002 and ~600ms per check.",
       "category": "global",
       "tags": [
         "verification",

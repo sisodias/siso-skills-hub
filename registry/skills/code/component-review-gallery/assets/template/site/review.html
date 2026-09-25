@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>{{CLIENT}} design review</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/review.css" />
+  </head>
+  <body>
+    <header class="bar">
+      <div class="bar-inner">
+        <div class="brandrow">
+          <span class="mark" aria-hidden="true"></span>
+          <strong>{{CLIENT}} design review</strong>
+          <span class="spacer"></span>
+          <a class="plain" id="indexLink" href="/">All components</a>
+          <a class="plain" id="aloneLink" href="#" target="_blank" rel="noreferrer">Open full size</a>
+        </div>
+        <h1 id="title">Loading</h1>
+        <div class="controls">
+          <div class="tabs" id="tabs" role="tablist" aria-label="Options"></div>
+          <div class="segmented" role="group" aria-label="Screen size">
+            <button type="button" data-view="desktop" aria-pressed="false">Desktop</button>
+            <button type="button" data-view="mobile" aria-pressed="true">Mobile</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="stage">
+        <div class="stage-head">
+          <div class="opt-name" id="optName"></div>
+          <div class="opt-note" id="optNote"></div>
+        </div>
+        <div class="frame-outer">
+          <div class="frame" id="frame" data-view="mobile">
+            <iframe id="stage" title="Component preview"></iframe>
+          </div>
+        </div>
+        <div class="stage-actions">
+          <button class="btn primary" type="button" id="copyBtn">Copy link to this option</button>
+          <a class="btn" id="openBtn" href="#" target="_blank" rel="noreferrer">Open on its own</a>
+          <span class="copied" id="copied" hidden>Link copied</span>
+        </div>
+        <p class="bestfor" id="bestFor"></p>
+      </section>
+
+      <section class="grid-section">
+        <h2>All options at a glance</h2>
+        <p class="sub">Tap any one to open it above. Each tile is a live preview, not a screenshot.</p>
+        <div class="grid" id="grid"></div>
+      </section>
+    </main>
+
+    <footer class="hint">
+      <b>How to give feedback:</b> screenshot the option you like and send it over, or just tell us the
+      number. Anything you dislike about one of them is useful too.
+    </footer>
+
+    <script type="module">
+      import { getComponent, ORDER } from './components/registry.js';
+
+      const VIEWPORTS = {
+        desktop: { width: 1440, height: 900 },
+        mobile: { width: 390, height: 844 },
+      };
+
+      const params = new URLSearchParams(location.search);
+      const component = getComponent(params.get('c') || ORDER[0]);
+
+      if (!component) {
+        document.getElementById('title').textContent = 'Unknown component';
+      } else {
+        const narrow = window.matchMedia('(max-width: 760px)').matches;
+        const state = {
+          variantId: resolveStartVariant(params.get('v')),
+          view: params.get('view') === 'desktop' || params.get('view') === 'mobile'
+            ? params.get('view')
+            : (narrow ? 'mobile' : 'desktop'),
+        };
+
+        function resolveStartVariant(requested) {
+          const wanted = requested ?? component.defaultVariantId ?? component.variants[0].id;
+          return (
+            component.variants.find((v) => v.id === wanted)?.id ?? component.variants[0].id
+          );
+        }
+
+        const els = {
+          title: document.getElementById('title'),
+          tabs: document.getElementById('tabs'),
+          frame: document.getElementById('frame'),
+          stage: document.getElementById('stage'),
+          optName: document.getElementById('optName'),
+          optNote: document.getElementById('optNote'),
+          bestFor: document.getElementById('bestFor'),
+          grid: document.getElementById('grid'),
+          openBtn: document.getElementById('openBtn'),
+          aloneLink: document.getElementById('aloneLink'),
+          copyBtn: document.getElementById('copyBtn'),
+          copied: document.getElementById('copied'),
+        };
+
+        const renderUrl = (variantId, view) =>
+          `/render.html?c=${component.id}&v=${variantId}&view=${view}`;
+
+        /* Static iframes have to be sized in JS: the frame is a fixed design
+           width scaled down to whatever space the gallery has, so a desktop
+           preview and a phone preview can sit side by side at true proportions. */
+        /* A tall footer should never be cut off mid-link, so the frame is the
+           device height or the component's own height, whichever is greater.
+           Width stays exact, which is what makes the preview honest. */
+        function fit(iframe, holder, viewport, contentHeight = 0) {
+          const available = holder.clientWidth;
+          const scale = Math.min(available / viewport.width, 1);
+          const height = Math.max(viewport.height, Math.ceil(contentHeight));
+          iframe.style.width = viewport.width + 'px';
+          iframe.style.height = height + 'px';
+          iframe.style.transform = 'scale(' + scale + ')';
+          holder.style.height = Math.round(height * scale) + 'px';
+        }
+
+        function contentHeight(iframe) {
+          try {
+            return iframe.contentDocument?.documentElement?.scrollHeight ?? 0;
+          } catch {
+            return 0;
+          }
+        }
+
+        function currentVariant() {
+          return component.variants.find((v) => v.id === state.variantId);
+        }
+
+        function syncUrl() {
+          const url = `?c=${component.id}&v=${state.variantId}&view=${state.view}`;
+          history.replaceState(null, '', url);
+        }
+
+        function paint() {
+          const variant = currentVariant();
+          const viewport = VIEWPORTS[state.view];
+
+          els.optName.innerHTML = `<span class="idx">${variant.id}.</span> ${variant.name}`;
+          els.optNote.textContent = variant.note;
+          els.bestFor.innerHTML = variant.bestFor ? `<b>Best for:</b> ${variant.bestFor}` : '';
+          els.frame.dataset.view = state.view;
+          els.stage.src = renderUrl(variant.id, state.view);
+          els.stage.title = `${component.label}: ${variant.name}`;
+          els.openBtn.href = renderUrl(variant.id, state.view);
+          els.aloneLink.href = renderUrl(variant.id, state.view);
+
+          for (const tab of els.tabs.children) {
+            tab.setAttribute('aria-selected', String(tab.dataset.variant === state.variantId));
+          }
+          for (const btn of document.querySelectorAll('.segmented button')) {
+            btn.setAttribute('aria-pressed', String(btn.dataset.view === state.view));
+          }
+          for (const card of els.grid.children) {
+            card.dataset.current = String(card.dataset.variant === state.variantId);
+          }
+
+          requestAnimationFrame(() => fit(els.stage, els.frame, viewport));
+        }
+
+        els.stage.addEventListener('load', () => {
+          fit(els.stage, els.frame, VIEWPORTS[state.view], contentHeight(els.stage));
+        });
+
+        els.title.textContent = component.label;
+        document.title = `${component.label} options for {{CLIENT}}`;
+
+        for (const variant of component.variants) {
+          const tab = document.createElement('button');
+          tab.type = 'button';
+          tab.className = 'tab';
+          tab.dataset.variant = variant.id;
+          tab.setAttribute('role', 'tab');
+          tab.setAttribute('aria-selected', 'false');
+          tab.innerHTML = `<span class="num">${variant.id}</span> ${variant.name}`;
+          tab.addEventListener('click', () => {
+            state.variantId = variant.id;
+            syncUrl();
+            paint();
+          });
+          els.tabs.append(tab);
+
+          const card = document.createElement('button');
+          card.type = 'button';
+          card.className = 'card';
+          card.dataset.variant = variant.id;
+          card.dataset.current = 'false';
+          card.innerHTML =
+            `<div class="thumb"><iframe loading="lazy" tabindex="-1" title="${variant.name} preview"></iframe></div>` +
+            `<div class="meta"><span class="idx">${variant.id}</span><span class="name">${variant.name}</span></div>` +
+            `<div class="note">${variant.note}</div>`;
+          card.addEventListener('click', () => {
+            state.variantId = variant.id;
+            syncUrl();
+            paint();
+            document.querySelector('.stage').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+          els.grid.append(card);
+        }
+
+        function layoutGrid() {
+          for (const card of els.grid.children) {
+            const iframe = card.querySelector('iframe');
+            const holder = card.querySelector('.thumb');
+            fit(iframe, holder, VIEWPORTS[state.view]);
+          }
+        }
+
+        function layoutCards() {
+          for (const card of els.grid.children) {
+            const variant = card.dataset.variant;
+            card.querySelector('iframe').src = renderUrl(variant, state.view);
+          }
+          requestAnimationFrame(layoutGrid);
+        }
+
+        for (const btn of document.querySelectorAll('.segmented button')) {
+          btn.addEventListener('click', () => {
+            state.view = btn.dataset.view;
+            syncUrl();
+            paint();
+            layoutCards();
+          });
+        }
+
+        els.copyBtn.addEventListener('click', async () => {
+          const link = location.origin + location.pathname + location.search;
+          try {
+            await navigator.clipboard.writeText(link);
+          } catch {
+            window.prompt('Copy this link', link);
+          }
+          els.copied.hidden = false;
+          setTimeout(() => { els.copied.hidden = true; }, 2200);
+        });
+
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            fit(els.stage, els.frame, VIEWPORTS[state.view], contentHeight(els.stage));
+            layoutGrid();
+          }, 120);
+        });
+
+        paint();
+        layoutCards();
+        syncUrl();
+      }
+    </script>
+  </body>
+</html>

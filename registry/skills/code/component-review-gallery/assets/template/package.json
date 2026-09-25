@@ -1,0 +1,6 @@
+{
+  "name": "{{PROJECT}}",
+  "private": true,
+  "type": "module",
+  "description": "Client-facing component variation gallery. No build step, no framework."
+}

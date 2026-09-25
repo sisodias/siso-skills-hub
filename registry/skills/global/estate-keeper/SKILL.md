@@ -20,21 +20,25 @@ estate map                # the districts
 
 If it exists, use it. Do not make a second copy, a `-v2`, a `-new` or a clone "just to look".
 
-## 2. Put new things in their district
+## 2. Put new things where the legend says
 
-| It is... | It goes in |
+Ask the map, not this page: `estate new <island>/<compound>[/<building>] --what "..."` dry-runs the placement, names
+it, and refuses a second building for a job that already has an owner (`--run` makes it). The rule behind it is
+`SISO_Agents/siso-estate/docs/LEGEND.md` §5, three questions in order: which part of the business does it serve;
+does something already do this job; is it code, data or a run.
+
+| It serves | It goes in |
 |---|---|
-| SISO's own product | `SISO_Agency/apps/<repo>` (several repos: one folder holding them) |
-| client work | `SISO_Agency/clients/<brand>/code/<repo>` plus `docs/` and `manifest.md` |
-| HALO's work (the HALO CRM, Oracle streaming, Kellman, its brands) | `HALO_Agency/<area>`; Cam's code stays in `crm/repo/` |
-| the agency itself (its sites, HQ, industries) | `SISO_Agency/hq/` |
-| the Software Factory | `SISO_Agency/factory/` |
-| how agents work (brain, hooks, skills, runtime, Agent Zero) | `SISO_Agents/<repo>` (`agent-zero/` for every Agent Zero) |
-| knowledge, research, banks, corpora | `Great_Library_of_SISO/` |
-| Shaan's life (finance, study, legal) | `personal/` |
-| other people's code you only read | `_reference/` (never edit it) |
-| runtime data, caches, builds, databases | `_data/` |
-| a git worktree | `_data/worktrees/<repo>/<lane>` (never `/tmp`, never beside or inside the repo) |
+| a partner agency's own systems | `SISO_Agency/partners/<agency>/` (HALO is still at `HALO_Agency/` until its move) |
+| one of a partner's clients | `SISO_Agency/partners/<agency>/clients/<brand>/` |
+| a client that came without a partner | `SISO_Agency/clients/<brand>/` |
+| how SISO runs itself (sites, HQ, industries) | `SISO_Agency/hq/<function>` |
+| every partner, as a module built once / as the way SISO builds | `SISO_Agency/apps/<product>` / `SISO_Agency/factory/` |
+| the agents that do the work (Agent Zero: `agent-zero/`) | `SISO_Agents/<job>` |
+| knowledge, research, banks, code kept to learn from | `Great_Library_of_SISO/` |
+| Shaan's life | `personal/` |
+| data (databases, uploads, client PII) | a data plane (`estate data`), never a repo |
+| a run: worktree, scratch, a test's temp folder | `_data/worktrees/<repo>/<lane>` or scratch, never inside a building |
 | anything retired | `_archive/YYYY-MM-DD-subject/` with a line in its `MANIFEST.md` |
 
 Rules the map is built on:

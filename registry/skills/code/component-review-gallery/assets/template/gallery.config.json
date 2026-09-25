@@ -1,0 +1,7 @@
+{
+  "client": "{{CLIENT}}",
+  "project": "{{PROJECT}}",
+  "credentials": "{{CREDENTIALS}}",
+  "accountIdVar": "{{ACCOUNT_ID_VAR}}",
+  "tokenVar": "{{TOKEN_VAR}}"
+}

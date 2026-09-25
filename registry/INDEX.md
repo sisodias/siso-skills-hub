@@ -15,6 +15,7 @@
 | component-review-gallery | Build a client-facing web gallery that shows several design options for one component using the client's real brand assets, and publishes it to a shareable URL they can open on a phone. | bundled |
 | implement_story | Implement a single user story with tests | bundled |
 | trace-to-regression | Convert observed agent failures into source-linked regression cases and scoped skill or harness corrections. | bundled |
+| ui-iteration-round | Run one round of UI iteration on pages or widgets Shaan has seen: his words first, shots before at his ratio, at least five specified improvement ideas per item (his own first, additive, never removing what he picked), one coder, shots after, and a before/after page with Added / Changed / Kept bullets per item. | bundled |
 | unified-code-search | Navigate a local codebase through native Serena symbol, reference, outline, and call-hierarchy queries. | bundled |
 
 ### communication
@@ -52,6 +53,7 @@
 | Skill | Description | Source |
 |---|---|---|
 | classify-by-reading | Classify files from their content before assigning consequential current/stale/dead/duplicate/archive verdicts. | bundled |
+| estate-keeper | Keep Shaan's laptop estate clean while working: look before making anything, put new things in their district, one command per move, keys and big files out of git, other agents' work untouched, and report messes to the Estate Manager's inbox. | bundled |
 | jev-judgment | Get a fast second opinion before asserting a conclusion — does my evidence actually support this claim? Also screens untrusted text and ranks candidates by meaning. ~$0.00002 and ~600ms per check. | bundled |
 | os-database | Core Agent OS Database for telemetry, tasks, and timeline tracking | bundled |
 | owner-handoff | Use the owning Playbook's preservation, cold-read and single-writer handoff gate. | bundled |
@@ -91,6 +93,6 @@
 
 ---
 
-**Total: 45 skills**
+**Total: 47 skills**
 
 Use `python3 scripts/skills list`, `search <query>`, or `info <skill>` to explore.
