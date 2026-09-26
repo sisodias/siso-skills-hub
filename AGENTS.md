@@ -10,7 +10,7 @@
 | Run it | `npm run test` |
 | Write here | .agents/ is this repo's one agent folder (ADR 0015); create what you need there |
 | Worktrees | _data/worktrees/siso-skills-hub/&lt;lane&gt; (never beside or inside the repo) |
-| Find anything | `estate where <words>`; the city map is `estate map` |
+| Anything outside this repo | ask the estate first, not this repo's docs: `estate where <words>` (a sentence works), the map is `~/SISO_Workspace/AGENTS.md`; loose files go to `~/SISO_Workspace/_inbox`, data backups are declared in `SISO_Agents/siso-estate/plan/data-planes.json` |
 <!-- estate:door end -->
 
 The Skills Hub owns atomic capability discovery, source receipts, installation, dependencies, telemetry adapters, templates, and pipeline references.
